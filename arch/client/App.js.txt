@@ -1,0 +1,165 @@
+import { useState } from 'react';
+import './App.css';
+import Axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+function App() {
+
+  const [articulo, setArticulo] = useState("");
+  const [precio, setPrecio] = useState(0);
+  const [cantidad, setCantidad] = useState(0);
+  const [proveedor, setProveedor] = useState("");
+  const [editar, setEditar] = useState(false);
+  const [id, setId] = useState(false);
+
+  const [productosList, setProductos] = useState([]);
+
+  const add = () => {
+    Axios.post("http://localhost:3001/create",{
+      articulo:articulo,
+      precio:precio,
+      cantidad:cantidad,
+      proveedor:proveedor
+    }).then(()=>{
+      getProductos(); 
+      limpiarCampos();   
+    }); 
+  }
+
+  const update = ()=>{
+    Axios.put("http://localhost:3001/update",{
+      id:id,
+      articuloe:articulo,
+      precio:cantidad,
+      cantidad:cantidad,
+      proveedor:proveedor,
+    }).then(()=>{
+      getProductos();
+      limpiarCampos();
+    });
+  }
+
+  const limpiarCampos=()=>{
+    setArticulo("");
+    setPrecio("");
+    setCantidad("");
+    setProveedor("");
+    setId("");
+    setEditar(false);
+  }
+
+  const editarProducto = val => {
+    setEditar(true);
+
+    setArticulo(val.articulo);
+    setPrecio(val.precio);
+    setCantidad(val.cantidad);
+    setProveedor(val.proveedor);
+    setId(val.id);
+
+  }
+
+  const getProductos = () => {
+    Axios.get("http://localhost:3001/productos").then((response)=>{
+      setProductos(response.data);
+    });
+  }
+
+  getProductos(); 
+
+  return (
+    <div className='container'>
+      <div className="card text-center">
+        <div className="card-header">
+          SISTEMA DE INVENTARIO     
+        </div>
+        <div className="card-body">
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">Articulo:</span>
+            <input type="text" value={articulo}
+            onChange={(event)=>{
+              setArticulo(event.target.value);
+            }}
+            className="form-control" placeholder="Ingrese un articulo" aria-label="Username" aria-describedby="basic-addon1"/>
+          </div>
+
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">Precio:</span>
+            <input type="number" value={precio}
+            onChange={(event)=>{
+              setPrecio(event.target.value);
+            }}
+            className="form-control" placeholder="Ingrese el precio" aria-label="Username" aria-describedby="basic-addon1"/>
+          </div>
+          
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">Cantidad:</span>
+            <input type="number" value={cantidad}
+            onChange={(event)=>{
+              setCantidad(event.target.value);
+            }}
+            className="form-control" placeholder="Ingrese la cantidad" aria-label="Username" aria-describedby="basic-addon1"/>
+          </div>
+
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">Proveedor: </span>
+            <input type="text" value={proveedor}
+            onChange={(event)=>{
+              setProveedor(event.target.value);
+            }}
+            className="form-control" placeholder="Ingrese el proveedor" aria-label="Username" aria-describedby="basic-addon1"/>
+          </div>
+        </div>
+        <div className="card-footer text-body-secondary">
+          {
+            editar? 
+            <div>
+            <button className='btn btn-warning m-2' onClick={update}>Actualizar</button>
+            <button className='btn btn-info m-2' onClick={limpiarCampos}>Cancelar</button>
+            </div>
+            :<button className='btn btn-success' onClick={add}>Registrar</button>
+          }
+
+        </div>
+      </div>
+      <table className="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Articulo</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Proveedor</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            productosList.map((val, key)=>{
+              return <tr key={val.id}>
+                      <th>{val.id}</th>
+                      <td>{val.articulo}</td>
+                      <td>{val.precio}</td>
+                      <td>{val.cantidad}</td>
+                      <td>{val.proveedor}</td>
+                      <td>
+                      <div className="btn-group" role="group" aria-label="Basic example">
+                        <button type="button"
+                        onClick={()=>{ 
+                          editarProducto(val)
+                        }}
+                        className="btn btn-info">Editar</button>
+                        <button type="button" className="btn btn-danger">Eliminar</button>
+                      </div>
+                      </td>
+                     </tr> 
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default App;
