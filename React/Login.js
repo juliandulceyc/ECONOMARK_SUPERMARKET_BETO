@@ -34,3 +34,28 @@ function Login() {
       setErrorMessage('Nombre de usuario o contraseña incorrectos');
     }
   };
+
+  return (
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="username" className="form-label">Nombre de usuario</label>
+              <input type="text" className="form-control" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">Contraseña</label>
+              <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+            {successMessage && <div className="alert alert-success">{successMessage}</div>}
+            <button type="submit" className="btn btn-primary">Iniciar sesión</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Login;
