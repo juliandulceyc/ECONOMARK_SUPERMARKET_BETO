@@ -1,0 +1,44 @@
+.wrapper {
+  min-height: 100vh;
+}
+
+.sidebar {
+  min-height: 100vh;
+  position: fixed;
+  width: inherit;
+  max-width: inherit;
+}
+
+.sidebar-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+.main-content {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.sidebar .nav-link {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  margin: 0.2rem 0;
+}
+
+.sidebar .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.sidebar-sticky {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
