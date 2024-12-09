@@ -1,0 +1,48 @@
+DROP DATABASE IF EXISTS economark;
+CREATE DATABASE economark;
+USE economark;
+
+CREATE TABLE credenciales (
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	rol varchar(80) NOT NULL, 
+	username varchar(80) NOT NULL,
+	password varchar(300) NOT NULL,
+  	createdAt DATE,
+  	updatedAt DATE
+);
+
+INSERT INTO credenciales (id, rol, username, password) VALUES
+(1, 'admin', 'HCD', '$2b$10$g/oBQPO9KrWLoxDG6NJbjeMfW1/NQMKjK7cE70uwCGwIqLLrs8EEW'),
+(2, 'empleado', 'Acutor', '$2b$10$F8Bp2qS5td6W/wxILMUuBOzluZmaSiVkwvM6cJVZptQEXU25GPlx.');
+
+
+USE economark;
+CREATE TABLE productos  (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre varchar(80) NOT NULL,
+  categoria varchar(150) NOT NULL,
+  precio DECIMAL(10,3) NOT NULL,
+  createdAt DATE,
+  updatedAt DATE	
+);
+
+INSERT INTO productos (nombre, categoria, precio) VALUES
+('Arroz', 'Granos', 3.000),
+('Leche', 'Lácteos', 3.500),
+('Pan', 'Panadería', 6.000);
+
+create table categoria(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+       idCategoria varchar(50) NOT NULL,
+       nombreCategoria varchar(50) not null unique,
+       descripcionCategoria varchar(256) null,
+       estado int,
+	createdAt DATE,
+  	updatedAt DATE
+);
+
+INSERT INTO categoria (idCategoria, nombreCategoria, descripcionCategoria, estado) VALUES
+('0001', 'Granos', '--', 1),
+('0002', 'Lácteos', '--', 0),
+('0003', 'Panadería', '--', 1),
+('0004', 'Hierbas', '--', 1);
