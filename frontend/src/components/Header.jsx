@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function Header() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [profileImage, setProfileImage] = useState('https://via.placeholder.com/40');
+  const [profileImage, setProfileImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_iwynnKUnSZbPBC5SiPy6Ay9-3cIEezn6w&s');
   const [profileData, setProfileData] = useState({
     name: 'Jefferson',
     email: 'jefferson@westcol.com',
@@ -66,6 +66,7 @@ function Header() {
 
           <Dropdown>
             <Dropdown.Toggle variant="link" className="bg-transparent border-0 p-0">
+              {/* Imagen de perfil en un círculo */}
               <img
                 src={profileImage}
                 alt="Profile"
@@ -82,7 +83,7 @@ function Header() {
               </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item>
-                <Link to={"/login/"} className="bi bi-box-arrow-right me-2">  Logout</Link>
+                <Link to={"/login/"} className="bi bi-box-arrow-right me-2"> Logout</Link>
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
