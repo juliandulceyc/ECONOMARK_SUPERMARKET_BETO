@@ -18,7 +18,7 @@ import Settings from './settings';
 
 function Home() {
     const [currentView, setCurrentView] = useState('dashboard');
-    const [userRole, setUserRole] = useState(null); // Almacenar el rol del usuario
+    const [userRole, setUserRole] = useState(null);
 
     const navigate = useNavigate();
     const fetchUser = async () => {
@@ -30,14 +30,14 @@ function Home() {
                 }
             });
             if (response.status === 401 || response.status === 403) {
-                navigate('/login');
+                navigate('/login', { replace: true }); // Añadir replace: true
             } else {
-                const userRole = response.data.user.rol; // Obtener el rol desde el cuerpo de la solicitud
-                console.log("Role obtenido:", userRole); // Añadir log para depurar
+                const userRole = response.data.user.rol;
+                console.log("Role obtenido:", userRole);
                 setUserRole(userRole);
             }
         } catch (err) {
-            navigate('/login');
+            navigate('/login', { replace: true }); // Añadir replace: true
             console.log(err);
         }
     };
