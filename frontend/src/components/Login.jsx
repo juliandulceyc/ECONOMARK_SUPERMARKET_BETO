@@ -7,7 +7,7 @@ const Login = () => {
     username: '',
     password: ''
   });
-  const [error, setError] = useState(''); // Estado para manejar los mensajes de error
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:3000/auth/login', values);
       if (response.status === 201) {
         localStorage.setItem('token', response.data.token);
-        navigate('/home');
+        navigate('/home', { replace: true }); // Añadir replace: true
       }
     } catch (err) {
       if (err.response) {
@@ -43,7 +43,7 @@ const Login = () => {
       <div className='bg-white p-3 rounded-0 w-25 border'>
         <h2 className='mb-3'>Login</h2>
         <form onSubmit={handleSumbit}>
-          {error && <div className='alert alert-danger'>{error}</div>} {/* Mostrar mensaje de error */}
+          {error && <div className='alert alert-danger'>{error}</div>}
           <div className='mb-3'>
             <label htmlFor='username' className='form-label'>Usuario</label>
             <input
