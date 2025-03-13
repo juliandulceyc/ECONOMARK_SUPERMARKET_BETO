@@ -7,8 +7,6 @@ import db from './lib/db.js'
 import routesCredenciales from './routes/routesCredenciales.js'
 import routesCategorias from './routes/routesCategorias.js'
 
-
-
 const app = express()
 app.use(cors())
 app.use(express.json())

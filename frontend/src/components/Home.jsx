@@ -62,6 +62,13 @@ function Home() {
                         <CompShowProducts />
                     </>
                 );
+            case 'ventas':
+                return (
+                    <>
+                        <DashboardStats />
+                        <CompShowProducts />
+                    </>
+                );
             case 'users':
                 if (userRole === 'admin') {
                     return (
