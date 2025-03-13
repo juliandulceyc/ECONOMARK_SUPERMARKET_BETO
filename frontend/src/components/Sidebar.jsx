@@ -25,13 +25,15 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               Usuarios
             </Nav.Link>
           )}
-          <Nav.Link
-            className={`text-white ${currentView === 'products' ? 'active bg-primary' : ''}`}
-            onClick={() => onNavigate('products')}
-          >
-            <i className="bi bi-cart me-2"></i>
-            Productos
-          </Nav.Link>
+          {userRole === 'admin' && (
+            <Nav.Link
+              className={`text-white ${currentView === 'products' ? 'active bg-primary' : ''}`}
+              onClick={() => onNavigate('products')}
+            >
+              <i className="bi bi-people me-2"></i>
+              productos
+            </Nav.Link>
+          )}
           <Nav.Link
             className={`text-white ${currentView === 'proveedores' ? 'active bg-primary' : ''}`}
             onClick={() => onNavigate('proveedores')}
