@@ -34,13 +34,15 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               productos
             </Nav.Link>
           )}
-          <Nav.Link
-            className={`text-white ${currentView === 'proveedores' ? 'active bg-primary' : ''}`}
-            onClick={() => onNavigate('proveedores')}
-          >
-            <i className="bi bi-speedometer2 me-2"></i>
-            Proveedores
-          </Nav.Link>
+          {userRole === 'admin' && (
+            <Nav.Link
+              className={`text-white ${currentView === 'proveedores' ? 'active bg-primary' : ''}`}
+              onClick={() => onNavigate('proveedores')}
+            >
+              <i className="bi bi-people me-2"></i>
+              proveedores
+            </Nav.Link>
+          )}
           <Nav.Link
             className={`text-white ${currentView === 'sell' ? 'active bg-primary' : ''}`}
             onClick={() => onNavigate('sell')}
@@ -48,27 +50,35 @@ function Sidebar({ onNavigate, currentView, userRole }) {
             <i className="bi bi-cart me-2"></i>
             Venta
           </Nav.Link>
-          <Nav.Link
-            className={`text-white ${currentView === 'analytics' ? 'active bg-primary' : ''}`}
-            onClick={() => onNavigate('analytics')}
-          >
-            <i className="bi bi-graph-up me-2"></i>
-            Estadísticas
-          </Nav.Link>
-          <Nav.Link
-            className={`text-white ${currentView === 'reports' ? 'active bg-primary' : ''}`}
-            onClick={() => onNavigate('reports')}
-          >
-            <i className="bi bi-file-earmark-bar-graph me-2"></i>
-            Reportes
-          </Nav.Link>
-          <Nav.Link
-            className={`text-white ${currentView === 'entry' ? 'active bg-primary' : ''}`}
-            onClick={() => onNavigate('entry')}
-          >
-            <i className="bi bi-graph-up me-2"></i>
-            Entradas/Salidas
-          </Nav.Link>
+          {userRole === 'admin' && (
+            <Nav.Link
+              className={`text-white ${currentView === 'estadisticas' ? 'active bg-primary' : ''}`}
+              onClick={() => onNavigate('estadisticas')}
+            >
+              <i className="bi bi-people me-2"></i>
+              estadisticas
+            </Nav.Link>
+          )}
+          {userRole === 'admin' && (
+            <Nav.Link
+              className={`text-white ${currentView === 'reports' ? 'active bg-primary' : ''}`}
+              onClick={() => onNavigate('reports')}
+            >
+              <i className="bi bi-people me-2"></i>
+              reportes
+            </Nav.Link>
+          )}
+          
+          {userRole === 'admin' && (
+            <Nav.Link
+              className={`text-white ${currentView === 'entry' ? 'active bg-primary' : ''}`}
+              onClick={() => onNavigate('entry')}
+            >
+              <i className="bi bi-people me-2"></i>
+              entradas/salidas
+            </Nav.Link>
+          )}
+          
           <Nav.Link
             className={`text-white ${currentView === 'settings' ? 'active bg-primary' : ''}`}
             onClick={() => onNavigate('settings')}
