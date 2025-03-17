@@ -19,6 +19,7 @@ import Settings from './settings';
 function Home() {
     const [currentView, setCurrentView] = useState('dashboard');
     const [userRole, setUserRole] = useState(null);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Nuevo estado
 
     const navigate = useNavigate();
     const fetchUser = async () => {
@@ -30,14 +31,14 @@ function Home() {
                 }
             });
             if (response.status === 401 || response.status === 403) {
-                navigate('/login', { replace: true }); // Añadir replace: true
+                navigate('/login', { replace: true });
             } else {
                 const userRole = response.data.user.rol;
                 console.log("Role obtenido:", userRole);
                 setUserRole(userRole);
             }
         } catch (err) {
-            navigate('/login', { replace: true }); // Añadir replace: true
+            navigate('/login', { replace: true });
             console.log(err);
         }
     };
@@ -103,19 +104,27 @@ function Home() {
         }
     };
 
+    const handleToggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
+    };
+
     return (
         <div className="wrapper">
-            <Row className="g-0">
-                <Col md={2} className="sidebar-wrapper">
-                    <Sidebar onNavigate={setCurrentView} currentView={currentView} userRole={userRole} />
-                </Col>
-                <Col md={10} className="main-content">
-                    <Header />
-                    <Container fluid className="px-4 py-4">
-                        {renderContent()}
-                    </Container>
-                </Col>
-            </Row>
+            <div className="sidebar-wrapper">
+                <Sidebar
+                    onNavigate={setCurrentView}
+                    currentView={currentView}
+                    userRole={userRole}
+                    isCollapsed={isSidebarCollapsed} // Pasamos el estado al Sidebar
+                    onToggle={handleToggleSidebar} // Pasamos la función para cambiar el estado
+                />
+            </div>
+            <div className="main-content">
+                <Header />
+                <Container fluid className="px-4 py-4">
+                    {renderContent()}
+                </Container>
+            </div>
         </div>
     );
 }

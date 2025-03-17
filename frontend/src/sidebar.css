@@ -1,0 +1,26 @@
+.sidebar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #343a40; /* Color del sidebar */
+    z-index: 10;
+  }
+  
+  .sidebar.collapsed {
+    width: 60px;
+  }
+  
+  .sidebar-wrapper {
+    transition: width 0.3s ease;
+  }
+  
+  .main-content {
+    transition: margin-left 0.3s ease;
+    margin-left: 250px; /* Estado expandido del sidebar */
+  }
+  
+  .collapsed-sidebar ~ .main-content {
+    margin-left: 60px; /* Estado colapsado del sidebar */
+  }
+  
