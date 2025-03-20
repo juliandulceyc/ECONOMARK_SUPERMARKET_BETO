@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Sidebar from './Sidebar';
 import DashboardStats from './DashboardStats';
 import SalesChart from './SalesChart';
@@ -12,6 +12,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../App.css';
 import CompShowProducts from './showProducts';
 import CompShowUsers from './showUsers';
+import CompShowProveedores from './showProveedores'; // Importamos el componente de proveedores
 import { Reports } from './reportes/Reports';
 import Preview from "./preview";
 import Settings from './settings';
@@ -19,9 +20,10 @@ import Settings from './settings';
 function Home() {
     const [currentView, setCurrentView] = useState('dashboard');
     const [userRole, setUserRole] = useState(null);
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Nuevo estado
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
     const navigate = useNavigate();
+
     const fetchUser = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -81,6 +83,18 @@ function Home() {
                 } else {
                     return <div>No tienes permisos para acceder a esta sección.</div>;
                 }
+                case 'proveedores': // Agregamos la sección de proveedores
+                if (userRole === 'admin') {
+                    return (
+                        <>
+                            <DashboardStats />
+                            <CompShowProveedores /> {/* Nombre del componente debe comenzar con mayúscula */}
+                        </>
+                    );
+                } else {
+                    return <div>No tienes permisos para acceder a esta sección.</div>;
+                }
+            
             case 'reports':
                 return (
                     <>
@@ -115,8 +129,8 @@ function Home() {
                     onNavigate={setCurrentView}
                     currentView={currentView}
                     userRole={userRole}
-                    isCollapsed={isSidebarCollapsed} // Pasamos el estado al Sidebar
-                    onToggle={handleToggleSidebar} // Pasamos la función para cambiar el estado
+                    isCollapsed={isSidebarCollapsed}
+                    onToggle={handleToggleSidebar}
                 />
             </div>
             <div className="main-content">
@@ -130,3 +144,4 @@ function Home() {
 }
 
 export default Home;
+

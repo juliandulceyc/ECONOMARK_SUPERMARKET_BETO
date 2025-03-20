@@ -6,6 +6,7 @@ import routes from './routes/routes.js'
 import db from './lib/db.js'
 import routesCredenciales from './routes/routesCredenciales.js'
 import routesCategorias from './routes/routesCategorias.js'
+import routesProveedores from './routes/routesProveedores.js'
 
 const app = express()
 app.use(cors())
@@ -14,6 +15,7 @@ app.use('/auth', authRouter)
 app.use('/tablas', routes)
 app.use('/credenciales', routesCredenciales)
 app.use('/categorias', routesCategorias)
+app.use('/proveedores', routesProveedores)
 
 app.listen(process.env.PORT, () => {
     console.log(`✓ Escuchando en el puerto: ${process.env.PORT}`)
