@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Nav } from 'react-bootstrap';
+import './Sidebar.css'; // Importamos el archivo CSS
 
 function Sidebar({ onNavigate, currentView, userRole }) {
   const supermarketImage = 'https://img.icons8.com/?size=100&id=64872&format=png&color=000000';
@@ -10,101 +11,111 @@ function Sidebar({ onNavigate, currentView, userRole }) {
   };
 
   return (
-    <div
-      className={`bg-dark text-white h-100 sidebar ${isCollapsed ? 'collapsed' : ''}`}
-      style={{ width: isCollapsed ? '60px' : '250px', transition: 'width 0.3s ease' }}
-    >
+    <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-sticky">
-        <div className="py-4 px-3 d-flex justify-content-between align-items-center">
-          <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+        <div className="sidebar-header">
+          <div className="sidebar-logo">
             {!isCollapsed && (
-              /* Imagen */
               <img
                 src={supermarketImage}
                 alt="Supermarket"
-                style={{
-                  width: '60px', // Aumenta el ancho
-                  height: '60px', // Aumenta el alto
-                  objectFit: 'contain', // Ajusta el objectFit para que se ajuste proporcionalmente
-                }}
+                className="logo-image"
               />
             )}
           </div>
           <button
-            className="btn btn-sm btn-light"
+            className="collapse-button"
             onClick={toggleSidebar}
             title={isCollapsed ? 'Expandir' : 'Minimizar'}
           >
             <i className={`bi ${isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
           </button>
         </div>
-        <Nav className="flex-column">
+        <Nav className="sidebar-nav flex-column">
           <Nav.Link
-            className={`text-white ${currentView === 'dashboard' ? 'active bg-primary' : ''}`}
+            className={`nav-link ${currentView === 'dashboard' ? 'active' : ''}`}
             onClick={() => onNavigate('dashboard')}
           >
-            <i className="bi bi-speedometer2 me-2"></i>
-            {!isCollapsed && <span>Inicio</span>}
+            <div className="nav-item-content">
+              <i className="bi bi-speedometer2 me-2"></i>
+              {!isCollapsed && <span>Inicio</span>}
+            </div>
           </Nav.Link>
           {userRole === 'admin' && (
             <>
               <Nav.Link
-                className={`text-white ${currentView === 'users' ? 'active bg-primary' : ''}`}
+                className={`nav-link ${currentView === 'users' ? 'active' : ''}`}
                 onClick={() => onNavigate('users')}
               >
-                <i className="bi bi-people me-2"></i>
-                {!isCollapsed && <span>Usuarios</span>}
+                <div className="nav-item-content">
+                  <i className="bi bi-people me-2"></i>
+                  {!isCollapsed && <span>Usuarios</span>}
+                </div>
               </Nav.Link>
               <Nav.Link
-                className={`text-white ${currentView === 'products' ? 'active bg-primary' : ''}`}
+                className={`nav-link ${currentView === 'products' ? 'active' : ''}`}
                 onClick={() => onNavigate('products')}
               >
-                <i className="bi bi-box me-2"></i>
-                {!isCollapsed && <span>Productos</span>}
+                <div className="nav-item-content">
+                  <i className="bi bi-box me-2"></i>
+                  {!isCollapsed && <span>Productos</span>}
+                </div>
               </Nav.Link>
               <Nav.Link
-                className={`text-white ${currentView === 'proveedores' ? 'active bg-primary' : ''}`}
+                className={`nav-link ${currentView === 'proveedores' ? 'active' : ''}`}
                 onClick={() => onNavigate('proveedores')}
               >
-                <i className="bi bi-truck me-2"></i>
-                {!isCollapsed && <span>Proveedores</span>}
+                <div className="nav-item-content">
+                  <i className="bi bi-truck me-2"></i>
+                  {!isCollapsed && <span>Proveedores</span>}
+                </div>
               </Nav.Link>
               <Nav.Link
-                className={`text-white ${currentView === 'estadisticas' ? 'active bg-primary' : ''}`}
+                className={`nav-link ${currentView === 'estadisticas' ? 'active' : ''}`}
                 onClick={() => onNavigate('estadisticas')}
               >
-                <i className="bi bi-bar-chart me-2"></i>
-                {!isCollapsed && <span>Estadísticas</span>}
+                <div className="nav-item-content">
+                  <i className="bi bi-bar-chart me-2"></i>
+                  {!isCollapsed && <span>Estadísticas</span>}
+                </div>
               </Nav.Link>
               <Nav.Link
-                className={`text-white ${currentView === 'reports' ? 'active bg-primary' : ''}`}
+                className={`nav-link ${currentView === 'reports' ? 'active' : ''}`}
                 onClick={() => onNavigate('reports')}
               >
-                <i className="bi bi-file-earmark-text me-2"></i>
-                {!isCollapsed && <span>Reportes</span>}
+                <div className="nav-item-content">
+                  <i className="bi bi-file-earmark-text me-2"></i>
+                  {!isCollapsed && <span>Reportes</span>}
+                </div>
               </Nav.Link>
               <Nav.Link
-                className={`text-white ${currentView === 'entry' ? 'active bg-primary' : ''}`}
+                className={`nav-link ${currentView === 'entry' ? 'active' : ''}`}
                 onClick={() => onNavigate('entry')}
               >
-                <i className="bi bi-arrow-left-right me-2"></i>
-                {!isCollapsed && <span>Entradas/Salidas</span>}
+                <div className="nav-item-content">
+                  <i className="bi bi-arrow-left-right me-2"></i>
+                  {!isCollapsed && <span>Entradas/Salidas</span>}
+                </div>
               </Nav.Link>
             </>
           )}
           <Nav.Link
-            className={`text-white ${currentView === 'sell' ? 'active bg-primary' : ''}`}
+            className={`nav-link ${currentView === 'sell' ? 'active' : ''}`}
             onClick={() => onNavigate('sell')}
           >
-            <i className="bi bi-cart me-2"></i>
-            {!isCollapsed && <span>Venta</span>}
+            <div className="nav-item-content">
+              <i className="bi bi-cart me-2"></i>
+              {!isCollapsed && <span>Venta</span>}
+            </div>
           </Nav.Link>
           <Nav.Link
-            className={`text-white ${currentView === 'settings' ? 'active bg-primary' : ''}`}
+            className={`nav-link ${currentView === 'settings' ? 'active' : ''}`}
             onClick={() => onNavigate('settings')}
           >
-            <i className="bi bi-gear me-2"></i>
-            {!isCollapsed && <span>Ajustes</span>}
+            <div className="nav-item-content">
+              <i className="bi bi-gear me-2"></i>
+              {!isCollapsed && <span>Ajustes</span>}
+            </div>
           </Nav.Link>
         </Nav>
       </div>
