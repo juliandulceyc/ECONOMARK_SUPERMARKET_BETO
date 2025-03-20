@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Nav } from 'react-bootstrap';
 
 function Sidebar({ onNavigate, currentView, userRole }) {
+  const supermarketImage = 'https://img.icons8.com/?size=100&id=64872&format=png&color=000000';
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => {
@@ -15,7 +16,20 @@ function Sidebar({ onNavigate, currentView, userRole }) {
     >
       <div className="sidebar-sticky">
         <div className="py-4 px-3 d-flex justify-content-between align-items-center">
-          {!isCollapsed && <h5>Panel de Administración</h5>}
+          <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+            {!isCollapsed && (
+              /* Imagen */
+              <img
+                src={supermarketImage}
+                alt="Supermarket"
+                style={{
+                  width: '60px', // Aumenta el ancho
+                  height: '60px', // Aumenta el alto
+                  objectFit: 'contain', // Ajusta el objectFit para que se ajuste proporcionalmente
+                }}
+              />
+            )}
+          </div>
           <button
             className="btn btn-sm btn-light"
             onClick={toggleSidebar}
@@ -30,7 +44,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
             onClick={() => onNavigate('dashboard')}
           >
             <i className="bi bi-speedometer2 me-2"></i>
-            {!isCollapsed && <span>Dashboard</span>}
+            {!isCollapsed && <span>Inicio</span>}
           </Nav.Link>
           {userRole === 'admin' && (
             <>

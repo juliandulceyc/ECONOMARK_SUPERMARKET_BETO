@@ -66,7 +66,7 @@ function Header() {
 
           <Dropdown>
             <Dropdown.Toggle variant="link" className="bg-transparent border-0 p-0">
-              {/* Imagen de perfil en un círculo */}
+              {/* Imagen de perfil*/}
               <img
                 src={profileImage}
                 alt="Profile"
