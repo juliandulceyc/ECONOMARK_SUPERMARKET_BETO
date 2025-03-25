@@ -13,6 +13,7 @@ import '../App.css';
 import CompShowProducts from './showProducts';
 import CompShowUsers from './showUsers';
 import CompShowProveedores from './showProveedores'; // Importamos el componente de proveedores
+import ventas from './ventas/ventas';
 import { Reports } from './reportes/Reports';
 import Preview from "./preview";
 import Settings from './settings';
@@ -83,7 +84,7 @@ function Home() {
                 } else {
                     return <div>No tienes permisos para acceder a esta sección.</div>;
                 }
-                case 'proveedores': // Agregamos la sección de proveedores
+            case 'proveedores': // Agregamos la sección de proveedores
                 if (userRole === 'admin') {
                     return (
                         <>
@@ -94,11 +95,17 @@ function Home() {
                 } else {
                     return <div>No tienes permisos para acceder a esta sección.</div>;
                 }
-            
+
             case 'reports':
                 return (
                     <>
                         <Reports />
+                    </>
+                );
+            case 'sell':
+                return (
+                    <>
+                        <ventas />
                     </>
                 );
             case 'analytics':

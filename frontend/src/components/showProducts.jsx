@@ -7,7 +7,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../App.css';
 import CompShowCategories from "./showCategories";
 import CompEditProduct from "./editProduct";
-import CompCreateProduct from "./createProduct"; 
+import CompCreateProduct from "./createProduct";
 
 const URL = 'http://localhost:3000/tablas/';
 
@@ -16,45 +16,39 @@ const CompShowProducts = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editProduct, setEditProduct] = useState(null);
-
-    const handleAdd = () => {
-        setShowCreateModal(true);
-    };
-
-    const handleEdit = (product) => {
-        setEditProduct(product);
-        setShowEditModal(true);
-    };
-
-    const handleCloseEdit = () => {
-        setShowEditModal(false);
-        setEditProduct(null);
-    };
-
-    const handleCloseCreate = () => {
-        setShowCreateModal(false);
-    };
-
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterBy, setFilterBy] = useState('all');
+    const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
-    
+
     useEffect(() => {
         getProducts();
     }, []);
 
-    // Procedimiento para mostrar todos los productos
+    useEffect(() => {
+        if (products.length > 0) {
+            const uniqueCategories = [...new Set(products.map(product => product.categoria))];
+            setCategories(uniqueCategories);
+        }
+    }, [products]);
+
     const getProducts = async () => {
         const response = await axios.get(URL);
         setProducts(response.data);
     };
 
-    // Procedimiento para eliminar un producto
     const deleteProduct = async (id) => {
         await axios.delete(`${URL}${id}`);
         getProducts();
     };
 
+    const filteredProducts = products.filter(product => {
+        const matchesSearch = product.nombre.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = filterBy === 'all' || product.categoria === filterBy;
+        return matchesSearch && matchesCategory;
+    });
+
     const renderTable = () => {
-        // Solo estructuras de tablas 
         switch (tableView) {
             case 'products':
                 return (
@@ -70,16 +64,19 @@ const CompShowProducts = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {products.map((product) => (
+                                {filteredProducts.map((product) => (
                                     <tr key={product.id}>
                                         <td className="text-center align-middle border-end">{product.id}</td>
                                         <td className="text-center align-middle border-end">{product.nombre}</td>
                                         <td className="text-center align-middle border-end">{product.categoria}</td>
                                         <td className="text-center align-middle border-end">{product.precio}</td>
                                         <td className="text-center align-middle border-end">
-                                            {/* Boton editar */}
-                                            <Button onClick={() => handleEdit(product)} className='btn btn-info'><i className="fa-solid fa-pen-to-square"></i></Button>
-                                            <button onClick={() => deleteProduct(product.id)} className="btn btn-danger"><i className="fa-solid fa-eraser"></i></button>
+                                            <Button onClick={() => handleEdit(product)} className='btn btn-info'>
+                                                <i className="fa-solid fa-pen-to-square"></i>
+                                            </Button>
+                                            <Button onClick={() => deleteProduct(product.id)} className="btn btn-danger">
+                                                <i className="fa-solid fa-eraser"></i>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}
@@ -95,34 +92,44 @@ const CompShowProducts = () => {
     };
 
     return (
-        // Anclaje de apartado productos
         <div className="container">
-            <select type='text' name='rol' className="form-select" aria-label="Default select example">
-                <option value=''></option>
-                <option onClick={() => setTableView('products')} value='admin'>Productos</option>
-                <option onClick={() => setTableView('categories')} value='empleado' >Categorias</option>
-            </select>
-            {/* Boton de añadir */}
-            <Button onClick={handleAdd} className="btn btn-primary mt-4 w-100">
+            <Form.Select
+                className="mb-3"
+                onChange={(e) => setTableView(e.target.value)}
+                value={tableView}
+            >
+                <option value="products">Productos</option>
+                <option value="categories">Categorías</option>
+            </Form.Select>
+
+            <Button onClick={() => setShowCreateModal(true)} className="btn btn-primary w-100">
                 <i className="fas fa-plus-square"></i> Añadir
             </Button>
+
             <div className="mt-4">
-                <SearchBar />
+                <SearchBar
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    filterBy={filterBy}
+                    onFilterChange={setFilterBy}
+                    categories={categories}
+                />
             </div>
+
             <div className="card-body">
                 {renderTable()}
             </div>
 
             <CompEditProduct
                 showModal={showEditModal}
-                handleClose={handleCloseEdit}
+                handleClose={() => setShowEditModal(false)}
                 product={editProduct}
                 refreshProducts={getProducts}
             />
 
             <CompCreateProduct
                 showModal={showCreateModal}
-                handleClose={handleCloseCreate}
+                handleClose={() => setShowCreateModal(false)}
                 refreshProducts={getProducts}
             />
         </div>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Nav } from 'react-bootstrap';
-import './Sidebar.css'; // Importamos el archivo CSS
+import './Sidebar.css';
 
 function Sidebar({ onNavigate, currentView, userRole }) {
   const supermarketImage = 'https://img.icons8.com/?size=100&id=64872&format=png&color=000000';
@@ -18,7 +17,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
             {!isCollapsed && (
               <img
                 src={supermarketImage}
-                alt="Supermarket"
+                alt="Supermarket logo"
                 className="logo-image"
               />
             )}
@@ -28,96 +27,107 @@ function Sidebar({ onNavigate, currentView, userRole }) {
             onClick={toggleSidebar}
             title={isCollapsed ? 'Expandir' : 'Minimizar'}
           >
-            <i className={`bi ${isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
+            <i className={`icon ${isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
           </button>
         </div>
-        <Nav className="sidebar-nav flex-column">
-          <Nav.Link
-            className={`nav-link ${currentView === 'dashboard' ? 'active' : ''}`}
+        <nav className="sidebar-nav">
+          <div
+            role="button"
+            className={`nav-item ${currentView === 'dashboard' ? 'active' : ''}`}
             onClick={() => onNavigate('dashboard')}
           >
-            <div className="nav-item-content">
-              <i className="bi bi-speedometer2 me-2"></i>
+            <div className="nav-content">
+              <i className="bi bi-speedometer2"></i>
               {!isCollapsed && <span>Inicio</span>}
             </div>
-          </Nav.Link>
+          </div>
+          
           {userRole === 'admin' && (
             <>
-              <Nav.Link
-                className={`nav-link ${currentView === 'users' ? 'active' : ''}`}
+              <div
+                role="button"
+                className={`nav-item ${currentView === 'users' ? 'active' : ''}`}
                 onClick={() => onNavigate('users')}
               >
-                <div className="nav-item-content">
-                  <i className="bi bi-people me-2"></i>
+                <div className="nav-content">
+                  <i className="bi bi-people"></i>
                   {!isCollapsed && <span>Usuarios</span>}
                 </div>
-              </Nav.Link>
-              <Nav.Link
-                className={`nav-link ${currentView === 'products' ? 'active' : ''}`}
+              </div>
+              <div
+                role="button"
+                className={`nav-item ${currentView === 'products' ? 'active' : ''}`}
                 onClick={() => onNavigate('products')}
               >
-                <div className="nav-item-content">
-                  <i className="bi bi-box me-2"></i>
+                <div className="nav-content">
+                  <i className="bi bi-box"></i>
                   {!isCollapsed && <span>Productos</span>}
                 </div>
-              </Nav.Link>
-              <Nav.Link
-                className={`nav-link ${currentView === 'proveedores' ? 'active' : ''}`}
+              </div>
+              <div
+                role="button"
+                className={`nav-item ${currentView === 'proveedores' ? 'active' : ''}`}
                 onClick={() => onNavigate('proveedores')}
               >
-                <div className="nav-item-content">
-                  <i className="bi bi-truck me-2"></i>
+                <div className="nav-content">
+                  <i className="bi bi-truck"></i>
                   {!isCollapsed && <span>Proveedores</span>}
                 </div>
-              </Nav.Link>
-              <Nav.Link
-                className={`nav-link ${currentView === 'estadisticas' ? 'active' : ''}`}
+              </div>
+              <div
+                role="button"
+                className={`nav-item ${currentView === 'estadisticas' ? 'active' : ''}`}
                 onClick={() => onNavigate('estadisticas')}
               >
-                <div className="nav-item-content">
-                  <i className="bi bi-bar-chart me-2"></i>
+                <div className="nav-content">
+                  <i className="bi bi-bar-chart"></i>
                   {!isCollapsed && <span>Estadísticas</span>}
                 </div>
-              </Nav.Link>
-              <Nav.Link
-                className={`nav-link ${currentView === 'reports' ? 'active' : ''}`}
+              </div>
+              <div
+                role="button"
+                className={`nav-item ${currentView === 'reports' ? 'active' : ''}`}
                 onClick={() => onNavigate('reports')}
               >
-                <div className="nav-item-content">
-                  <i className="bi bi-file-earmark-text me-2"></i>
+                <div className="nav-content">
+                  <i className="bi bi-file-earmark-text"></i>
                   {!isCollapsed && <span>Reportes</span>}
                 </div>
-              </Nav.Link>
-              <Nav.Link
-                className={`nav-link ${currentView === 'entry' ? 'active' : ''}`}
+              </div>
+              <div
+                role="button"
+                className={`nav-item ${currentView === 'entry' ? 'active' : ''}`}
                 onClick={() => onNavigate('entry')}
               >
-                <div className="nav-item-content">
-                  <i className="bi bi-arrow-left-right me-2"></i>
+                <div className="nav-content">
+                  <i className="bi bi-arrow-left-right"></i>
                   {!isCollapsed && <span>Entradas/Salidas</span>}
                 </div>
-              </Nav.Link>
+              </div>
             </>
           )}
-          <Nav.Link
-            className={`nav-link ${currentView === 'sell' ? 'active' : ''}`}
+          
+          <div
+            role="button"
+            className={`nav-item ${currentView === 'sell' ? 'active' : ''}`}
             onClick={() => onNavigate('sell')}
           >
-            <div className="nav-item-content">
-              <i className="bi bi-cart me-2"></i>
-              {!isCollapsed && <span>Venta</span>}
+            <div className="nav-content">
+              <i className="bi bi-cart"></i>
+              {!isCollapsed && <span>Ventas</span>}
             </div>
-          </Nav.Link>
-          <Nav.Link
-            className={`nav-link ${currentView === 'settings' ? 'active' : ''}`}
+          </div>
+          <div
+            role="button"
+            className={`nav-item ${currentView === 'settings' ? 'active' : ''}`}
             onClick={() => onNavigate('settings')}
           >
-            <div className="nav-item-content">
-              <i className="bi bi-gear me-2"></i>
+            <div className="nav-content">
+              <i className="bi bi-gear"></i>
               {!isCollapsed && <span>Ajustes</span>}
             </div>
-          </Nav.Link>
-        </Nav>
+          </div>
+        </nav>
       </div>
     </div>
   );

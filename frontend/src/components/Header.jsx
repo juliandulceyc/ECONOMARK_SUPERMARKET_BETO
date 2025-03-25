@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Dropdown, Badge, Modal, Form, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import './head.css';
 
 function Header() {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -35,27 +36,27 @@ function Header() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white px-4 py-3 shadow-sm">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white px-4 py-3 shadow-sm header-custom">
       <div className="d-flex justify-content-between w-100 align-items-center">
-        <h4 className="mb-0">Dashboard</h4>
+        <h4 className="mb-0 header-title">Dashboard</h4>
         <div className="d-flex align-items-center">
           <Dropdown show={showNotifications} onToggle={setShowNotifications}>
             <Dropdown.Toggle variant="link" className="text-dark position-relative me-3 bg-transparent border-0">
-              <i className="bi bi-bell fs-5"></i>
-              <Badge bg="danger" className="position-absolute top-0 start-100 translate-middle rounded-pill">
+              <i className="bi bi-bell fs-5 notification-icon"></i>
+              <Badge bg="danger" className="position-absolute top-0 start-100 translate-middle rounded-pill notification-badge">
                 {notifications.filter(n => !n.read).length}
               </Badge>
             </Dropdown.Toggle>
-            <Dropdown.Menu className="dropdown-menu-end" style={{ minWidth: '300px' }}>
+            <Dropdown.Menu className="dropdown-menu-custom">
               <h6 className="dropdown-header">Notificaciones</h6>
               {notifications.map(notification => (
-                <Dropdown.Item key={notification.id} className={!notification.read ? 'bg-light' : ''}>
+                <Dropdown.Item key={notification.id} className={!notification.read ? 'bg-light' : 'notification-item'}>
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <p className="mb-0">{notification.text}</p>
                       <small className="text-muted">{notification.time}</small>
                     </div>
-                    {!notification.read && <Badge bg="primary">New</Badge>}
+                    {!notification.read && <Badge bg="primary" className="new-notification-badge">New</Badge>}
                   </div>
                 </Dropdown.Item>
               ))}
@@ -66,15 +67,13 @@ function Header() {
 
           <Dropdown>
             <Dropdown.Toggle variant="link" className="bg-transparent border-0 p-0">
-              {/* Imagen de perfil*/}
               <img
                 src={profileImage}
                 alt="Profile"
-                className="rounded-circle"
-                style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                className="rounded-circle profile-img"
               />
             </Dropdown.Toggle>
-            <Dropdown.Menu className="dropdown-menu-end">
+            <Dropdown.Menu className="dropdown-menu-custom">
               <Dropdown.Item onClick={() => setShowProfileModal(true)}>
                 <i className="bi bi-person me-2"></i>Editar perfil
               </Dropdown.Item>
@@ -100,8 +99,7 @@ function Header() {
               <img
                 src={profileImage}
                 alt="Profile"
-                className="rounded-circle mb-2"
-                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                className="rounded-circle profile-modal-img"
               />
               <div>
                 <Form.Label className="btn btn-outline-primary btn-sm">
