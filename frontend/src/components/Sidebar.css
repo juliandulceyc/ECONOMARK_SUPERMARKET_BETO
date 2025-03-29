@@ -30,23 +30,22 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  min-height: 90px; /* Altura mínima constante del encabezado */
-  height: 90px; /* Altura fija del encabezado */
+  min-height: 90px;
+  height: 90px;
 }
 
 .sidebar-logo {
   width: 70%;
   display: flex;
   align-items: center;
-  transition: all 0.3s ease; /* Transición para el colapso del logo */
+  transition: all 0.3s ease;
 }
 
 .sidebar.collapsed .sidebar-logo {
-  width: 0%; /* Oculta el logo colapsado */
+  width: 0%;
   opacity: 0;
   margin-right: 0;
 }
-
 
 .logo-image {
   width: 50px;
@@ -65,11 +64,11 @@
   font-size: 1.2rem;
   font-weight: 600;
   letter-spacing: 0.5px;
-  transition: all 0.3s ease; /* Transición para el colapso del texto */
+  transition: all 0.3s ease;
 }
 
 .sidebar.collapsed .logo-text {
-  display: none; /* Oculta el texto colapsado */
+  display: none;
   opacity: 0;
 }
 
@@ -167,7 +166,7 @@
   gap: 0;
 }
 
-.sidebar.collapsed .nav-text {
+.sidebar.collapsed .nav-text:not([aria-label]) {
   display: none;
 }
 
@@ -190,31 +189,29 @@
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* Icono de Supermercado Estilizado (sin círculo) */
 .supermarket-icon {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    padding: 2px;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  padding: 2px;
 }
 
 .supermarket-icon::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 2px;
-    width: 20px;
-    height: 12px;
-    border: 2px solid #ffffff;
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 2px;
+  width: 20px;
+  height: 12px;
+  border: 2px solid #ffffff;
 }
 
 .supermarket-icon::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 4px;
-    width: 16px;
-    height: 8px;
-    background-color: #ffffff;
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 4px;
+  width: 16px;
+  height: 8px;
+  background-color: #ffffff;
 }
-

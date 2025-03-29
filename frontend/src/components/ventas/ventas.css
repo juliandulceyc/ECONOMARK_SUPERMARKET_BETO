@@ -1,0 +1,19 @@
+.header {
+    display: grid;
+    border-radius: 5px;
+    border: 3px solid black;
+    grid-template-columns: repeat(13, minmax(0, 1fr));
+    grid-template-rows: repeat(8, 1fr);
+    overflow: hidden;
+}
+
+
+.item:nth-child(1) {
+    grid-area: 1 / 1 / 2 / 2;
+    grid-column: 1 / 6;
+}
+
+.item {
+    border: 1px solid black;
+    background: lightblue;
+}

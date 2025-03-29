@@ -13,7 +13,7 @@ import '../App.css';
 import CompShowProducts from './showProducts';
 import CompShowUsers from './showUsers';
 import CompShowProveedores from './showProveedores'; // Importamos el componente de proveedores
-import ventas from './ventas/ventas';
+import Ventas from './ventas/ventas';
 import { Reports } from './reportes/Reports';
 import Preview from "./preview";
 import Settings from './settings';
@@ -37,7 +37,7 @@ function Home() {
                 navigate('/login', { replace: true });
             } else {
                 const userRole = response.data.user.rol;
-                console.log("Role obtenido:", userRole);
+                console.log("Rol obtenido:", userRole);
                 setUserRole(userRole);
             }
         } catch (err) {
@@ -66,13 +66,6 @@ function Home() {
                         <CompShowProducts />
                     </>
                 );
-            case 'ventas':
-                return (
-                    <>
-                        <DashboardStats />
-                        <CompShowProducts />
-                    </>
-                );
             case 'users':
                 if (userRole === 'admin') {
                     return (
@@ -89,13 +82,12 @@ function Home() {
                     return (
                         <>
                             <DashboardStats />
-                            <CompShowProveedores /> {/* Nombre del componente debe comenzar con mayúscula */}
+                            <CompShowProveedores />
                         </>
                     );
                 } else {
                     return <div>No tienes permisos para acceder a esta sección.</div>;
                 }
-
             case 'reports':
                 return (
                     <>
@@ -105,7 +97,7 @@ function Home() {
             case 'sell':
                 return (
                     <>
-                        <ventas />
+                        <Ventas />
                     </>
                 );
             case 'analytics':
@@ -151,4 +143,3 @@ function Home() {
 }
 
 export default Home;
-

@@ -1,11 +1,50 @@
-function ventas() {
+import React from 'react';
+import './ventas.css'
+
+const Ventas = () => {
     return (
-        <section>
-            <div>
-                <H1>Hola como vas</H1>
+        <section className='header'>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Remulo</h1>
+            </div>
+            <div className='item'>
+                <h1>Holaa</h1>
+            </div>
+            <div className='item'>
+                <h1>Holaa</h1>
+            </div>
+            <div className='item'>
+                <h1>Holaa</h1>
             </div>
         </section>
     );
-}
+};
 
-export default ventas;
+export default Ventas;

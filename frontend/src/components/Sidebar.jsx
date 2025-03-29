@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 
 function Sidebar({ onNavigate, currentView, userRole }) {
-  const supermarketImage = 'https://img.icons8.com/?size=100&id=64872&format=png&color=000000';
+  const supermarketImage = 'https://img.icons8.com/?size=100&id=otDBSWUrE50n&format=png&color=000000';
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => {
