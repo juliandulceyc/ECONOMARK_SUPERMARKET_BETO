@@ -23,7 +23,7 @@ const Ventas = () => {
                 <h1>Remulo</h1>
             </div>
             <div className='item'>
-                <h1>Remulo</h1>
+                <h1>Remuloo</h1>
             </div>
             <div className='item'>
                 <h1>Remulo</h1>
