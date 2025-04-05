@@ -10,10 +10,10 @@ const Ventas = () => {
         <img src={Logo} alt="Carrito de compras" />
       </header>
 
-      {/* Fila de botones debajo del encabezado */}
+      {/* Fila superior de botones */}
       <section className="ventas-button-row">
         {Array.from({ length: 13 }, (_, index) => (
-          <button className="ventas-button">
+          <button key={index} className="ventas-button">
             Botón
           </button>
         ))}
@@ -21,21 +21,25 @@ const Ventas = () => {
 
       {/* Sección de ingreso de datos */}
       <section className="ventas-product-entry">
-        <div className='ventas-input'>
-          <h5 className='text-ventas-input'>Venta de productos</h5>
-          <div className="ventas-input-group">
-            <label htmlFor="codigo-producto">Código del producto:</label>
-            <input type="text" id="codigo-producto" />
+        <div className="ventas-titulo-container">
+          <h2 className="ventas-titulo-gradiente">VENTA DE PRODUCTOS</h2>
+        </div>
+        <div className="ventas-controls-line">
+          <div className="code-plus-group">
+            <div className="input-group">
+              <label>Código del producto:</label>
+              <input type="text" className="codigo-input" maxLength="15" />
+            </div>
+            <button className="ventas-add-btn">+</button>
           </div>
-        </div>
-        <div className="ventas-input-group">
-          <label htmlFor="cantidad">Cantidad:</label>
-          <input type="number" id="cantidad" />
-        </div>
-        <div className="ventas-buttons-group">
-          <button>Registrar recarga</button>
-          <button>Vender a granel</button>
-          <button>Venta en espera</button>
+          <div className="input-group">
+            <label>Cantidad:</label>
+            <input type="number" className="cantidad-input" />
+          </div>
+
+          <button className="action-btn">Registrar recarga</button>
+          <button className="action-btn">Vender a granel</button>
+          <button className="action-btn">Venta en espera</button>
         </div>
       </section>
 
@@ -53,7 +57,7 @@ const Ventas = () => {
             </tr>
           </thead>
           <tbody>
-            {/* Aquí puedes mapear datos dinámicos para generar las filas */}
+            {/* Aquí se pueden mapear datos dinámicos */}
           </tbody>
         </table>
       </section>
