@@ -71,7 +71,7 @@ const CompShowProducts = () => {
                                         <td className="text-center align-middle border-end">{product.categoria}</td>
                                         <td className="text-center align-middle border-end">{product.precio}</td>
                                         <td className="text-center align-middle border-end">
-                                            <Button onClick={() => handleEdit(product)} className='btn btn-info'>
+                                            <Button onClick={() => handleEdit(product)} className='btn btn-info mx-2'>
                                                 <i className="fa-solid fa-pen-to-square"></i>
                                             </Button>
                                             <Button onClick={() => deleteProduct(product.id)} className="btn btn-danger">

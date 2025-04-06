@@ -25,16 +25,14 @@ const Ventas = () => {
           <h2 className="ventas-titulo-gradiente">VENTA DE PRODUCTOS</h2>
         </div>
         <div className="ventas-controls-line">
-          <div className="code-plus-group">
-            <div className="input-group">
-              <label>Código del producto:</label>
-              <input type="text" className="codigo-input" maxLength="15" />
-            </div>
+          <div className="input-group">
+            <label>Código del producto:</label>
+            <input type="text" className="input" maxLength="15" />
             <button className="ventas-add-btn">+</button>
           </div>
           <div className="input-group">
             <label>Cantidad:</label>
-            <input type="number" className="cantidad-input" />
+            <input type="number" className="input" />
           </div>
 
           <button className="action-btn">Registrar recarga</button>
@@ -65,12 +63,12 @@ const Ventas = () => {
       {/* Sección de acciones y pago */}
       <section className="ventas-actions">
         <div className="ventas-actions-buttons">
-          <button>Artículo común</button>
-          <button>Datos extra al ticket</button>
-          <button>F11 - Búsqueda rápida</button>
-          <button>Cancelar venta</button>
-          <button>Editar venta</button>
-          <button>Reimprimir último ticket</button>
+          <button className='action-btn'>Artículo común</button>
+          <button className='action-btn'>Datos extra al ticket</button>
+          <button className='action-btn'>F11 - Búsqueda rápida</button>
+          <button className='action-btn'>Cancelar venta</button>
+          <button className='action-btn'>Editar venta</button>
+          <button className='action-btn'>Reimprimir último ticket</button>
         </div>
         <div className="ventas-payment">
           <button className="ventas-cobrar">F12 - Cobrar</button>

@@ -57,7 +57,7 @@ const CompShowCategories = () => {
                                 </td>
 
                                 <td className="text-center align-middle border-end">
-                                    <Button className='btn btn-info'><i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button className='btn btn-info mx-2'><i className="fa-solid fa-pen-to-square"></i></Button>
                                     <button onClick={() => deleteCategory(category.id)} className="btn btn-danger"><i className="fa-solid fa-eraser"></i></button>
                                 </td>
                             </tr>
