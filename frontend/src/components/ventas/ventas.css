@@ -6,6 +6,11 @@ body {
   background-color: #f2f2f2;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Contenedor principal */
 .ventas-container {
   display: grid;
   grid-template-areas: 
@@ -17,10 +22,10 @@ body {
     "footer footer footer";
   grid-gap: 10px;
   grid-row-gap: 0;
-  max-width: 100vw;
-  margin: 0 auto;
+  margin: 0;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
 }
 
 /* Encabezado */
@@ -29,21 +34,19 @@ body {
   position: relative;
   width: 100%;
   background: linear-gradient(to bottom, #B5C5F9 14%, #FFFFFF 67%);
-  box-sizing: border-box;
   overflow: hidden;
   height: 116px;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
 }
 
 .ventas-header img {
-  position: absolute;
-  top: 50%;
-  left: 50px;
-  transform: translateY(-50%);
   width: 99px;
   height: 99px;
 }
 
-/* Fila superior de botones */
+/* Fila de botones superiores */
 .ventas-button-row {
   grid-area: button-row;
   display: grid;
@@ -65,14 +68,12 @@ body {
   background: #dee2e6;
 }
 
-/* Sección de ingreso de datos */
+/* Sección de ingreso de productos */
 .ventas-product-entry {
   grid-area: product-entry;
-  border-radius: 8px;
   margin: 0 0 1rem 0;
 }
 
-/* Encabezado del título "VENTA DE PRODUCTOS" con gradiente y características tipográficas */
 .ventas-titulo-container {
   margin-bottom: 1rem;
 }
@@ -84,8 +85,8 @@ body {
   font-size: 20px;
   letter-spacing: 0;
   text-transform: uppercase;
-  color: #FFFFFF;             /* Relleno blanco */
-  -webkit-text-stroke: 0.2px #000000; /* Trazo negro de 0.2px */
+  color: #FFFFFF;
+  -webkit-text-stroke: 0.2px #000000;
   padding: 10px;
   border-radius: 4px;
   text-rendering: optimizeLegibility;
@@ -93,30 +94,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Controles en una única línea */
 .ventas-controls-line {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  flex-wrap: nowrap; /* Forzamos que todo permanezca en una fila */
+  flex-wrap: nowrap;
+  padding: 0 20px;
+  justify-content: flex-start;
 }
 
-/* Grupo para cada input*/
-.ventas-container .input-group {
+.input-group {
   display: flex;
   flex-direction: row;
   gap: 4px;
   align-items: center;
-  justify-content: center;
 }
 
-.ventas-container .input-group label {
+.input-group label {
   font-weight: bold;
   font-size: 0.9rem;
 }
 
-/* Estilos para los inputs: */
 .input {
   padding: 8px 12px;
   border: 1px solid #ddd;
@@ -124,15 +122,13 @@ body {
   width: 160px;
   height: 35px;
   font-size: 1rem;
-  box-sizing: border-box;
 }
 
-/* Botón “+” para el código, con igual altura al input */
 .ventas-add-btn {
   background-color: #28a745;
   color: #fff;
   border: none;
-  border-radius: 50%; /* Circular */
+  border-radius: 50%;
   width: 45px;
   height: 45px;
   font-size: 1.4rem;
@@ -140,44 +136,23 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-sizing: border-box;
 }
 
 .ventas-add-btn:hover {
   background-color: #218838;
 }
 
-/* Botones de acción */
-.action-btn {
-  padding: 0 16px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.2s;
-  height: 35px;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.action-btn:hover {
-  background: #0056b3;
-}
 .ventas-separator {
-  height: 35px; 
-  background-color: #1921C5; 
-  border: none;
+  height: 35px;
+  background-color: #1921C5;
   margin: 10px 0;
 }
 
-/* Sección de la lista de productos */
+/* Lista de productos */
 .ventas-product-list {
   grid-area: product-list;
   overflow-x: auto;
+  padding: 0 20px;
 }
 
 .ventas-product-list table {
@@ -188,77 +163,97 @@ body {
 .ventas-product-list th,
 .ventas-product-list td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 12px;
   text-align: center;
   background: #D9D9D9;
 }
 
-/* Contenedor general de la sección de acciones: ocupa el 100% del ancho disponible */
+.ventas-product-list th {
+  background: #B5B5B5;
+  font-weight: bold;
+}
+
+/* Sección de acciones */
 .ventas-actions {
   grid-area: actions;
+  width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  padding: 0 20px;  /* Opcional para darle espacio a los extremos */
+  padding: 20px;
+  height: 259px;
 }
 
-/* Columna izquierda: contenedor para la cuadrícula de botones */
 .ventas-buttons-container {
+  flex: 1;
+  height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 719px;
-  height: 263px;
+  max-width: calc(100% - 600px); /* Ajustado para nuevo layout */
 }
 
-/* Cuadrícula de 6 botones (3 columnas x 2 filas) */
 .ventas-actions-grid {
   display: grid;
   grid-template-columns: repeat(3, 233px);
   grid-template-rows: repeat(2, 44px);
   gap: 10px;
+  align-self: center;
 }
 
-/* Estilo de cada botón en la cuadrícula */
 .action-btn {
   width: 233px;
   height: 44px;
-}
-
-/* Columna derecha: bloque vertical para "Cobrar" y "Total" */
-.ventas-payment-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Botón "F12 - Cobrar" */
-.ventas-cobrar {
-  width: 229px;
-  height: 94px;
-  background-color: orange;
+  background: #007BFF;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 1.2em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 0.95rem;
+  font-weight: bold;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
 }
 
-/* Apartado "Total" */
+.action-btn:hover {
+  background: #0056b3;
+}
+
+/* Sección de pago - Modificado para disposición horizontal */
+.ventas-payment-col {
+  display: flex;
+  flex-direction: row; /* Cambiado a horizontal */
+  align-items: center;
+  gap: 20px;
+  height: auto;
+}
+
+.ventas-cobrar {
+  width: 229px;
+  height: 94px;
+  background: #FF7900;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ventas-total {
   width: 342px;
   height: 159px;
+  background: #D9D9D9;
+  border: 1px solid #8F8F8F;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 2em;
-  font-weight: bold;
-  /* Opcional: agrega fondo o borde para destacarlo */
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 /* Pie de página */
@@ -266,7 +261,9 @@ body {
   grid-area: footer;
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 12px 30px;
   font-weight: bold;
   background-color: #eaeaea;
+  font-size: 1.1rem;
 }
+
