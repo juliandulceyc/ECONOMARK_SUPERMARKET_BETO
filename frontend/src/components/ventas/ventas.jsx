@@ -39,7 +39,9 @@ const Ventas = () => {
           <button className="action-btn">Vender a granel</button>
           <button className="action-btn">Venta en espera</button>
         </div>
+        <div className='ventas-separator'></div>
       </section>
+
 
       {/* Sección de la lista de productos */}
       <section className="ventas-product-list">
@@ -60,17 +62,21 @@ const Ventas = () => {
         </table>
       </section>
 
-      {/* Sección de acciones y pago */}
       <section className="ventas-actions">
-        <div className="ventas-actions-buttons">
-          <button className='action-btn'>Artículo común</button>
-          <button className='action-btn'>Datos extra al ticket</button>
-          <button className='action-btn'>F11 - Búsqueda rápida</button>
-          <button className='action-btn'>Cancelar venta</button>
-          <button className='action-btn'>Editar venta</button>
-          <button className='action-btn'>Reimprimir último ticket</button>
+        {/* Columna izquierda: botones */}
+        <div className="ventas-buttons-container">
+          <div className="ventas-actions-grid">
+            <button className="action-btn">Artículo común</button>
+            <button className="action-btn">Datos extra al ticket</button>
+            <button className="action-btn">F11 - Búsqueda rápida</button>
+            <button className="action-btn">Cancelar venta</button>
+            <button className="action-btn">Editar venta</button>
+            <button className="action-btn">Reimprimir último ticket</button>
+          </div>
         </div>
-        <div className="ventas-payment">
+
+        {/* Columna derecha: botón cobrar y, debajo, total */}
+        <div className="ventas-payment-col">
           <button className="ventas-cobrar">F12 - Cobrar</button>
           <div className="ventas-total">$ 0.00</div>
         </div>
