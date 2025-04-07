@@ -272,8 +272,10 @@ body {
 
 /* Pie de página */
 .ventas-footer {
+  height: 100px;
   grid-area: footer;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 12px 30px;
   font-weight: bold;

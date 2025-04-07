@@ -39,7 +39,7 @@ const Ventas = () => {
           <button className="action-btn">Vender a granel</button>
           <button className="action-btn">Venta en espera</button>
         </div>
-        <div className='ventas-separator'></div>
+        <div className='ventas-separator' />
       </section>
 
 
@@ -57,7 +57,7 @@ const Ventas = () => {
             </tr>
           </thead>
           <tbody>
-            {/* Filas de ejemplo (puedes ajustar el número) */}
+            {/* Filas de ejemplo (ajustar el número) */}
             {[1, 2, 3, 4, 5].map((item) => (
               <tr key={item}>
                 <td>&nbsp;</td>
