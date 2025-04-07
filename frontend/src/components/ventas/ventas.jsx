@@ -57,6 +57,19 @@ const Ventas = () => {
             </tr>
           </thead>
           <tbody>
+            {/* Filas de ejemplo (puedes ajustar el número) */}
+            {[1, 2, 3, 4, 5].map((item) => (
+              <tr key={item}>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+            ))}
+          </tbody>
+          <tbody>
             {/* Aquí se pueden mapear datos dinámicos */}
           </tbody>
         </table>
