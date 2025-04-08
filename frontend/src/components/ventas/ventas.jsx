@@ -97,8 +97,10 @@ const Ventas = () => {
 
       {/* Pie de página */}
       <footer className="ventas-footer">
-        <div>Cajero en turno: Jefferson Andres Contreras</div>
-        <div>14:24</div>
+        <div className="ventas-footer-content">
+          <div>Cajero en turno: Jefferson Andres Contreras</div>
+          <div>14:24</div>
+        </div>
       </footer>
     </div>
   );

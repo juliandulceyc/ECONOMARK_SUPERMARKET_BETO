@@ -6,14 +6,16 @@ body {
   background-color: #f2f2f2;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 /* Contenedor principal */
 .ventas-container {
   display: grid;
-  grid-template-areas: 
+  grid-template-areas:
     "header header header"
     "button-row button-row button-row"
     "product-entry product-entry product-entry"
@@ -188,7 +190,8 @@ body {
   height: 100%;
   display: flex;
   align-items: center;
-  max-width: calc(100% - 600px); /* Ajustado para nuevo layout */
+  max-width: calc(100% - 600px);
+  /* Ajustado para nuevo layout */
 }
 
 .ventas-actions-grid {
@@ -238,7 +241,8 @@ body {
 /* Sección de pago - Modificado para disposición horizontal */
 .ventas-payment-col {
   display: flex;
-  flex-direction: row; /* Cambiado a horizontal */
+  flex-direction: row;
+  /* Cambiado a horizontal */
   align-items: center;
   gap: 20px;
   height: auto;
@@ -272,7 +276,7 @@ body {
 
 /* Pie de página */
 .ventas-footer {
-  height: 100px;
+  height: 150px;
   grid-area: footer;
   display: flex;
   align-items: center;
@@ -281,4 +285,50 @@ body {
   font-weight: bold;
   background-color: #eaeaea;
   font-size: 1.1rem;
+  margin-top: -50px;
+  position: relative;
+  overflow: visible;
+  padding: 0;
+}
+
+/* Separador superior - Alineado con ventas-total */
+.ventas-footer::before {
+  content: '';
+  position: absolute;
+  top: -7px; /* Sube hasta el área del ventas-total */
+  left: 0;
+  right: 0;
+  height: 8px;
+  width: 1273px;
+  background-color: #1921C5;
+  z-index: 1;
+}
+
+/* Separador inferior - 95% de ancho centrado */
+.ventas-footer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 2.5%; /* Centrado horizontal: (100% - 95%) / 2 */
+  right: 2.5%;
+  height: 20px;
+  background-color: #1921C5;
+}
+
+
+/* Contenido del footer */
+.ventas-footer-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center; /* Centrado vertical principal */
+  justify-content: space-between;
+  /* Nuevas propiedades para alineación precisa */
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%); /* Centrado vertical exacto */
+  padding: 0 30px;
 }
