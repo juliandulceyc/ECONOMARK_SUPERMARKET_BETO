@@ -7,6 +7,8 @@ import CompCreateProduct from './components/createProduct'
 import CompEditProduct from './components/editProduct'
 import './App.css'
 import CompShowUsers from './components/showUsers'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 
 
