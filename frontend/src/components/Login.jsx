@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './sign-in.css';
-import carrito from './img/supermarket.png'; 
+import Logo from './img/carrito-de-compras.png';
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -12,6 +12,25 @@ const Login = () => {
   const [error, setError] = useState('');
   const [theme, setTheme] = useState('auto');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.history.pushState(null, document.title, window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, document.title, window.location.href);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+  
+  // Si ya existe un token, redirigir automáticamente a Home
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/home', { replace: true });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') || 'auto';
@@ -44,6 +63,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:3000/auth/login', values);
       if (response.status === 201) {
         localStorage.setItem('token', response.data.token);
+        // Navegamos a Home usando replace para que la ruta actual no quede en el historial
         navigate('/home', { replace: true });
       }
     } catch (err) {
@@ -83,7 +103,9 @@ const Login = () => {
             <button type="button"
               className={`dropdown-item d-flex align-items-center ${theme === 'light' ? 'active' : ''}`}
               onClick={() => handleThemeChange('light')}>
-              <svg className="bi me-2 opacity-50" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+              <svg className="bi me-2 opacity-50" width="1em" height="1em">
+                <use href="#sun-fill"></use>
+              </svg>
               Light
             </button>
           </li>
@@ -91,7 +113,9 @@ const Login = () => {
             <button type="button"
               className={`dropdown-item d-flex align-items-center ${theme === 'dark' ? 'active' : ''}`}
               onClick={() => handleThemeChange('dark')}>
-              <svg className="bi me-2 opacity-50" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+              <svg className="bi me-2 opacity-50" width="1em" height="1em">
+                <use href="#moon-stars-fill"></use>
+              </svg>
               Dark
             </button>
           </li>
@@ -99,7 +123,9 @@ const Login = () => {
             <button type="button"
               className={`dropdown-item d-flex align-items-center ${theme === 'auto' ? 'active' : ''}`}
               onClick={() => handleThemeChange('auto')}>
-              <svg className="bi me-2 opacity-50" width="1em" height="1em"><use href="#circle-half"></use></svg>
+              <svg className="bi me-2 opacity-50" width="1em" height="1em">
+                <use href="#circle-half"></use>
+              </svg>
               Auto
             </button>
           </li>
@@ -109,8 +135,7 @@ const Login = () => {
       <main className="form-signin w-100 m-auto">
         <form onSubmit={handleSubmit}>
           <div className="text-center">
-            <img className="mb-4 img-fluid" src={carrito}
-              alt="" width="72" height="57" />
+            <img className="mb-4 img-fluid" src={Logo} alt="Logo" width="72" height="57" />
             <h1 className="h3 mb-3 fw-normal">Iniciar Sesión</h1>
           </div>
 

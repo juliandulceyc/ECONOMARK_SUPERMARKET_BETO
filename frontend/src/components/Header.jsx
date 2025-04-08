@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dropdown, Badge, Modal, Form, Button } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './head.css';
 
 function Header() {
@@ -12,6 +12,9 @@ function Header() {
     email: 'jefferson@westcol.com',
     role: 'Administrador'
   });
+
+  // Hook para redireccionar
+  const navigate = useNavigate();
 
   const notifications = [
     { id: 1, text: '2 Productos vencidos', time: 'Hace 5 minutos', read: false },
@@ -34,6 +37,14 @@ function Header() {
     e.preventDefault();
     setShowProfileModal(false);
   };
+
+  // Función para cerrar sesión: elimina el token y redirige al login.
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    // Esta redirección completa borra el historial previo
+    window.location.replace('/login');
+  };
+
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white px-4 py-3 shadow-sm header-custom">
@@ -81,8 +92,8 @@ function Header() {
                 <i className="bi bi-gear me-2"></i>Ajustes
               </Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item>
-                <Link to={"/login/"} className="bi bi-box-arrow-right me-2"> Logout</Link>
+              <Dropdown.Item onClick={handleLogout}>
+                <i className="bi bi-box-arrow-right me-2"></i>Logout
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
