@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Economark</string>
+    <string name="title_page_login">Bienvenido, Iniciar sesion!</string>
+    <string name="please_wait">Espera un momento&#8230;</string>
+    <string name="please_click_back_again_to_exit">Por favor presione de nuevo para salir</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notificaciones</string>
+    <string name="settings">Ajustes</string>
+    <string name="ha_dimenticato_la_password"><u>Ha olvidado la contraseña?</u></string>
+    <string name="iscriviti_qui">Registrarse</string>
+    <string name="torna_al_login"><u>Volver al Login</u></string>
+</resources>
