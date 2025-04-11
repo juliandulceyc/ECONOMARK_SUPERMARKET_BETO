@@ -61,8 +61,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3000/auth/login', values);
-      if (response.status === 201) {
+      if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
+        console.log('Login exitoso, navegando a /home');
         // Navegamos a Home usando replace para que la ruta actual no quede en el historial
         navigate('/home', { replace: true });
       }
