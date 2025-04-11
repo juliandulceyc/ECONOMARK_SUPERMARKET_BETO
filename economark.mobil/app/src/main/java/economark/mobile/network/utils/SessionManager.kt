@@ -1,4 +1,4 @@
-package economark.mobile.utils
+package com.example.marflexv2.utils
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -45,4 +45,3 @@ class SessionManager(context: Context) {
         editor.apply()
     }
 }
-

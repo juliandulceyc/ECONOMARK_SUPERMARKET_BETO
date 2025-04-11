@@ -1,71 +1,60 @@
 package economark.mobile
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import economark.mobile.network.api
-import economark.mobile.network.
-import economark.mobile.network.RetrofitClient
+import androidx.core.content.ContextCompat
+import economark.mobile.HomeActivity
+import com.google.android.material.snackbar.Snackbar
 import economark.mobile.utils.SessionManager
+import economark.network.LoginRequest
+import economark.network.LoginResponse
+import economark.network.RetrofitClient
+import economark.mobile.databinding.ActivityMainBinding
+import economark.mobile.ui.activities.RegisterActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.content.ContextCompat
-import android.graphics.Color
-import com.google.android.gms.cast.framework.SessionManager
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
 
         sessionManager = SessionManager(this)
 
         setupListeners()
-        checkExistingSession()
     }
 
     private fun setupListeners() {
+        // Botón de inicio de sesión
         binding.buttonLogin.setOnClickListener {
             val email = binding.inputEmail.text.toString()
             val password = binding.inputPassword.text.toString()
 
-            if (validateInputs(email, password)) {
+            if (email.isNotEmpty() && password.isNotEmpty()) {
                 performLogin(email, password)
+            } else {
+                showSnackbar("Por favor, llena todos los campos")
             }
         }
 
+        // Texto de "Olvidaste tu contraseña"
         binding.tvForgotPassword.setOnClickListener {
             navigateToPasswordRecovery()
         }
 
+        // Texto para registrarse
         binding.register.setOnClickListener {
             navigateToRegister()
-        }
-    }
-
-    private fun validateInputs(email: String, password: String): Boolean {
-        return when {
-            email.isEmpty() -> {
-                showSnackbar("Ingrese su correo electrónico")
-                false
-            }
-            password.isEmpty() -> {
-                showSnackbar("Ingrese su contraseña")
-                false
-            }
-            else -> true
         }
     }
 
@@ -75,9 +64,27 @@ class MainActivity : AppCompatActivity() {
         RetrofitClient.instance.login(loginRequest).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
-                    handleLoginSuccess(response.body())
+                    val loginResponse = response.body()
+                    if (loginResponse?.success == true) {
+                        // Guardar la sesión del usuario
+                        sessionManager.saveUserSession(
+                            token = loginResponse.token,
+                            userId = loginResponse.userId,
+                            rol = loginResponse.rol,
+                            fotoPerfil = loginResponse.fotoPerfil
+                        )
+
+                        Toast.makeText(
+                            this@MainActivity,
+                            "¡Inicio de sesión exitoso!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        redirectToHome()
+                    } else {
+                        showSnackbar(loginResponse?.message ?: "Error desconocido")
+                    }
                 } else {
-                    handleLoginError(response.code())
+                    showSnackbar("Usuario o contraseña incorrectos")
                 }
             }
 
@@ -85,37 +92,6 @@ class MainActivity : AppCompatActivity() {
                 showSnackbar("Error de conexión: ${t.message}")
             }
         })
-    }
-
-    private fun handleLoginSuccess(loginResponse: LoginResponse?) {
-        loginResponse?.let {
-            if (it.success) {
-                sessionManager.saveUserSession(
-                    token = it.token,
-                    userId = it.userId,
-                    rol = it.rol,
-                    fotoPerfil = it.fotoPerfil
-                )
-                redirectToHome()
-            } else {
-                showSnackbar(it.message ?: "Error de autenticación")
-            }
-        }
-    }
-
-    private fun handleLoginError(statusCode: Int) {
-        val errorMessage = when (statusCode) {
-            401 -> "Credenciales inválidas"
-            500 -> "Error del servidor"
-            else -> "Error desconocido ($statusCode)"
-        }
-        showSnackbar(errorMessage)
-    }
-
-    private fun checkExistingSession() {
-        if (sessionManager.isLoggedIn()) {
-            redirectToHome()
-        }
     }
 
     private fun showSnackbar(message: String) {
@@ -127,15 +103,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToPasswordRecovery() {
-        startActivity(Intent(this, RecuperarContrasenaActivity::class.java))
+        val intent = Intent(this, RecuperarContrasenaActivity::class.java)
+        startActivity(intent)
     }
 
     private fun navigateToRegister() {
-        startActivity(Intent(this, RegisterActivity::class.java))
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
     }
 
     private fun redirectToHome() {
-        startActivity(Intent(this, HomeActivity::class.java))
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
         finish()
     }
 }

@@ -8,4 +8,5 @@
     <color name="colorPrimaryLight">#718792</color>
     <color name="colorBottomLight">#ffd88f</color>
     <color name="click">#AD0000</color>
+    <color name="colorError">#D32F2F</color>
 </resources>

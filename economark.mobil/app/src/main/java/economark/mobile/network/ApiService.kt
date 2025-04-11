@@ -1,4 +1,4 @@
-package com.example.marflex.network
+package economark.network
 
 import retrofit2.Call
 import retrofit2.http.Body
@@ -17,11 +17,11 @@ data class LoginResponse(
     val token: String,
     val rol: String,
     val userId: String,
-    val fotoPerfil: String?
+    val fotoPerfil: String? // si no estás usando fotoPerfil aún, puedes ponerlo como null
 )
 
 // Interfaz Retrofit para consumir la API
 interface ApiService {
-    @POST("/login")
+    @POST("auth/login") // ← CORREGIDO
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 }

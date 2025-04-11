@@ -1,4 +1,4 @@
-package com.example.marflex.network
+package economark.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 
 object RetrofitClient {
     // Configuración para MySQL/API REST
-    private const val API_BASE_URL = "http://10.0.2.2:3000/api/"
+    private const val API_BASE_URL = "http://10.0.2.2:3000/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
