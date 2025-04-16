@@ -32,6 +32,11 @@ const CompShowProducts = () => {
         }
     }, [products]);
 
+    const handleEdit = (product) => {
+        setEditProduct(product);
+        setShowEditModal(true);
+    };
+    
     const getProducts = async () => {
         const response = await axios.get(URL);
         setProducts(response.data);
