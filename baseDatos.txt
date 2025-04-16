@@ -5,9 +5,9 @@ USE economark;
 -- Tabla de credenciales
 CREATE TABLE credenciales (
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	rol varchar(80) NOT NULL, 
-	username varchar(80) NOT NULL,
-	password varchar(300) NOT NULL,
+	rol VARCHAR(80) NOT NULL, 
+	username VARCHAR(80) NOT NULL,
+	password VARCHAR(300) NOT NULL,
   	createdAt DATE,
   	updatedAt DATE
 );
@@ -18,60 +18,58 @@ INSERT INTO credenciales (id, rol, username, password) VALUES
 
 -- Tabla de categorías
 CREATE TABLE categoria (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	idCategoria varchar(50) NOT NULL,
-	nombreCategoria varchar(50) NOT NULL UNIQUE,
-	descripcionCategoria varchar(256) NULL,
+	idCategoria INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nombreCategoria VARCHAR(50) NOT NULL UNIQUE,
+	descripcionCategoria VARCHAR(256) NULL,
 	estado BIT DEFAULT 1,
 	createdAt DATE,
   	updatedAt DATE
 );
 
 INSERT INTO categoria (idCategoria, nombreCategoria, descripcionCategoria, estado) VALUES
-('0001', 'Granos', '--', 1),
-('0002', 'Lácteos', '--', 0),
-('0003', 'Panadería', '--', 1),
-('0004', 'Hierbas', '--', 1),
-('0005', 'Cereales', '', 1); -- traído de la segunda base
+(1, 'Granos', '--', 1),
+(2, 'Lácteos', '--', 0),
+(3, 'Panadería', '--', 1),
+(4, 'Hierbas', '--', 1),
+(5, 'Cereales', '', 1);
 
--- Tabla de productos (se mantiene)
+-- Tabla de productos
 CREATE TABLE productos (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	nombre varchar(80) NOT NULL,
-	categoria varchar(150) NOT NULL,
-	precio DECIMAL(10,3) NOT NULL,
-	createdAt DATE,
-	updatedAt DATE	
-);
-
-INSERT INTO productos (nombre, categoria, precio) VALUES
-('Arroz', 'Granos', 3.000),
-('Leche', 'Lácteos', 3.500),
-('Pan', 'Panadería', 6.000);
-
--- Tabla de artículos
-CREATE TABLE articulo (
-	idArticulo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	idProducto INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idCategoria INT NOT NULL,
-	codigo varchar(50) NULL,
-	nombre varchar(100) NOT NULL UNIQUE,
-	precio_venta DECIMAL(11,2) NOT NULL,
-	stock INT NOT NULL,
-	descripcion varchar(256) NULL,
+	nombreProducto VARCHAR(80) NOT NULL UNIQUE,
+	precioVenta DECIMAL(10,3) NOT NULL,
+	stock INT DEFAULT 0,
 	estado BIT DEFAULT 1,
-	FOREIGN KEY (idCategoria) REFERENCES categoria(id)
+	createdAt DATE,
+	updatedAt DATE,
+	FOREIGN KEY (idCategoria) REFERENCES categoria(idCategoria)
 );
 
--- Tabla de personas (clientes y proveedores)
-CREATE TABLE persona (
-	idPersona INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	tipo_persona varchar(20) NOT NULL,
-	nombre varchar(100) NOT NULL,
-	tipo_documento varchar(20) NULL,
-	num_documento varchar(20) NULL,
-	direccion varchar(70) NULL,
-	telefono varchar(20) NULL,
-	email varchar(50) NULL
+INSERT INTO productos (idCategoria, nombreProducto, precioVenta) VALUES
+(1, 'Arroz', 3.000),
+(2, 'Leche', 3.500),
+(3, 'Pan', 6.000);
+
+-- Tabla de proveedores
+CREATE TABLE proveedores (
+    idProveedor INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombreProveedor VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20) NOT NULL,
+    direccion VARCHAR(150) NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Tabla de clientes
+CREATE TABLE clientes (
+	idCliente INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nombreCliente VARCHAR(100) NOT NULL,
+	telefono VARCHAR(20),
+	direccion VARCHAR(150),
+	email VARCHAR(100),
+	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+	updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Tabla de ingresos
@@ -79,14 +77,14 @@ CREATE TABLE ingreso (
 	idIngreso INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idProveedor INT NOT NULL,
 	idUsuario INT NOT NULL,
-	tipo_comprobante varchar(20) NOT NULL,
-	serie_comprobante varchar(7) NULL,
-	num_comprobante varchar(10) NOT NULL,
+	tipo_comprobante VARCHAR(20) NOT NULL,
+	serie_comprobante VARCHAR(7),
+	num_comprobante VARCHAR(10) NOT NULL,
 	fecha DATETIME NOT NULL,
 	impuesto DECIMAL(4,2) NOT NULL,
 	total DECIMAL(11,2) NOT NULL,
-	estado varchar(20) NOT NULL,
-	FOREIGN KEY (idProveedor) REFERENCES persona(idPersona),
+	estado VARCHAR(20) NOT NULL,
+	FOREIGN KEY (idProveedor) REFERENCES proveedores(idProveedor),
 	FOREIGN KEY (idUsuario) REFERENCES credenciales(id)
 );
 
@@ -94,11 +92,11 @@ CREATE TABLE ingreso (
 CREATE TABLE detalle_ingreso (
 	idDetalle_ingreso INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idIngreso INT NOT NULL,
-	idArticulo INT NOT NULL,
+	idProducto INT NOT NULL,
 	cantidad INT NOT NULL,
 	precio DECIMAL(11,2) NOT NULL,
 	FOREIGN KEY (idIngreso) REFERENCES ingreso(idIngreso) ON DELETE CASCADE,
-	FOREIGN KEY (idArticulo) REFERENCES articulo(idArticulo)
+	FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
 
 -- Tabla de ventas
@@ -106,14 +104,14 @@ CREATE TABLE venta (
 	idVenta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idCliente INT NOT NULL,
 	idUsuario INT NOT NULL,
-	tipo_comprobante varchar(20) NOT NULL,
-	serie_comprobante varchar(7) NULL,
-	num_comprobante varchar(10) NOT NULL,
+	tipo_comprobante VARCHAR(20) NOT NULL,
+	serie_comprobante VARCHAR(7),
+	num_comprobante VARCHAR(10) NOT NULL,
 	fecha_hora DATETIME NOT NULL,
 	impuesto DECIMAL(4,2) NOT NULL,
 	total DECIMAL(11,2) NOT NULL,
-	estado varchar(20) NOT NULL,
-	FOREIGN KEY (idCliente) REFERENCES persona(idPersona),
+	estado VARCHAR(20) NOT NULL,
+	FOREIGN KEY (idCliente) REFERENCES clientes(idCliente),
 	FOREIGN KEY (idUsuario) REFERENCES credenciales(id)
 );
 
@@ -121,21 +119,10 @@ CREATE TABLE venta (
 CREATE TABLE detalle_venta (
 	idDetalle_venta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idVenta INT NOT NULL,
-	idArticulo INT NOT NULL,
+	idProducto INT NOT NULL,
 	cantidad INT NOT NULL,
 	precio DECIMAL(11,2) NOT NULL,
 	descuento DECIMAL(11,2) NOT NULL,
 	FOREIGN KEY (idVenta) REFERENCES venta(idVenta) ON DELETE CASCADE,
-	FOREIGN KEY (idArticulo) REFERENCES articulo(idArticulo)
-);
-
--- Proveedores
-CREATE TABLE proveedores (
-    idProveedor INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    telefono VARCHAR(20) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    direccion VARCHAR(150) NOT NULL,
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+	FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
