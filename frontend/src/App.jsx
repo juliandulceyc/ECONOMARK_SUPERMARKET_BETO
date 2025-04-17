@@ -3,8 +3,6 @@ import Home from './components/Home'
 import Register from './components/Register'
 import Login from './components/Login'
 import CompShowProducts from './components/showProducts'
-import CompCreateProduct from './components/createProduct'
-import CompEditProduct from './components/editProduct'
 import './App.css'
 import CompShowUsers from './components/showUsers'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,8 +20,6 @@ function App() {
         <Route path='/home' element={<Home />} />
         <Route path='/home/tablas/' element={<CompShowProducts />} />
         <Route path='/home/admin/usuarios/' element={<CompShowUsers />} />
-        <Route path='/tablas/crear/' element={<CompCreateProduct />} />
-        <Route path='/tablas/editar/:id' element={<CompEditProduct />} />
       </Routes>
     </BrowserRouter>
   )

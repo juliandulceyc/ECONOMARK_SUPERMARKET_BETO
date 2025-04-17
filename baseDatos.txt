@@ -21,7 +21,7 @@ CREATE TABLE categoria (
 	idCategoria INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nombreCategoria VARCHAR(50) NOT NULL UNIQUE,
 	descripcionCategoria VARCHAR(256) NULL,
-	estado BIT DEFAULT 1,
+	estado varchar(80),
 	createdAt DATE,
   	updatedAt DATE
 );
@@ -40,7 +40,7 @@ CREATE TABLE productos (
 	nombreProducto VARCHAR(80) NOT NULL UNIQUE,
 	precioVenta DECIMAL(10,3) NOT NULL,
 	stock INT DEFAULT 0,
-	estado BIT DEFAULT 1,
+	estado VARCHAR(80),
 	createdAt DATE,
 	updatedAt DATE,
 	FOREIGN KEY (idCategoria) REFERENCES categoria(idCategoria)

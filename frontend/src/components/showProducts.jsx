@@ -1,144 +1,205 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button, Modal, Form } from 'react-bootstrap';
 import SearchBar from "./SearchBar";
+import { Table, Button, Form, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../App.css';
-import CompShowCategories from "./showCategories";
-import CompEditProduct from "./editProduct";
-import CompCreateProduct from "./createProduct";
+import './show.css'
 
-const URL = 'http://localhost:3000/tablas/';
+const entityConfig = {
+    products: {
+        label: "Productos",
+        url: "http://localhost:3000/productos/",
+        columns: [
+            { key: "idProducto", label: "ID" },
+            { key: "nombreProducto", label: "ARTICULO" },
+            { key: "idCategoria", label: "CATEGORIA" },
+            { key: "precioVenta", label: "PRECIO" },
+            { key: "stock", label: "STOCK" },
+            { key: "estado", label: "ESTADO" }
+        ],
+        initialData: {
+            nombreProducto: "", idCategoria: "", precioVenta: "", stock: "", estado: ""
+        },
+        idField: "idProducto"
+    },
+    proveedores: {
+        label: "Categorias",
+        url: "http://localhost:3000/categorias/",
+        columns: [
+            { key: "idCategoria", label: "ID" },
+            { key: "nombreCategoria", label: "NOMBRE" },
+            { key: "descripcionCategoria", label: "DESCRIPCIÓN" },
+            { key: "estado", label: "ESTADO" }
+        ],
+        initialData: {
+            nombreCategoria: "", descripcionCategoria: "", estado: ""
+        },
+        idField: "idCategoria"
+    }
+};
 
-const CompShowProducts = () => {
-    const [tableView, setTableView] = useState('products');
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [editProduct, setEditProduct] = useState(null);
+const CompShowEntities = () => {
+    const [tableView, setTableView] = useState("products");
+    const [dataList, setDataList] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [editData, setEditData] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
-    const [filterBy, setFilterBy] = useState('all');
+    const [filterByColumn, setFilterByColumn] = useState('');
+    const [filterByValue, setFilterByValue] = useState('');
     const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
 
-    useEffect(() => {
-        getProducts();
-    }, []);
+    const config = entityConfig[tableView];
 
-    useEffect(() => {
-        if (products.length > 0) {
-            const uniqueCategories = [...new Set(products.map(product => product.categoria))];
+    // Función para obtener los datos de las entidades (productos o categorías)
+    const fetchData = async () => {
+        const res = await axios.get(config.url);
+        setDataList(res.data);
+
+        // Si la entidad es productos, podemos obtener las categorías
+        if (tableView === 'products') {
+            const uniqueCategories = [...new Set(res.data.map(product => product.idCategoria))];
             setCategories(uniqueCategories);
         }
-    }, [products]);
-
-    const handleEdit = (product) => {
-        setEditProduct(product);
-        setShowEditModal(true);
-    };
-    
-    const getProducts = async () => {
-        const response = await axios.get(URL);
-        setProducts(response.data);
     };
 
-    const deleteProduct = async (id) => {
-        await axios.delete(`${URL}${id}`);
-        getProducts();
+    useEffect(() => {
+        fetchData();
+    }, [tableView]);
+
+    const handleDelete = async (id) => {
+        await axios.delete(`${config.url}${id}`);
+        fetchData();
     };
 
-    const filteredProducts = products.filter(product => {
-        const matchesSearch = product.nombre.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = filterBy === 'all' || product.categoria === filterBy;
-        return matchesSearch && matchesCategory;
-    });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const idValue = editData[config.idField];
 
-    const renderTable = () => {
-        switch (tableView) {
-            case 'products':
-                return (
-                    <div className="table-responsive card shadow-sm">
-                        <Table className="table table-hover mb-0">
-                            <thead>
-                                <tr className="table-header-gradient text-white">
-                                    <th className="text-center py-3 border-end">ID</th>
-                                    <th className="text-center py-3 border-end">ARTICULO</th>
-                                    <th className="text-center py-3 border-end">CATEGORIA</th>
-                                    <th className="text-center py-3 border-end">PRECIO</th>
-                                    <th className="text-center py-3 border-end">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredProducts.map((product) => (
-                                    <tr key={product.id}>
-                                        <td className="text-center align-middle border-end">{product.id}</td>
-                                        <td className="text-center align-middle border-end">{product.nombre}</td>
-                                        <td className="text-center align-middle border-end">{product.categoria}</td>
-                                        <td className="text-center align-middle border-end">{product.precio}</td>
-                                        <td className="text-center align-middle border-end">
-                                            <Button onClick={() => handleEdit(product)} className='btn btn-info mx-2'>
-                                                <i className="fa-solid fa-pen-to-square"></i>
-                                            </Button>
-                                            <Button onClick={() => deleteProduct(product.id)} className="btn btn-danger">
-                                                <i className="fa-solid fa-eraser"></i>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    </div>
-                );
-            case 'categories':
-                return <CompShowCategories />;
-            default:
-                return null;
+        if (idValue) {
+            await axios.put(`${config.url}${idValue}`, editData);
+        } else {
+            await axios.post(config.url, editData);
         }
+
+        setShowModal(false);
+        fetchData();
     };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEditData(prev => ({ ...prev, [name]: value }));
+    };
+
+    // Función para filtrar los datos basados en la búsqueda y el filtro por columna
+    const filteredData = dataList.filter(item => {
+        const matchesSearch = Object.keys(item).some(key =>
+            item[key]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        const matchesColumnFilter = filterByColumn
+            ? item[filterByColumn]?.toString().toLowerCase().includes(filterByValue.toLowerCase())
+            : true;
+        return matchesSearch && matchesColumnFilter;
+    });
 
     return (
         <div className="container">
             <Form.Select
                 className="mb-3"
-                onChange={(e) => setTableView(e.target.value)}
                 value={tableView}
+                onChange={(e) => setTableView(e.target.value)}
             >
-                <option value="products">Productos</option>
-                <option value="categories">Categorías</option>
+                {Object.entries(entityConfig).map(([key, val]) => (
+                    <option key={key} value={key}>{val.label}</option>
+                ))}
             </Form.Select>
 
-            <Button onClick={() => setShowCreateModal(true)} className="btn btn-primary w-100">
-                <i className="fas fa-plus-square"></i> Añadir
+            <Button className="btn btn-primary w-100 mb-3" onClick={() => {
+                setEditData({ ...config.initialData });
+                setShowModal(true);
+            }}>
+                <i className="fas fa-plus-square"></i> Añadir {config.label.slice(0, -1)}
             </Button>
 
             <div className="mt-4">
                 <SearchBar
                     searchQuery={searchQuery}
                     onSearchChange={setSearchQuery}
-                    filterBy={filterBy}
-                    onFilterChange={setFilterBy}
+                    filterByColumn={filterByColumn}
+                    filterByValue={filterByValue}
+                    onFilterColumnChange={setFilterByColumn}
+                    onFilterValueChange={setFilterByValue}
+                    columns={config.columns}
                     categories={categories}
                 />
             </div>
 
-            <div className="card-body">
-                {renderTable()}
+            <div className="table-responsive card shadow-sm">
+                <Table className="table table-hover mb-0">
+                    <thead className="table-header-gradient text-white">
+                        <tr>
+                            {config.columns.map(col => (
+                                <th key={col.key} className="text-center border-end py-3">{col.label}</th>
+                            ))}
+                            <th className="text-center border-end py-3">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredData.map(item => (
+                            <tr key={item[config.idField]}>
+                                {config.columns.map(col => (
+                                    <td key={col.key} className="text-center border-end align-middle">
+                                        {item[col.key]}
+                                    </td>
+                                ))}
+                                <td className="text-center border-end">
+                                    <Button className="btn btn-info mx-2" onClick={() => {
+                                        setEditData(item);
+                                        setShowModal(true);
+                                    }}>
+                                        <i className="fa-solid fa-pen-to-square"></i>
+                                    </Button>
+                                    <Button className="btn btn-danger" onClick={() => handleDelete(item[config.idField])}>
+                                        <i className="fa-solid fa-eraser"></i>
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
             </div>
 
-            <CompEditProduct
-                showModal={showEditModal}
-                handleClose={() => setShowEditModal(false)}
-                product={editProduct}
-                refreshProducts={getProducts}
-            />
-
-            <CompCreateProduct
-                showModal={showCreateModal}
-                handleClose={() => setShowCreateModal(false)}
-                refreshProducts={getProducts}
-            />
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        {editData?.[config.idField] ? "Editar" : "Crear"} {config.label.slice(0, -1)}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSubmit}>
+                        {Object.keys(config.initialData).map((key) => (
+                            <Form.Group key={key} className="mb-3">
+                                <Form.Label>{key.charAt(0).toUpperCase() + key.slice(1)}</Form.Label>
+                                <Form.Control
+                                    name={key}
+                                    value={editData?.[key] || ""}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        ))}
+                        <div className="text-end">
+                            <Button variant="secondary" className="me-2" onClick={() => setShowModal(false)}>
+                                Cancelar
+                            </Button>
+                            <Button type="submit" variant="primary">
+                                Guardar
+                            </Button>
+                        </div>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };
 
-export default CompShowProducts;
+export default CompShowEntities;

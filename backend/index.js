@@ -14,9 +14,8 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Tus rutas
 app.use('/auth', authRouter)
-app.use('/tablas', routes)
+app.use('/productos', routes)
 app.use('/credenciales', routesCredenciales)
 app.use('/categorias', routesCategorias)
 app.use('/proveedores', routesProveedores)

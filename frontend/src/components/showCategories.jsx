@@ -7,8 +7,6 @@ import '../App.css';
 
 const URL = 'http://localhost:3000/categorias/'
 
-
-
 const CompShowCategories = () => {
     const [categories, setCategories] = useState([])
 
@@ -22,14 +20,14 @@ const CompShowCategories = () => {
         setCategories(response.data)
     }
 
-    //procedimiento para eliminar un producto
+    //procedimiento para eliminar una categoria
     const deleteCategory = async (id) => {
         await axios.delete(`${URL}${id}`)
         getCategories()
     }
 
     return (
-        <div className="card border-0 shadow-sm">
+        <div className="card border-1 shadow-sm">
             <div className="table-responsive">
                 <Table className="table table-hover mb-0">
                     <thead>
@@ -43,7 +41,7 @@ const CompShowCategories = () => {
                     </thead>
                     <tbody>
                         {categories.map((category) => (
-                            <tr key={category.id}>
+                            <tr key={category.idCategoria}>
                                 <td className="text-center align-middle border-end">{category.idCategoria}</td>
                                 <td className="text-center align-middle border-end">{category.nombreCategoria}</td>
                                 <td className="text-center align-middle border-end">{category.descripcionCategoria}</td>
@@ -58,7 +56,7 @@ const CompShowCategories = () => {
 
                                 <td className="text-center align-middle border-end">
                                     <Button className='btn btn-info mx-2'><i className="fa-solid fa-pen-to-square"></i></Button>
-                                    <button onClick={() => deleteCategory(category.id)} className="btn btn-danger"><i className="fa-solid fa-eraser"></i></button>
+                                    <button onClick={() => deleteCategory(category.idCategoria)} className="btn btn-danger"><i className="fa-solid fa-eraser"></i></button>
                                 </td>
                             </tr>
                         ))}

@@ -1,0 +1,60 @@
+/* Ajustar la altura y el padding del SearchBar para reducir el contenedor */
+.custom-search-bar {
+    background: #f8f9fa;
+    border-radius: 1rem;
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s ease-in-out;
+    padding: 0.75rem 1rem;  /* Ajustar padding para reducir la altura del contenedor */
+    height: 120px;  /* Ajustar la altura del contenedor */
+}
+
+.custom-search-bar:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.custom-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.875rem;  /* Reducir tamaño de la fuente */
+}
+
+.input-glow {
+    border-radius: 0.6rem !important;
+    transition: all 0.2s ease;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    font-size: 0.875rem;  /* Reducir tamaño de la fuente en los inputs */
+}
+
+.input-glow:focus-within {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+.input-icon {
+    background: #ffffff;
+    border: none;
+    border-right: 1px solid #dee2e6;
+    color: #6c757d;
+    padding: 5px 8px;  /* Reducir el padding del ícono */
+}
+
+.input-group {
+    height: 100%;  /* Asegurar que los input group se ajusten a la altura */
+}
+
+.input-group .form-control,
+.input-group select {
+    height: 100%;  /* Ajustar la altura de los campos de entrada */
+    padding: 5px 10px;  /* Reducir el padding dentro de los campos de texto */
+    font-size: 0.875rem;  /* Reducir tamaño de la fuente */
+}
+
+.input-group-text {
+    padding: 5px 10px;  /* Reducir padding para los iconos */
+    font-size: 1rem;  /* Reducir tamaño del icono */
+}
+
+.custom-search-bar .row {
+    margin-bottom: 0;  /* Eliminar márgenes innecesarios */
+}

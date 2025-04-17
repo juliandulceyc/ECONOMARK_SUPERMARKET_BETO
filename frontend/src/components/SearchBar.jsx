@@ -1,46 +1,67 @@
 import React from 'react';
-import { InputGroup, Form, Button, Row, Col } from 'react-bootstrap';
+import { InputGroup, Form, Row, Col } from 'react-bootstrap';
 import { FaSearch, FaFilter } from 'react-icons/fa';
+import './SearchBar.css';
 
-const SearchBar = ({ 
-  searchQuery, 
-  onSearchChange, 
-  filterBy, 
-  onFilterChange, 
-  categories = [] 
+const SearchBar = ({
+  searchQuery,
+  onSearchChange,
+  filterByColumn,
+  onFilterColumnChange,
+  filterByValue,
+  onFilterValueChange,
+  columns = []
 }) => {
   return (
-    <Row className="mb-4 g-3">
-      <Col md={8}>
-        <InputGroup>
-          <Form.Control
-            placeholder="Buscar por categoria..."
-            aria-label="Search products"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-          />
-          <Button variant="primary" disabled>
-            <FaSearch /> Buscar
-          </Button>
-        </InputGroup>
-      </Col>
-      <Col md={4}>
-        <InputGroup>
+    <div className="custom-search-bar mb-4 p-4 shadow-sm">
+      <Row className="gy-3 align-items-end">
+        {/* Búsqueda general */}
+        <Col md={6}>
+          <Form.Label className="custom-label">🔎 Búsqueda general</Form.Label>
+          <InputGroup className="input-glow">
+            <InputGroup.Text className="input-icon">
+              <FaSearch />
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="Buscar..."
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+          </InputGroup>
+        </Col>
+
+        {/* Selección de columna */}
+        <Col md={3}>
+          <Form.Label className="custom-label">📁 Columna</Form.Label>
           <Form.Select
-            value={filterBy}
-            onChange={(e) => onFilterChange(e.target.value)}
+            className="input-glow"
+            value={filterByColumn}
+            onChange={(e) => onFilterColumnChange(e.target.value)}
           >
-            <option value="all">Todas las categorías</option>
-            {categories.map(category => (
-              <option key={category} value={category}>{category}</option>
+            <option value="">Todas</option>
+            {columns.map(col => (
+              <option key={col.key} value={col.key}>{col.label}</option>
             ))}
           </Form.Select>
-          <Button variant="outline-secondary" disabled>
-            <FaFilter />
-          </Button>
-        </InputGroup>
-      </Col>
-    </Row>
+        </Col>
+
+        {/* Valor del filtro */}
+        <Col md={3}>
+          <Form.Label className="custom-label">🎯 Valor</Form.Label>
+          <InputGroup className="input-glow">
+            <InputGroup.Text className="input-icon">
+              <FaFilter />
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="Filtrar por..."
+              value={filterByValue}
+              onChange={(e) => onFilterValueChange(e.target.value)}
+              disabled={!filterByColumn}
+            />
+          </InputGroup>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

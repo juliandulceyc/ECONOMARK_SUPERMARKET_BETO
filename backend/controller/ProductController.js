@@ -16,7 +16,7 @@ export const getAllProducts = async (req, res) => {
 export const getProduct = async (req, res) => { 
     try {
         const product = await ProductModel.findAll({
-            where:{ id:req.params.id }
+            where:{ idProducto:req.params.id }
         })
         res.json(product[0])
     } catch (error) {
@@ -35,7 +35,7 @@ export const createProduct = async (req, res) => {
 //Actualizar un registro 
 export const updateProduct = async (req, res) => {
     try {
-        await ProductModel.update(req.body, {where: {id: req.params.id }})
+        await ProductModel.update(req.body, {where: {idProducto: req.params.id }})
         res.json( {"message":"¡Registro actualizado correctamente!"} )
     } catch (error) {
         res.json( {message: error.message} )
@@ -45,7 +45,7 @@ export const updateProduct = async (req, res) => {
 //Eliminar un registro 
 export const deleteProduct = async (req, res) => {
     try {
-        await ProductModel.destroy({where: {id: req.params.id}})
+        await ProductModel.destroy({where: {idProducto: req.params.id}})
         res.json( {"message":"¡Registro eliminado correctamente!"} )
     } catch (error) {
         res.json( {message: error.message} )

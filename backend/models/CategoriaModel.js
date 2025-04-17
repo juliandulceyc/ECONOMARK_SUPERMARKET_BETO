@@ -4,10 +4,10 @@ import db from "../lib/database.js";
 import { DataTypes } from "sequelize";
 
 const CategoriaModel = db.define('categoria', {
-    idCategoria: { type:DataTypes.STRING},
+    idCategoria: { type:DataTypes.STRING, primaryKey: true},
     nombreCategoria: { type: DataTypes.STRING },
     descripcionCategoria: { type: DataTypes.STRING },
-    estado: { type: DataTypes.NUMBER }
+    estado: { type: DataTypes.BOOLEAN }
 })
 
 export default CategoriaModel

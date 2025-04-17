@@ -17,7 +17,7 @@ export const getAllCategorias = async (req, res) => {
 export const getCategoria = async (req, res) => { 
     try {
         const categoria = await CategoriaModel.findAll({
-            where:{ id:req.params.id }
+            where:{ idCategoria:req.params.id }
         })
         res.json(categoria[0])
     } catch (error) {
@@ -36,7 +36,7 @@ export const createCategoria = async (req, res) => {
 //Actualizar un registro 
 export const updateCategoria = async (req, res) => {
     try {
-        await CategoriaModel.update(req.body, {where: {id: req.params.id }})
+        await CategoriaModel.update(req.body, {where: {idCategoria: req.params.id }})
         res.json( {"message":"¡Registro actualizado correctamente!"} )
     } catch (error) {
         res.json( {message: error.message} )
@@ -46,7 +46,7 @@ export const updateCategoria = async (req, res) => {
 //Eliminar un registro 
 export const deleteCategoria = async (req, res) => {
     try {
-        await CategoriaModel.destroy({where: {id: req.params.id}})
+        await CategoriaModel.destroy({where: {idCategoria: req.params.id}})
         res.json( {"message":"¡Registro eliminado correctamente!"} )
     } catch (error) {
         res.json( {message: error.message} )

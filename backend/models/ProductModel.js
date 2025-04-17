@@ -4,10 +4,12 @@ import db from "../lib/database.js";
 import { DataTypes } from "sequelize";
 
 const ProductModel = db.define('productos', {
-    id: { type: DataTypes.NUMBER, primaryKey: true},
-    nombre: { type: DataTypes.STRING },
-    categoria: { type: DataTypes.STRING },
-    precio: { type: DataTypes.DECIMAL }
+    idProducto: { type: DataTypes.NUMBER, primaryKey: true},
+    nombreProducto: { type: DataTypes.STRING },
+    idCategoria: { type: DataTypes.STRING },
+    precioVenta: { type: DataTypes.DECIMAL },
+    stock:  { type: DataTypes.INTEGER },
+    estado: { type: DataTypes.STRING },
 })
 
 export default ProductModel

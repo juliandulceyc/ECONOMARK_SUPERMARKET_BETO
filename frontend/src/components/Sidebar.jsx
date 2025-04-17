@@ -61,7 +61,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               >
                 <div className="nav-content">
                   <i className="bi bi-box"></i>
-                  {!isCollapsed && <span>Productos</span>}
+                  {!isCollapsed && <span>Inventario</span>}
                 </div>
               </div>
               <div

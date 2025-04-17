@@ -1,30 +1,37 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Form, Button, Modal } from 'react-bootstrap'; //punto de restauración
+import { Form, Button, Modal } from 'react-bootstrap';
 
-const URL = 'http://localhost:3000/tablas/';
+const URL = 'http://localhost:3000/productos/';
 
 const CompEditProduct = ({ showModal, handleClose, product, refreshProducts }) => {
-    const [nombre, setNombre] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [precio, setPrecio] = useState('');
+    const [nombreProducto, setNombreProducto] = useState('');
+    const [idCategoria, setIdCategoria] = useState('');
+    const [precioVenta, setPrecioVenta] = useState('');
+    const [stock, setStock] = useState('');
+    const [estado, setEstado] = useState('');
 
     useEffect(() => {
         if (product) {
-            setNombre(product.nombre);
-            setCategoria(product.categoria);
-            setPrecio(product.precio);
+            setNombreProducto(product.nombreProducto);
+            setIdCategoria(product.idCategoria);
+            setPrecioVenta(product.precioVenta);
+            setStock(product.stock);
+            setEstado(product.estado);
         }
     }, [product]);
 
-    // Procedimiento para actualizar
     const update = async (e) => {
         e.preventDefault();
-        await axios.put(URL + product.id, {
-            nombre, categoria, precio
+        await axios.put(`${URL}${product.idProducto}`, {
+            nombreProducto,
+            idCategoria,
+            precioVenta,
+            stock,
+            estado
         });
-        refreshProducts(); // Refresca la lista de productos después de actualizar
-        handleClose(); // Cierra el modal
+        refreshProducts();
+        handleClose();
     };
 
     return (
@@ -38,17 +45,17 @@ const CompEditProduct = ({ showModal, handleClose, product, refreshProducts }) =
                         <Form.Label>Nombre</Form.Label>
                         <Form.Control
                             type="text"
-                            value={nombre}
-                            onChange={(e) => setNombre(e.target.value)}
+                            value={nombreProducto}
+                            onChange={(e) => setNombreProducto(e.target.value)}
                             required
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label>Categoria</Form.Label>
+                        <Form.Label>Categoría (ID)</Form.Label>
                         <Form.Control
-                            type="text"
-                            value={categoria}
-                            onChange={(e) => setCategoria(e.target.value)}
+                            type="number"
+                            value={idCategoria}
+                            onChange={(e) => setIdCategoria(e.target.value)}
                             required
                         />
                     </Form.Group>
@@ -56,10 +63,31 @@ const CompEditProduct = ({ showModal, handleClose, product, refreshProducts }) =
                         <Form.Label>Precio</Form.Label>
                         <Form.Control
                             type="number"
-                            value={precio}
-                            onChange={(e) => setPrecio(e.target.value)}
+                            value={precioVenta}
+                            onChange={(e) => setPrecioVenta(e.target.value)}
                             required
                         />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Stock</Form.Label>
+                        <Form.Control
+                            type="number"
+                            value={stock}
+                            onChange={(e) => setStock(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Estado</Form.Label>
+                        <Form.Select
+                            value={estado}
+                            onChange={(e) => setEstado(e.target.value)}
+                            required
+                        >
+                            <option value="">Selecciona un estado</option>
+                            <option value="Activo">Disponible</option>
+                            <option value="Inactivo">No disponible</option>
+                        </Form.Select>
                     </Form.Group>
                     <div className="text-end">
                         <Button variant="secondary" className="me-2" onClick={handleClose}>
