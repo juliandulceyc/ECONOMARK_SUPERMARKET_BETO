@@ -7,7 +7,7 @@ import './show.css'
 
 const entityConfig = {
     proveedores: {
-        label: "Proveedores",
+        label: "Proveedoress",
         url: "http://localhost:3000/proveedores/",
         columns: [
             { key: "idProveedor", label: "ID" },

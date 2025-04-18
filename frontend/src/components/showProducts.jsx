@@ -83,7 +83,55 @@ const entityConfig = {
             nombreProveedor: "", telefono: ""
         },
         idField: "idProveedor"
+    },
+    detalle_entradas: {
+        label: "Detalle Entradas",
+        url: "http://localhost:3000/detalleentradas/",
+        columns: [
+            { key: "idDetalle_entrada", label: "ID" },
+            { key: "idEntrada", label: "ENTRADA" },
+            { key: "idProducto", label: "PRODUCTO" },
+            { key: "cantidad", label: "CANTIDAD" },
+            { key: "precio", label: "PRECIO" }
+        ],
+        initialData: {
+            idEntrada: "",
+            idProducto: "",
+            cantidad: "",
+            precio: ""
+        },
+        idField: "idDetalle_entrada"
+    },
+    ventas: {
+        label: "Ventas",
+        url: "http://localhost:3000/ventas/",
+        columns: [
+            { key: "idVenta", label: "ID" },
+            { key: "idCliente", label: "CLIENTE" },
+            { key: "idUsuario", label: "USUARIO" },
+            { key: "tipo_comprobante", label: "TIPO DE COMPROBANTE" },
+            { key: "serie_comprobante", label: "SERIE COMPROBANTE" },
+            { key: "num_comprobante", label: "NÚMERO DE COMPROBANTE" },
+            { key: "fecha_hora", label: "FECHA Y HORA" },
+            { key: "impuesto", label: "IMPUESTO" },
+            { key: "total", label: "TOTAL" },
+            { key: "estado", label: "ESTADO" }
+        ],
+        initialData: {
+            idCliente: "",
+            idUsuario: "",
+            tipo_comprobante: "",
+            serie_comprobante: "",
+            num_comprobante: "",
+            fecha_hora: "",
+            impuesto: "",
+            total: "",
+            estado: ""
+        },
+        idField: "idVenta"
     }
+
+
 };
 
 const CompShowProducts = () => {
@@ -200,7 +248,7 @@ const CompShowProducts = () => {
                                     </td>
                                 ))}
                                 <td className="text-center border-end">
-                                    <Button className="btn btn-info mx-2" onClick={() => {
+                                    <Button className="btn btn-info mx-2 my-2" onClick={() => {
                                         setEditData(item);
                                         setShowModal(true);
                                     }}>

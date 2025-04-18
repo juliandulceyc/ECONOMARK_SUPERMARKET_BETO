@@ -23,6 +23,7 @@ app.use('/categorias', routesCategorias)
 app.use('/proveedores', routesProveedores)
 app.use('/clientes', routesClientes)
 app.use('/entradas', routesEntradas)
+app.use('/detalle_entradas', routesEntradas)
 
 // Escuchar puerto
 const PORT = process.env.PORT || 3000
