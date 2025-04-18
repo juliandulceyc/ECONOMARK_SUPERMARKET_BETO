@@ -1,107 +1,149 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button } from "react-bootstrap";
 import SearchBar from "./SearchBar";
-import ShowEditProveedor from "./showEditProveedor";
-import ShowCreateProveedor from "./showCreateProveedor";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import "../App.css";
+import { Table, Button, Form, Modal } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './show.css'
 
-const URL = "http://localhost:3000/proveedores/";
+const entityConfig = {
+    proveedores: {
+        label: "Proveedores",
+        url: "http://localhost:3000/proveedores/",
+        columns: [
+            { key: "idProveedor", label: "ID" },
+            { key: "nombreProveedor", label: "NOMBRE" },
+            { key: "email", label: "EMAIL" },
+            { key: "telefono", label: "TELÉFONO" },
+        ],
+        initialData: {
+            nombreProveedor: "", email: "", telefono: ""
+        },
+        idField: "idProveedor"
+    }
+};
 
-const ShowProveedores = () => {
-    const [proveedores, setProveedores] = useState([]);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [editProveedor, setEditProveedor] = useState(null);
+const CompShowProveedores = () => {
+    const [tableView, setTableView] = useState("proveedores");
+    const [dataList, setDataList] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [editData, setEditData] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterByColumn, setFilterByColumn] = useState('');
+    const [filterByValue, setFilterByValue] = useState('');
+    const [categories, setCategories] = useState([]);
 
-    // Cargar los proveedores al inicio
+    const config = entityConfig[tableView];
+
+    // Función para obtener los datos de las entidades (productos o categorías)
+    const fetchData = async () => {
+        const res = await axios.get(config.url);
+        setDataList(res.data);
+
+        // Si la entidad es productos, podemos obtener las categorías
+        if (tableView === 'products') {
+            const uniqueCategories = [...new Set(res.data.map(product => product.idCategoria))];
+            setCategories(uniqueCategories);
+        }
+    };
+
     useEffect(() => {
-        getProveedores();
-    }, []);
+        fetchData();
+    }, [tableView]);
 
-    const getProveedores = async () => {
-        try {
-            const response = await axios.get(`${URL}list`);
-            setProveedores(response.data);
-        } catch (error) {
-            console.error("Error al obtener los proveedores:", error);
-            alert("No se pudieron cargar los proveedores.");
+    const handleDelete = async (id) => {
+        await axios.delete(`${config.url}${id}`);
+        fetchData();
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const idValue = editData[config.idField];
+
+        if (idValue) {
+            await axios.put(`${config.url}${idValue}`, editData);
+        } else {
+            await axios.post(config.url, editData);
         }
+
+        setShowModal(false);
+        fetchData();
     };
 
-    const deleteProveedor = async (id) => {
-        const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este proveedor?");
-        if (!confirmDelete) return;
-
-        try {
-            await axios.delete(`${URL}delete/${id}`);
-            alert("Proveedor eliminado con éxito.");
-            getProveedores();
-        } catch (error) {
-            console.error("Error al eliminar proveedor:", error);
-            alert("No se pudo eliminar el proveedor.");
-        }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEditData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleAdd = () => setShowCreateModal(true);
-
-    const handleEdit = (proveedor) => {
-        setEditProveedor(proveedor);
-        setShowEditModal(true);
-    };
-
-    const handleCloseEdit = () => {
-        setShowEditModal(false);
-        setEditProveedor(null);
-    };
-
-    const handleCloseCreate = () => {
-        setShowCreateModal(false);
-    };
+    // Función para filtrar los datos basados en la búsqueda y el filtro por columna
+    const filteredData = dataList.filter(item => {
+        const matchesSearch = Object.keys(item).some(key =>
+            item[key]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        const matchesColumnFilter = filterByColumn
+            ? item[filterByColumn]?.toString().toLowerCase().includes(filterByValue.toLowerCase())
+            : true;
+        return matchesSearch && matchesColumnFilter;
+    });
 
     return (
         <div className="container">
-            <Button onClick={handleAdd} className="btn btn-primary mt-4 w-100">
-                <i className="fas fa-plus-square"></i> Añadir Proveedor
+            <Form.Select
+                className="mb-3"
+                value={tableView}
+                onChange={(e) => setTableView(e.target.value)}
+            >
+                {Object.entries(entityConfig).map(([key, val]) => (
+                    <option key={key} value={key}>{val.label}</option>
+                ))}
+            </Form.Select>
+
+            <Button className="btn btn-primary w-100 mb-3" onClick={() => {
+                setEditData({ ...config.initialData });
+                setShowModal(true);
+            }}>
+                <i className="fas fa-plus-square"></i> Añadir {config.label.slice(0, -1)}
             </Button>
+
             <div className="mt-4">
-                <SearchBar />
+                <SearchBar
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    filterByColumn={filterByColumn}
+                    filterByValue={filterByValue}
+                    onFilterColumnChange={setFilterByColumn}
+                    onFilterValueChange={setFilterByValue}
+                    columns={config.columns}
+                    categories={categories}
+                />
             </div>
-            <div className="table-responsive card shadow-sm mt-4">
+
+            <div className="table-responsive card shadow-sm">
                 <Table className="table table-hover mb-0">
-                    <thead>
-                        <tr className="table-header-gradient text-white">
-                            <th className="text-center py-3 border-end">ID</th>
-                            <th className="text-center py-3 border-end">Nombre</th>
-                            <th className="text-center py-3 border-end">Contacto</th>
-                            <th className="text-center py-3 border-end">Teléfono</th>
-                            <th className="text-center py-3 border-end">Email</th>
-                            <th className="text-center py-3 border-end">Dirección</th>
-                            <th className="text-center py-3 border-end">Acciones</th>
+                    <thead className="table-header-gradient text-white">
+                        <tr>
+                            {config.columns.map(col => (
+                                <th key={col.key} className="text-center border-end py-3">{col.label}</th>
+                            ))}
+                            <th className="text-center border-end py-3">ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {proveedores.map((proveedor) => (
-                            <tr key={proveedor.id}>
-                                <td className="text-center align-middle border-end">{proveedor.id}</td>
-                                <td className="text-center align-middle border-end">{proveedor.nombre}</td>
-                                <td className="text-center align-middle border-end">{proveedor.contacto || "N/A"}</td>
-                                <td className="text-center align-middle border-end">{proveedor.telefono}</td>
-                                <td className="text-center align-middle border-end">{proveedor.email}</td>
-                                <td className="text-center align-middle border-end">{proveedor.direccion}</td>
-                                <td className="text-center align-middle border-end">
-                                    <Button
-                                        onClick={() => handleEdit(proveedor)}
-                                        className="btn btn-info mx-2"
-                                    >
-                                        <i className="fas fa-edit"></i>
+                        {filteredData.map(item => (
+                            <tr key={item[config.idField]}>
+                                {config.columns.map(col => (
+                                    <td key={col.key} className="text-center border-end align-middle">
+                                        {item[col.key]}
+                                    </td>
+                                ))}
+                                <td className="text-center border-end">
+                                    <Button className="btn btn-info mx-2" onClick={() => {
+                                        setEditData(item);
+                                        setShowModal(true);
+                                    }}>
+                                        <i className="fa-solid fa-pen-to-square"></i>
                                     </Button>
-                                    <Button
-                                        onClick={() => deleteProveedor(proveedor.id)}
-                                        className="btn btn-danger"
-                                    >
-                                        <i className="fas fa-trash-alt"></i>
+                                    <Button className="btn btn-danger" onClick={() => handleDelete(item[config.idField])}>
+                                        <i className="fa-solid fa-eraser"></i>
                                     </Button>
                                 </td>
                             </tr>
@@ -109,19 +151,39 @@ const ShowProveedores = () => {
                     </tbody>
                 </Table>
             </div>
-            <ShowEditProveedor
-                showModal={showEditModal}
-                handleClose={handleCloseEdit}
-                proveedor={editProveedor}
-                refreshProveedores={getProveedores}
-            />
-            <ShowCreateProveedor
-                showModal={showCreateModal}
-                handleClose={handleCloseCreate}
-                refreshProveedores={getProveedores}
-            />
+
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        {editData?.[config.idField] ? "Editar" : "Crear"} {config.label.slice(0, -1)}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSubmit}>
+                        {Object.keys(config.initialData).map((key) => (
+                            <Form.Group key={key} className="mb-3">
+                                <Form.Label>{key.charAt(0).toUpperCase() + key.slice(1)}</Form.Label>
+                                <Form.Control
+                                    name={key}
+                                    value={editData?.[key] || ""}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        ))}
+                        <div className="text-end">
+                            <Button variant="secondary" className="me-2" onClick={() => setShowModal(false)}>
+                                Cancelar
+                            </Button>
+                            <Button type="submit" variant="primary">
+                                Guardar
+                            </Button>
+                        </div>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };
 
-export default ShowProveedores;
+export default CompShowProveedores;

@@ -1,107 +1,139 @@
+/* --- Header --- */
 .header-custom {
-  border-bottom: 1px solid #dee2e6;
   position: sticky;
   top: 0;
   z-index: 1000;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   transition: box-shadow 0.3s ease;
 }
 
 .header-custom:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .header-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #212529;
   transition: color 0.3s ease;
 }
 
 .header-title:hover {
-  color: #007bff;
+  color: #0d6efd;
 }
 
+/* --- Notificaciones --- */
 .notification-icon {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  color: #495057;
   transition: color 0.3s ease;
 }
 
 .notification-icon:hover {
-  color: #007bff;
+  color: #0d6efd;
 }
 
 .notification-badge {
-  font-size: 0.7rem;
-  padding: 0.25rem 0.4rem;
+  font-size: 0.65rem;
+  padding: 0.3rem 0.45rem;
   border-radius: 10px;
 }
 
+/* --- Dropdown general --- */
 .dropdown-menu-custom {
-  min-width: 300px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  min-width: 320px;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.notification-item {
-  transition: background-color 0.3s ease;
+.dropdown-menu-custom .dropdown-header {
+  font-weight: 600;
+  color: #343a40;
 }
 
+.dropdown-menu-custom .dropdown-item {
+  font-size: 0.95rem;
+  padding: 0.6rem 1rem;
+  color: #212529;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu-custom .dropdown-item:hover {
+  background-color: #f1f3f5;
+}
+
+/* --- Notificación individual --- */
 .notification-item:hover {
   background-color: #f8f9fa;
 }
 
 .new-notification-badge {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   padding: 0.25rem 0.4rem;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
+/* --- Imagen de perfil --- */
 .profile-img {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  border: 2px solid #dee2e6;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .profile-img:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
+  border-color: #0d6efd;
 }
 
+/* --- Modal de Perfil --- */
 .profile-modal-img {
   width: 100px;
   height: 100px;
   object-fit: cover;
+  border: 3px solid #0d6efd;
+  margin-bottom: 10px;
 }
 
 .modal-content {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
-.modal-header {
-  border-bottom: 1px solid #dee2e6;
-}
-
+.modal-header,
 .modal-footer {
-  border-top: 1px solid #dee2e6;
+  border: none;
 }
 
+/* --- Inputs y Botones --- */
 .form-control {
-  border-radius: 5px;
+  border-radius: 8px;
+  box-shadow: none;
+  border: 1px solid #ced4da;
 }
 
 .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  font-weight: 500;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .btn-primary:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
 }
 
 .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  font-weight: 500;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 

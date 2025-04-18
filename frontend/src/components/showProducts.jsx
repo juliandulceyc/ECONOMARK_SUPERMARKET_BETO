@@ -22,7 +22,7 @@ const entityConfig = {
         },
         idField: "idProducto"
     },
-    proveedores: {
+    categorias: {
         label: "Categorias",
         url: "http://localhost:3000/categorias/",
         columns: [
@@ -69,12 +69,24 @@ const entityConfig = {
             idProveedor: "", idUsuario: "", tipo_comprobante: "", serie_comprobante: "", num_comprobante: "", fecha: "", impuesto: "", total: "", estado: ""
         },
         idField: "idEntrada"
+    },
+    proveedores: {
+        label: "Proveedores",
+        url: "http://localhost:3000/proveedores/",
+        columns: [
+            { key: "idProveedor", label: "ID" },
+            { key: "nombreProveedor", label: "NOMBRE" },
+            { key: "email", label: "EMAIL" },
+            { key: "telefono", label: "TELÉFONO" },
+        ],
+        initialData: {
+            nombreProveedor: "", telefono: ""
+        },
+        idField: "idProveedor"
     }
-
-
 };
 
-const CompShowEntities = () => {
+const CompShowProducts = () => {
     const [tableView, setTableView] = useState("products");
     const [dataList, setDataList] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -238,4 +250,4 @@ const CompShowEntities = () => {
     );
 };
 
-export default CompShowEntities;
+export default CompShowProducts;
