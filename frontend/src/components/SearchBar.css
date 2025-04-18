@@ -1,11 +1,10 @@
-/* Ajustar la altura y el padding del SearchBar para reducir el contenedor */
 .custom-search-bar {
     background: #f8f9fa;
     border-radius: 1rem;
     border: 1px solid #e0e0e0;
     transition: box-shadow 0.3s ease-in-out;
-    padding: 0.75rem 1rem;  /* Ajustar padding para reducir la altura del contenedor */
-    height: 120px;  /* Ajustar la altura del contenedor */
+    padding: 0.75rem 1rem;  
+    height: 120px;  
 }
 
 .custom-search-bar:hover {
@@ -15,7 +14,7 @@
 .custom-label {
     font-weight: 600;
     color: #495057;
-    font-size: 0.875rem;  /* Reducir tamaño de la fuente */
+    font-size: 0.875rem; 
 }
 
 .input-glow {
@@ -23,7 +22,7 @@
     transition: all 0.2s ease;
     border: 1px solid #ced4da;
     background-color: #fff;
-    font-size: 0.875rem;  /* Reducir tamaño de la fuente en los inputs */
+    font-size: 0.875rem; 
 }
 
 .input-glow:focus-within {
@@ -36,25 +35,25 @@
     border: none;
     border-right: 1px solid #dee2e6;
     color: #6c757d;
-    padding: 5px 8px;  /* Reducir el padding del ícono */
+    padding: 5px 8px; 
 }
 
 .input-group {
-    height: 100%;  /* Asegurar que los input group se ajusten a la altura */
+    height: 100%;  
 }
 
 .input-group .form-control,
 .input-group select {
-    height: 100%;  /* Ajustar la altura de los campos de entrada */
-    padding: 5px 10px;  /* Reducir el padding dentro de los campos de texto */
-    font-size: 0.875rem;  /* Reducir tamaño de la fuente */
+    height: 100%;  
+    padding: 5px 10px; 
+    font-size: 0.875rem;  
 }
 
 .input-group-text {
-    padding: 5px 10px;  /* Reducir padding para los iconos */
-    font-size: 1rem;  /* Reducir tamaño del icono */
+    padding: 5px 10px;  
+    font-size: 1rem;  
 }
 
 .custom-search-bar .row {
-    margin-bottom: 0;  /* Eliminar márgenes innecesarios */
+    margin-bottom: 0; 
 }

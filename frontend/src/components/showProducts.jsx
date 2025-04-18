@@ -35,7 +35,43 @@ const entityConfig = {
             nombreCategoria: "", descripcionCategoria: "", estado: ""
         },
         idField: "idCategoria"
+    },
+    clientes: {
+        label: "Clientes",
+        url: "http://localhost:3000/clientes/",
+        columns: [
+            { key: "idCliente", label: "ID" },
+            { key: "nombreCliente", label: "NOMBRE" },
+            { key: "telefono", label: "TELEFONO" },
+            { key: "email", label: "EMAIL" }
+        ],
+        initialData: {
+            nombreCliente: "", telefono: "", email: ""
+        },
+        idField: "idCliente"
+    },
+    entradas: {
+        label: "Entradas",
+        url: "http://localhost:3000/entradas/",
+        columns: [
+            { key: "idEntrada", label: "ID" },
+            { key: "idProveedor", label: "PROVEEDOR" },
+            { key: "idUsuario", label: "USUARIO" },
+            { key: "tipo_comprobante", label: "TIPO COMPROBANTE" },
+            { key: "serie_comprobante", label: "SERIE COMPROBANTE" },
+            { key: "num_comprobante", label: "NUMERO COMPROBANTE" },
+            { key: "fecha", label: "FECHA" },
+            { key: "impuesto", label: "IMPUESTO" },
+            { key: "total", label: "TOTAL" },
+            { key: "estado", label: "ESTADO" }
+        ],
+        initialData: {
+            idProveedor: "", idUsuario: "", tipo_comprobante: "", serie_comprobante: "", num_comprobante: "", fecha: "", impuesto: "", total: "", estado: ""
+        },
+        idField: "idEntrada"
     }
+
+
 };
 
 const CompShowEntities = () => {

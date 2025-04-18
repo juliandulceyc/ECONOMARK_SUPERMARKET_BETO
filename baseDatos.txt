@@ -66,15 +66,14 @@ CREATE TABLE clientes (
 	idCliente INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nombreCliente VARCHAR(100) NOT NULL,
 	telefono VARCHAR(20),
-	direccion VARCHAR(150),
 	email VARCHAR(100),
 	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
 	updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Tabla de ingresos
-CREATE TABLE ingreso (
-	idIngreso INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE entradas (
+	idEntrada INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idProveedor INT NOT NULL,
 	idUsuario INT NOT NULL,
 	tipo_comprobante VARCHAR(20) NOT NULL,
@@ -85,17 +84,19 @@ CREATE TABLE ingreso (
 	total DECIMAL(11,2) NOT NULL,
 	estado VARCHAR(20) NOT NULL,
 	FOREIGN KEY (idProveedor) REFERENCES proveedores(idProveedor),
-	FOREIGN KEY (idUsuario) REFERENCES credenciales(id)
+	FOREIGN KEY (idUsuario) REFERENCES credenciales(id),
+	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    	updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Detalle de ingreso
-CREATE TABLE detalle_ingreso (
-	idDetalle_ingreso INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	idIngreso INT NOT NULL,
+CREATE TABLE detalle_entradas (
+	idDetalle_entrada INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	idEntrada INT NOT NULL,
 	idProducto INT NOT NULL,
 	cantidad INT NOT NULL,
 	precio DECIMAL(11,2) NOT NULL,
-	FOREIGN KEY (idIngreso) REFERENCES ingreso(idIngreso) ON DELETE CASCADE,
+	FOREIGN KEY (idEntrada) REFERENCES entradas(idEntrada) ON DELETE CASCADE,
 	FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
 

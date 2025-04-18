@@ -14,20 +14,18 @@ function Sidebar({ onNavigate, currentView, userRole }) {
       <div className="sidebar-sticky">
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            {!isCollapsed && (
-              <img
-                src={supermarketImage}
-                alt="Supermarket logo"
-                className="logo-image"
-              />
-            )}
+            <img
+              src={supermarketImage}
+              alt="Supermarket logo"
+              className={`logo-image ${isCollapsed ? 'collapsed' : ''}`}
+            />
           </div>
           <button
             className="collapse-button"
             onClick={toggleSidebar}
             title={isCollapsed ? 'Expandir' : 'Minimizar'}
           >
-            <i className={`icon ${isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
+            <i className={`fas ${isCollapsed ? 'fa-arrow-right' : 'fa-arrow-left'}`}></i>
           </button>
         </div>
         <nav className="sidebar-nav">
@@ -38,7 +36,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
           >
             <div className="nav-content">
               <i className="bi bi-speedometer2"></i>
-              {!isCollapsed && <span>Inicio</span>}
+              <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Inicio</span>
             </div>
           </div>
           
@@ -51,7 +49,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               >
                 <div className="nav-content">
                   <i className="bi bi-people"></i>
-                  {!isCollapsed && <span>Usuarios</span>}
+                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Usuarios</span>
                 </div>
               </div>
               <div
@@ -61,7 +59,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               >
                 <div className="nav-content">
                   <i className="bi bi-box"></i>
-                  {!isCollapsed && <span>Inventario</span>}
+                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Inventario</span>
                 </div>
               </div>
               <div
@@ -71,7 +69,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               >
                 <div className="nav-content">
                   <i className="bi bi-truck"></i>
-                  {!isCollapsed && <span>Proveedores</span>}
+                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Proveedores</span>
                 </div>
               </div>
               <div
@@ -81,7 +79,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               >
                 <div className="nav-content">
                   <i className="bi bi-bar-chart"></i>
-                  {!isCollapsed && <span>Estadísticas</span>}
+                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Estadísticas</span>
                 </div>
               </div>
               <div
@@ -91,7 +89,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               >
                 <div className="nav-content">
                   <i className="bi bi-file-earmark-text"></i>
-                  {!isCollapsed && <span>Reportes</span>}
+                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Reportes</span>
                 </div>
               </div>
               <div
@@ -101,7 +99,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               >
                 <div className="nav-content">
                   <i className="bi bi-arrow-left-right"></i>
-                  {!isCollapsed && <span>Entradas/Salidas</span>}
+                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Entradas/Salidas</span>
                 </div>
               </div>
             </>
@@ -114,7 +112,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
           >
             <div className="nav-content">
               <i className="bi bi-cart"></i>
-              {!isCollapsed && <span>Ventas</span>}
+              <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Ventas</span>
             </div>
           </div>
           <div
@@ -124,7 +122,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
           >
             <div className="nav-content">
               <i className="bi bi-gear"></i>
-              {!isCollapsed && <span>Ajustes</span>}
+              <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Ajustes</span>
             </div>
           </div>
         </nav>
