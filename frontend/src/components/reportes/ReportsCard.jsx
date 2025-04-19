@@ -4,6 +4,8 @@ import { Card, Button, Table, Collapse } from 'react-bootstrap';
 import { FileDown, ChevronDown, ChevronUp } from 'lucide-react';
 import Inventario from '../inventario/inventario';
 import * as XLSX from 'xlsx';
+import { pdf } from '@react-pdf/renderer';
+import TablePDF from './TablePDF'; // Asegúrate de que la ruta sea correcta
 import './reportCard.css';
 
 const ReportCard = ({ entityKey }) => {
@@ -29,6 +31,23 @@ const ReportCard = ({ entityKey }) => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, entity.label);
     XLSX.writeFile(workbook, `${entityKey}.xlsx`);
+  };
+
+  const handleDownloadPDF = async () => {
+    const blob = await pdf(
+      <TablePDF
+        data={data}
+        columns={entity.columns}
+        title={entity.label} // Pasa el nombre de la tabla como título
+      />
+    ).toBlob();
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${entityKey}.pdf`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   if (!entity) return null;
@@ -93,7 +112,10 @@ const ReportCard = ({ entityKey }) => {
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownloadPDF();
+                }}
                 className="button-custom button-pdf"
               >
                 Generar PDF

@@ -2,7 +2,6 @@
 import React from 'react';
 import ReportCard from './ReportsCard';
 import Inventario from '../inventario/inventario';
-import './reportes.css'
 
 const Reports = () => {
   return (
