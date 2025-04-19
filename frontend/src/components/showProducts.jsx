@@ -4,135 +4,7 @@ import SearchBar from "./SearchBar";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './show.css'
-
-const entityConfig = {
-    products: {
-        label: "Productos",
-        url: "http://localhost:3000/productos/",
-        columns: [
-            { key: "idProducto", label: "ID" },
-            { key: "nombreProducto", label: "ARTICULO" },
-            { key: "idCategoria", label: "CATEGORIA" },
-            { key: "precioVenta", label: "PRECIO" },
-            { key: "stock", label: "STOCK" },
-            { key: "estado", label: "ESTADO" }
-        ],
-        initialData: {
-            nombreProducto: "", idCategoria: "", precioVenta: "", stock: "", estado: ""
-        },
-        idField: "idProducto"
-    },
-    categorias: {
-        label: "Categorias",
-        url: "http://localhost:3000/categorias/",
-        columns: [
-            { key: "idCategoria", label: "ID" },
-            { key: "nombreCategoria", label: "NOMBRE" },
-            { key: "descripcionCategoria", label: "DESCRIPCIÓN" },
-            { key: "estado", label: "ESTADO" }
-        ],
-        initialData: {
-            nombreCategoria: "", descripcionCategoria: "", estado: ""
-        },
-        idField: "idCategoria"
-    },
-    clientes: {
-        label: "Clientes",
-        url: "http://localhost:3000/clientes/",
-        columns: [
-            { key: "idCliente", label: "ID" },
-            { key: "nombreCliente", label: "NOMBRE" },
-            { key: "telefono", label: "TELEFONO" },
-            { key: "email", label: "EMAIL" }
-        ],
-        initialData: {
-            nombreCliente: "", telefono: "", email: ""
-        },
-        idField: "idCliente"
-    },
-    entradas: {
-        label: "Entradas",
-        url: "http://localhost:3000/entradas/",
-        columns: [
-            { key: "idEntrada", label: "ID" },
-            { key: "idProveedor", label: "PROVEEDOR" },
-            { key: "idUsuario", label: "USUARIO" },
-            { key: "tipo_comprobante", label: "TIPO COMPROBANTE" },
-            { key: "serie_comprobante", label: "SERIE COMPROBANTE" },
-            { key: "num_comprobante", label: "NUMERO COMPROBANTE" },
-            { key: "fecha", label: "FECHA" },
-            { key: "impuesto", label: "IMPUESTO" },
-            { key: "total", label: "TOTAL" },
-            { key: "estado", label: "ESTADO" }
-        ],
-        initialData: {
-            idProveedor: "", idUsuario: "", tipo_comprobante: "", serie_comprobante: "", num_comprobante: "", fecha: "", impuesto: "", total: "", estado: ""
-        },
-        idField: "idEntrada"
-    },
-    proveedores: {
-        label: "Proveedores",
-        url: "http://localhost:3000/proveedores/",
-        columns: [
-            { key: "idProveedor", label: "ID" },
-            { key: "nombreProveedor", label: "NOMBRE" },
-            { key: "email", label: "EMAIL" },
-            { key: "telefono", label: "TELÉFONO" },
-        ],
-        initialData: {
-            nombreProveedor: "", telefono: ""
-        },
-        idField: "idProveedor"
-    },
-    detalle_entradas: {
-        label: "Detalle Entradas",
-        url: "http://localhost:3000/detalleentradas/",
-        columns: [
-            { key: "idDetalle_entrada", label: "ID" },
-            { key: "idEntrada", label: "ENTRADA" },
-            { key: "idProducto", label: "PRODUCTO" },
-            { key: "cantidad", label: "CANTIDAD" },
-            { key: "precio", label: "PRECIO" }
-        ],
-        initialData: {
-            idEntrada: "",
-            idProducto: "",
-            cantidad: "",
-            precio: ""
-        },
-        idField: "idDetalle_entrada"
-    },
-    ventas: {
-        label: "Ventas",
-        url: "http://localhost:3000/ventas/",
-        columns: [
-            { key: "idVenta", label: "ID" },
-            { key: "idCliente", label: "CLIENTE" },
-            { key: "idUsuario", label: "USUARIO" },
-            { key: "tipo_comprobante", label: "TIPO DE COMPROBANTE" },
-            { key: "serie_comprobante", label: "SERIE COMPROBANTE" },
-            { key: "num_comprobante", label: "NÚMERO DE COMPROBANTE" },
-            { key: "fecha_hora", label: "FECHA Y HORA" },
-            { key: "impuesto", label: "IMPUESTO" },
-            { key: "total", label: "TOTAL" },
-            { key: "estado", label: "ESTADO" }
-        ],
-        initialData: {
-            idCliente: "",
-            idUsuario: "",
-            tipo_comprobante: "",
-            serie_comprobante: "",
-            num_comprobante: "",
-            fecha_hora: "",
-            impuesto: "",
-            total: "",
-            estado: ""
-        },
-        idField: "idVenta"
-    }
-
-
-};
+import Inventario from "./inventario/inventario";
 
 const CompShowProducts = () => {
     const [tableView, setTableView] = useState("products");
@@ -144,14 +16,13 @@ const CompShowProducts = () => {
     const [filterByValue, setFilterByValue] = useState('');
     const [categories, setCategories] = useState([]);
 
-    const config = entityConfig[tableView];
+    const config = Inventario[tableView];
 
-    // Función para obtener los datos de las entidades (productos o categorías)
+    // Función para obtener los datos de las tablas
     const fetchData = async () => {
         const res = await axios.get(config.url);
         setDataList(res.data);
 
-        // Si la entidad es productos, podemos obtener las categorías
         if (tableView === 'products') {
             const uniqueCategories = [...new Set(res.data.map(product => product.idCategoria))];
             setCategories(uniqueCategories);
@@ -204,7 +75,7 @@ const CompShowProducts = () => {
                 value={tableView}
                 onChange={(e) => setTableView(e.target.value)}
             >
-                {Object.entries(entityConfig).map(([key, val]) => (
+                {Object.entries(Inventario).map(([key, val]) => (
                     <option key={key} value={key}>{val.label}</option>
                 ))}
             </Form.Select>

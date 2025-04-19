@@ -14,7 +14,7 @@ import CompShowProducts from './showProducts';
 import CompShowUsers from './showUsers';
 import CompShowProveedores from './showProveedores'; // Componente para proveedores
 import Ventas from './ventas/ventas';
-import { Reports } from './reportes/Reports';
+import Reports from './reportes/Reports';
 import Preview from "./preview";
 import Settings from './settings';
 

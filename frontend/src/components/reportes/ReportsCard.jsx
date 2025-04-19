@@ -1,128 +1,126 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FileDown } from 'lucide-react';
-import { Card, Button, Table } from 'react-bootstrap';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import TablePDF from '../tablePDF.jsX';
+import { Card, Button, Table, Collapse } from 'react-bootstrap';
+import { FileDown, ChevronDown, ChevronUp } from 'lucide-react';
+import TablePDF from './tablePDF';
+import Inventario from '../inventario/inventario';
+import * as XLSX from 'xlsx';
 
-const URL = 'http://localhost:3000/tablas/';
-const URLCAT = 'http://localhost:3000/categorias/';
-
-const ReportsCard = () => {
+const ReportCard = ({ entityKey }) => {
+  const [data, setData] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const entity = Inventario[entityKey];
 
   useEffect(() => {
-    const getProducts = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(URL);
-        setProducts(response.data);
+        const res = await axios.get(entity.url);
+        setData(res.data);
       } catch (error) {
-        console.error('Error al obtener productos', error);
+        console.error(`Error al obtener datos de ${entityKey}`, error);
       }
     };
 
-    const getCategories = async () => {
-      try {
-        const response = await axios.get(URLCAT);
-        setCategories(response.data);
-      } catch (error) {
-        console.error('Error al obtener categorías', error);
-      }
-    };
+    fetchData();
+  }, [entity.url, entityKey]);
 
-    getProducts();
-    getCategories();
-  }, []);
-
-  const handleDownload = (format) => {
-    // Aquí iría la lógica real de descarga
-    alert(`Descargando en formato ${format}`);
+  const handleDownloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, entity.label);
+    XLSX.writeFile(workbook, `${entityKey}.xlsx`);
   };
 
+  if (!entity) return null;
+
   return (
-    <div
-      className="card h-100 shadow-sm cursor-pointer"
-      onClick={() => setShowOptions(!showOptions)}
-    >
-      <div className="card-body">
-        <h5 className="card-title d-flex align-items-center">
-          <FileDown className="me-2" size={20} />
-          Productos
-        </h5>
-        <p className="card-text text-muted">Estado actual del inventario</p>
-        <Table className="table table-hover mb-0">
-          <thead>
-            <tr className="table-header-gradient text-white bg-primary">
-              <th className="text-center py-3 border-end">ID</th>
-              <th className="text-center py-3 border-end">ARTICULO</th>
-              <th className="text-center py-3 border-end">CATEGORIA</th>
-              <th className="text-center py-3 border-end">PRECIO</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.slice(0, 4).map((product) => (
-              <tr key={product.id}>
-                <td className="text-center align-middle border-end">{product.id}</td>
-                <td className="text-center align-middle border-end">{product.nombre}</td>
-                <td className="text-center align-middle border-end">{product.categoria}</td>
-                <td className="text-center align-middle border-end">{product.precio}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        {showOptions && (
-          <div className="mt-3">
-            <p className="mb-2 text-muted small">Formatos disponibles:</p>
-            <div className="d-flex gap-2">
-              {['PDF', 'Excel'].map((format) => (
-                <React.Fragment key={format}>
-                  {format === 'PDF' ? (
-                    <PDFDownloadLink
-                      document={<TablePDF products={products} categories={categories} />}
-                      fileName="reporte.pdf"
-                    >
-                      {({ loading }) =>
-                        loading ? (
-                          <Button
-                            className="btn btn-sm btn-outline-primary"
-                            style={{ backgroundColor: '#0056b3', borderColor: '#0056b3', color: '#fff' }}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Generando PDF...
-                          </Button>
-                        ) : (
-                          <Button
-                            className="btn btn-sm btn-outline-primary"
-                            style={{ backgroundColor: '#0056b3', borderColor: '#0056b3', color: '#fff' }}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                             PDF
-                          </Button>
-                        )
-                      }
-                    </PDFDownloadLink>
-                  ) : (
-                    <Button
-                      className="btn btn-sm btn-outline-primary"
-                      style={{ backgroundColor: '#007bff', borderColor: '#007bff', color: '#fff' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDownload(format);
-                      }}
-                    >
-                      Descargar {format}
-                    </Button>
-                  )}
-                </React.Fragment>
-              ))}
+    <Card className="shadow-lg rounded-4 border-0 mb-4 transition-all">
+      <Card.Body className="d-flex flex-column justify-content-between">
+        {/* Header con toggle */}
+        <div
+          className="d-flex align-items-center justify-content-between mb-3"
+          onClick={() => setShowOptions(prev => !prev)}
+          style={{ cursor: 'pointer' }}
+        >
+          <div className="d-flex align-items-center gap-3">
+            <FileDown size={22} />
+            <div>
+              <Card.Title className="mb-0">{entity.label}</Card.Title>
+              <Card.Text className="text-muted small mb-0">
+                Reporte general de {entity.label}
+              </Card.Text>
             </div>
           </div>
-        )}
-      </div>
-    </div>
+          {showOptions ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        </div>
+
+        {/* Contenido colapsable */}
+        <Collapse in={showOptions}>
+          <div>
+            <div className="table-responsive">
+              <Table className="table-hover mb-3 text-center align-middle">
+                <thead className="table">
+                  <tr>
+                    {entity.columns.map((col) => (
+                      <th key={col.key} className="border-end">
+                        {col.label}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.isArray(data) && data.length > 0 ? (
+                    data.slice(0, 3).map((item, i) => (
+                      <tr key={i}>
+                        {entity.columns.map((col, index) => (
+                          <td key={index} className="border-end">
+                            {item[col.key] ?? '-'}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={entity.columns.length}>No hay datos</td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </div>
+
+            <div className="mt-2 d-flex gap-2 justify-content-start">
+              <PDFDownloadLink
+                document={<TablePDF data={data} columns={entity.columns} />}
+                fileName={`${entityKey}.pdf`}
+              >
+                {({ loading }) => (
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {loading ? 'Generando PDF...' : 'Descargar PDF'}
+                  </Button>
+                )}
+              </PDFDownloadLink>
+
+              <Button
+                variant="outline-success"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownloadExcel();
+                }}
+              >
+                Descargar Excel
+              </Button>
+            </div>
+          </div>
+        </Collapse>
+      </Card.Body>
+    </Card>
   );
 };
 
-export default ReportsCard;
+export default ReportCard;

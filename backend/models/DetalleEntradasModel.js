@@ -9,6 +9,8 @@ const DetalleEntradaModel = db.define('detalle_entradas', {
     idProducto: {type: DataTypes.INTEGER,allowNull: false},
     cantidad: {type: DataTypes.INTEGER, allowNull: false},
     precio: {type: DataTypes.DECIMAL(11, 2),allowNull: false}
+},{
+    tableName: 'detalle_entradas', timestamps: false
 });
 
 // Asociaciones
