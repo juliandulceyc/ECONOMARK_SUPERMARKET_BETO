@@ -1,0 +1,71 @@
+/* Efectos generales para la tarjeta */
+.card-custom {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+.card-custom:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+}
+
+/* Estilos para el encabezado */
+.card-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.card-header-custom:hover .card-title-custom {
+    color: #007bff;
+}
+
+.card-title-custom {
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.card-text-custom {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* Estilo del ícono de flecha */
+.card-header-custom svg {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.card-header-custom svg:hover {
+    color: #007bff;
+    transform: scale(1.1);
+}
+
+/* Estilo de las filas de la tabla */
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    transform: translateY(-2px);
+}
+
+.table-hover td {
+    padding: 12px 15px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.table-hover th {
+    padding: 12px 15px;
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.button-custom:hover {
+    transform: scale(1.05); /* Agranda el botón un 5% */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Card, Button, Table, Collapse } from 'react-bootstrap';
 import { FileDown, ChevronDown, ChevronUp } from 'lucide-react';
-import TablePDF from './tablePDF';
 import Inventario from '../inventario/inventario';
 import * as XLSX from 'xlsx';
+import './reportCard.css';
 
 const ReportCard = ({ entityKey }) => {
   const [data, setData] = useState([]);
@@ -35,19 +34,19 @@ const ReportCard = ({ entityKey }) => {
   if (!entity) return null;
 
   return (
-    <Card className="shadow-lg rounded-4 border-0 mb-4 transition-all">
+    <Card className="card-custom shadow-lg rounded-4 border-0 mb-4 transition-all">
       <Card.Body className="d-flex flex-column justify-content-between">
         {/* Header con toggle */}
         <div
-          className="d-flex align-items-center justify-content-between mb-3"
-          onClick={() => setShowOptions(prev => !prev)}
+          className="card-header-custom d-flex align-items-center justify-content-between mb-3"
+          onClick={() => setShowOptions((prev) => !prev)}
           style={{ cursor: 'pointer' }}
         >
           <div className="d-flex align-items-center gap-3">
             <FileDown size={22} />
             <div>
-              <Card.Title className="mb-0">{entity.label}</Card.Title>
-              <Card.Text className="text-muted small mb-0">
+              <Card.Title className="card-title-custom mb-0">{entity.label}</Card.Title>
+              <Card.Text className="card-text-custom small mb-0">
                 Reporte general de {entity.label}
               </Card.Text>
             </div>
@@ -90,20 +89,15 @@ const ReportCard = ({ entityKey }) => {
             </div>
 
             <div className="mt-2 d-flex gap-2 justify-content-start">
-              <PDFDownloadLink
-                document={<TablePDF data={data} columns={entity.columns} />}
-                fileName={`${entityKey}.pdf`}
+              {/* Botones de Descargar PDF y Excel */}
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={(e) => e.stopPropagation()}
+                className="button-custom button-pdf"
               >
-                {({ loading }) => (
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {loading ? 'Generando PDF...' : 'Descargar PDF'}
-                  </Button>
-                )}
-              </PDFDownloadLink>
+                Generar PDF
+              </Button>
 
               <Button
                 variant="outline-success"
@@ -112,6 +106,7 @@ const ReportCard = ({ entityKey }) => {
                   e.stopPropagation();
                   handleDownloadExcel();
                 }}
+                className="button-custom button-excel"
               >
                 Descargar Excel
               </Button>
