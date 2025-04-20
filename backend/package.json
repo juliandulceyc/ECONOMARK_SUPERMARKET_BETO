@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.460.0",
     "mysql2": "^3.11.4",
+    "nodemailer": "^6.10.1",
     "nodemon": "^3.1.7",
     "sequelize": "^6.37.5"
   }

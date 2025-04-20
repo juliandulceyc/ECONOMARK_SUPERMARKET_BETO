@@ -1,43 +1,131 @@
-.theme-container {
-    height: 100%;
-  }
-  
-  .form-signin {
-    max-width: 330px;
-    padding: 1rem;
-  }
-  
-  .form-signin .form-floating:focus-within {
-    z-index: 2;
-  }
-  
-  .form-signin input[type="email"] {
-    margin-bottom: -1px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  
-  .form-signin input[type="password"] {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-  
-  /* Solo aplica el tema oscuro al contenedor */
-  .theme-container[data-bs-theme="dark"] {
-    color: #fff;
-    background-color: #212529;
-  }
-  
-  .theme-container[data-bs-theme="dark"] .form-control {
-    background-color: #2b3035;
-    border-color: #373b3e;
-    color: #fff;
-  }
-  
-  .theme-container[data-bs-theme="dark"] .form-control:focus {
-    background-color: #2b3035;
-    border-color: #4a5056;
-    color: #fff;
-    box-shadow: 0 0 0 0.25rem rgba(130, 138, 145, 0.5);
-  }
+/* Global styles */
+html,
+body {
+  height: 100%;
+}
+
+/* Login container */
+.login-container {
+  min-height: 100vh;
+}
+
+/* Form styles */
+.form-signin {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+/*Union del select y los input */
+.merged-group .form-floating {
+  margin-bottom: -1px; /* quita el espacio entre ellos */
+}
+
+.merged-input-top {
+  border-radius: 10px 10px 0 0;
+}
+
+.merged-input-middle {
+  border-radius: 0;
+}
+
+.merged-input-bottom {
+  border-radius: 0 0 10px 10px;
+}
+
+/* Asegúrar que los bordes no se dupliquen */
+.merged-group .form-control {
+  border-top: 1px solid #ced4da;
+  border-bottom: 1px solid #ced4da;
+}
+
+.merged-group .form-floating:first-child .form-control {
+  border-top: 1px solid #ced4da;
+}
+
+.merged-group .form-floating:last-child .form-control {
+  border-bottom: 1px solid #ced4da;
+}
+
+/* Ubicación relativa para posicionar el botón de toggle */
+.input-container {
+  position: relative;
+}
+
+/* Estilos para el botón de toggle de contraseña */
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 17px; /* Ajusta según las dimensiones deseadas */
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggle-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Efectos para el toggle del ojo */
+.toggle-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Cuando el usuario pase el cursor sobre el botón del ojo */
+.toggle-password:hover .toggle-icon {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+/* Cuando el botón esté presionado (active) se puede aplicar una pequeña rotación */
+.toggle-password:active .toggle-icon {
+  transform: scale(1.1) rotate(10deg);
+}
+
+/* Estilos para el enlace 'Olvidaste tu contraseña?' */
+.forgot-password {
+  text-align: right;
+  margin-top: -5px;
+  font-size: 0.9rem;
+}
+
+/* Estilos para el botón Ingresar */
+.login-submit {
+  margin-top: -10px;
+}
+
+/* Tema oscuro (puedes adaptarlo si usas un contenedor específico) */
+.theme-container[data-bs-theme="dark"] {
+  color: #fff;
+  background-color: #212529;
+}
+
+.theme-container[data-bs-theme="dark"] .form-control {
+  background-color: #2b3035;
+  border-color: #373b3e;
+  color: #fff;
+}
+
+.theme-container[data-bs-theme="dark"] .form-control:focus {
+  background-color: #2b3035;
+  border-color: #4a5056;
+  color: #fff;
+  box-shadow: 0 0 0 0.25rem rgba(130, 138, 145, 0.5);
+}
+
+/* Efecto hover en el logo */
+.logo-hover {
+  transition: transform 0.3s ease;
+}
+.logo-hover:hover {
+  transform: scale(1.1);
+}

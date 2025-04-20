@@ -7,6 +7,7 @@ import './App.css'
 import CompShowUsers from './components/showUsers'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import ForgotPassword from './components/recuperarContraseña/ForgotPassword'
 
 
 
@@ -20,6 +21,7 @@ function App() {
         <Route path='/home' element={<Home />} />
         <Route path='/home/tablas/' element={<CompShowProducts />} />
         <Route path='/home/admin/usuarios/' element={<CompShowUsers />} />
+        <Route path='/recuperarContraseña' element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   )
