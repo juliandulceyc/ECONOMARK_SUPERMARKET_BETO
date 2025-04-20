@@ -5,7 +5,7 @@ import { DataTypes } from "sequelize";
 
 const VentaModel = db.define('venta', {
     idVenta: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    idCliente: { type: DataTypes.INTEGER, allowNull: false },
+    idCliente: { type: DataTypes.INTEGER, allowNull: true },
     idUsuario: { type: DataTypes.INTEGER, allowNull: false },
     tipo_comprobante: { type: DataTypes.STRING(20), allowNull: false },
     serie_comprobante: { type: DataTypes.STRING(7) },

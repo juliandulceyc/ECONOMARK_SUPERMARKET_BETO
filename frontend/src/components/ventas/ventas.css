@@ -191,7 +191,6 @@ body {
   display: flex;
   align-items: center;
   max-width: calc(100% - 600px);
-  /* Ajustado para nuevo layout */
 }
 
 .ventas-actions-grid {
@@ -238,11 +237,10 @@ body {
   background: #0056b3;
 }
 
-/* Sección de pago - Modificado para disposición horizontal */
+/* Sección de pago */
 .ventas-payment-col {
   display: flex;
   flex-direction: row;
-  /* Cambiado a horizontal */
   align-items: center;
   gap: 20px;
   height: auto;
@@ -291,11 +289,10 @@ body {
   padding: 0;
 }
 
-/* Separador superior - Alineado con ventas-total */
 .ventas-footer::before {
   content: '';
   position: absolute;
-  top: -7px; /* Sube hasta el área del ventas-total */
+  top: -7px;
   left: 0;
   right: 0;
   height: 8px;
@@ -304,31 +301,203 @@ body {
   z-index: 1;
 }
 
-/* Separador inferior - 95% de ancho centrado */
 .ventas-footer::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 2.5%; /* Centrado horizontal: (100% - 95%) / 2 */
+  left: 2.5%;
   right: 2.5%;
   height: 20px;
   background-color: #1921C5;
 }
 
-
-/* Contenido del footer */
 .ventas-footer-content {
   position: relative;
   z-index: 2;
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center; /* Centrado vertical principal */
+  align-items: center;
   justify-content: space-between;
-  /* Nuevas propiedades para alineación precisa */
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translateY(-50%); /* Centrado vertical exacto */
+  transform: translateY(-50%);
   padding: 0 30px;
+}
+
+/* ======================= */
+/* === RESPONSIVE ZONE === */
+/* ======================= */
+
+@media (max-width: 1200px) {
+  .ventas-actions {
+    flex-direction: column;
+    height: auto;
+    gap: 20px;
+  }
+
+  .ventas-buttons-container {
+    max-width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .ventas-actions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-rows: auto;
+    width: 100%;
+    justify-items: center;
+  }
+
+  .ventas-total {
+    width: 100%;
+    height: auto;
+    font-size: 2rem;
+    padding: 20px 0;
+  }
+
+  .ventas-cobrar {
+    width: 100%;
+    height: 70px;
+    font-size: 1.2rem;
+  }
+
+  .ventas-payment-col {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .ventas-controls-line {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .input {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ventas-add-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .ventas-button-row {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 6px;
+  }
+
+  .ventas-product-list table {
+    font-size: 0.9rem;
+  }
+
+  .ventas-product-list th,
+  .ventas-product-list td {
+    padding: 8px;
+  }
+
+  .ventas-actions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .action-btn {
+    width: 100%;
+    height: 42px;
+  }
+
+  .ventas-footer-content {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .ventas-header {
+    padding-left: 10px;
+    justify-content: center;
+  }
+
+  .ventas-header img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .ventas-titulo-gradiente {
+    font-size: 1rem;
+    padding: 6px;
+    text-align: center;
+  }
+
+  .ventas-product-list table {
+    font-size: 0.8rem;
+  }
+
+  .ventas-footer::before,
+  .ventas-footer::after {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .ventas-footer-content {
+    flex-direction: column;
+    padding: 5px;
+    font-size: 0.9rem;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  max-height: 80vh;
+  overflow-y: auto;
+  width: 90%;
+  max-width: 700px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.modal-table th,
+.modal-table td {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  text-align: center;
 }

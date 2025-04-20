@@ -161,7 +161,7 @@ const Login = () => {
 
           {error && <div className="alert alert-danger">{error}</div>}
 
-          {/* Inputs unidos al estilo Bootstrap */}
+          {/* Inputs unidos */}
           <div className="mb-4">
             <div className="form-floating">
               <input
@@ -195,7 +195,7 @@ const Login = () => {
               />
               <label htmlFor="password">Contraseña</label>
 
-              {/* Botón para ver/ocultar la contraseña usando iconos de Iconos8 */}
+              {/* Botón para ver/ocultar la contraseña */}
               <button
                 type="button"
                 onClick={togglePassword}
@@ -220,7 +220,7 @@ const Login = () => {
           </div>
 
           {/* Reducido el espacio superior del botón para que esté más pegado al link */}
-          <button className="btn btn-primary w-100 py-2" type="submit" style={{ marginTop: '-15px' }}>
+          <button className="btn btn-primary w-100 py-2 login-btn" type="submit" style={{ marginTop: '-15px' }}>
             Ingresar
           </button>
 

@@ -104,7 +104,7 @@ CREATE TABLE detalle_entradas (
 -- Tabla de ventas
 CREATE TABLE venta (
 	idVenta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	idCliente INT NOT NULL,
+	idCliente INT NULL,
 	idUsuario INT NOT NULL,
 	tipo_comprobante VARCHAR(20) NOT NULL,
 	serie_comprobante VARCHAR(7),

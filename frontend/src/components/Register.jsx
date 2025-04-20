@@ -208,7 +208,7 @@ const Register = () => {
           </div>
 
 
-          <button className="btn btn-primary w-100 py-2 login-submit" type="submit">
+          <button className="btn btn-primary w-100 py-2 login-submit login-btn" type="submit">
             Registrarse
           </button>
 

@@ -125,7 +125,7 @@ const ResetPassword = () => {
             </button>
           </div>
 
-          <button className="btn btn-primary w-100 py-2" type="submit">
+          <button className="btn btn-primary w-100 py-2 login-btn" type="submit">
             Restablecer Contraseña
           </button>
 
