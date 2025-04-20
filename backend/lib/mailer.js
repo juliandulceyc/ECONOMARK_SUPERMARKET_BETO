@@ -11,7 +11,7 @@ export const transporter = nodemailer.createTransport({
 })
 
 export const sendResetEmail = async (to, token) => {
-  const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`
+  const resetLink = `${process.env.FRONTEND_URL}/resetContraseña/${token}`
 
   await transporter.sendMail({
     from: `"Economark Soporte" <${process.env.EMAIL_USER}>`,

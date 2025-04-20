@@ -23,7 +23,7 @@ function App() {
         <Route path='/home/tablas/' element={<CompShowProducts />} />
         <Route path='/home/admin/usuarios/' element={<CompShowUsers />} />
         <Route path='/recuperarContraseña' element={<ForgotPassword />} />
-        <Route path='/resetContraseña' element={<ResetPassword />} />
+        <Route path='/resetContraseña/:token' element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   )

@@ -10,6 +10,8 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false); // Estado para mostrar/ocultar nueva contraseña
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para mostrar/ocultar confirmar contraseña
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +40,15 @@ const ResetPassword = () => {
     }
   };
 
+  // Funciones para manejar mostrar/ocultar contraseñas
+  const toggleNewPassword = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const toggleConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
     <div className="d-flex align-items-center py-4 bg-body-tertiary" style={{ minHeight: '100vh' }}>
       <main className="form-signin w-100 m-auto">
@@ -58,7 +69,7 @@ const ResetPassword = () => {
 
           <div className="form-floating">
             <input
-              type="password"
+              type={showNewPassword ? 'text' : 'password'}
               className="form-control merged-input-top"
               id="newPassword"
               placeholder="Nueva Contraseña"
@@ -68,11 +79,26 @@ const ResetPassword = () => {
               required
             />
             <label htmlFor="newPassword">Nueva Contraseña</label>
+            <button
+              type="button"
+              onClick={toggleNewPassword}
+              className="toggle-password"
+            >
+              <img
+                src={
+                  showNewPassword
+                    ? "https://img.icons8.com/?size=100&id=89226&format=png&color=000000"
+                    : "https://img.icons8.com/?size=100&id=96160&format=png&color=000000"
+                }
+                alt={showNewPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                className="toggle-icon"
+              />
+            </button>
           </div>
 
           <div className="form-floating mb-3">
             <input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               className="form-control merged-input-bottom"
               id="confirmPassword"
               placeholder="Confirmar Contraseña"
@@ -82,6 +108,21 @@ const ResetPassword = () => {
               required
             />
             <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+            <button
+              type="button"
+              onClick={toggleConfirmPassword}
+              className="toggle-password"
+            >
+              <img
+                src={
+                  showConfirmPassword
+                    ? "https://img.icons8.com/?size=100&id=89226&format=png&color=000000"
+                    : "https://img.icons8.com/?size=100&id=96160&format=png&color=000000"
+                }
+                alt={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                className="toggle-icon"
+              />
+            </button>
           </div>
 
           <button className="btn btn-primary w-100 py-2" type="submit">
