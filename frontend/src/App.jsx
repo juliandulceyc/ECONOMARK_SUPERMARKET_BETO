@@ -8,6 +8,7 @@ import CompShowUsers from './components/showUsers'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ForgotPassword from './components/recuperarContraseña/ForgotPassword'
+import ResetPassword from './components/recuperarContraseña/ResetPassword'
 
 
 
@@ -22,6 +23,7 @@ function App() {
         <Route path='/home/tablas/' element={<CompShowProducts />} />
         <Route path='/home/admin/usuarios/' element={<CompShowUsers />} />
         <Route path='/recuperarContraseña' element={<ForgotPassword />} />
+        <Route path='/resetContraseña' element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   )
