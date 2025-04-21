@@ -15,8 +15,21 @@ import CompShowUsers from './showUsers';
 import CompShowProveedores from './showProveedores'; // Componente para proveedores
 import Ventas from './ventas/ventas';
 import Reports from './reportes/Reports';
-import Preview from "./preview";
+import Preview from './preview';
 import Settings from './settings';
+
+// Interceptor global para manejar expiración de token
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      // Token expirado o inválido: limpiar y redirigir
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 function Home() {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -24,24 +37,20 @@ function Home() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
+  // Obtener usuario y rol
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:3000/auth/home', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (response.status === 401 || response.status === 403) {
-        navigate('/login', { replace: true });
-      } else {
-        const userRole = response.data.user.rol;
-        console.log("Rol obtenido:", userRole);
-        setUserRole(userRole);
-      }
+      const role = response.data.user.rol;
+      console.log('Rol obtenido:', role);
+      setUserRole(role);
     } catch (err) {
+      // Si hay error (p.ej. 401), redirigir al login
       navigate('/login', { replace: true });
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -50,19 +59,15 @@ function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Bloquear que el usuario regrese al login usando el botón "atrás" del navegador.
+  // Bloquear botón atrás hacia login
   useEffect(() => {
     window.history.pushState(null, document.title, window.location.href);
-    const handlePopState = () => {
-      window.history.pushState(null, document.title, window.location.href);
-    };
-
+    const handlePopState = () => window.history.pushState(null, document.title, window.location.href);
     window.addEventListener('popstate', handlePopState);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // Renderizar contenido según vista seleccionada
   const renderContent = () => {
     switch (currentView) {
       case 'dashboard':
@@ -80,27 +85,23 @@ function Home() {
           </>
         );
       case 'users':
-        if (userRole === 'admin') {
-          return (
-            <>
-              <DashboardStats />
-              <CompShowUsers />
-            </>
-          );
-        } else {
-          return <div>No tienes permisos para acceder a esta sección.</div>;
-        }
+        return userRole === 'admin' ? (
+          <>
+            <DashboardStats />
+            <CompShowUsers />
+          </>
+        ) : (
+          <div>No tienes permisos para acceder a esta sección.</div>
+        );
       case 'proveedores':
-        if (userRole === 'admin') {
-          return (
-            <>
-              <DashboardStats />
-              <CompShowProveedores />
-            </>
-          );
-        } else {
-          return <div>No tienes permisos para acceder a esta sección.</div>;
-        }
+        return userRole === 'admin' ? (
+          <>
+            <DashboardStats />
+            <CompShowProveedores />
+          </>
+        ) : (
+          <div>No tienes permisos para acceder a esta sección.</div>
+        );
       case 'reports':
         return <Reports />;
       case 'sell':
@@ -114,9 +115,8 @@ function Home() {
     }
   };
 
-  const handleToggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
+  // Alternar colapsado del sidebar
+  const handleToggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
   return (
     <div className="wrapper">

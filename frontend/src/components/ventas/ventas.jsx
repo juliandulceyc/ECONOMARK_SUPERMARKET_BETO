@@ -1,55 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import './ventas.css';
 import Logo from './carrito-de-compras.png';
-import API from './services/axiosConfig'; // Configuración de la API
+import API from './services/axiosConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCashRegister } from '@fortawesome/free-solid-svg-icons'; // Iconos para búsqueda y facturación
-import FacturaModal from './FacturaModal'; // Modal de factura
+import { faSearch, faCashRegister } from '@fortawesome/free-solid-svg-icons';
+import FacturaModal from './FacturaModal';
+import ClienteModal from './ClienteModal'; // Importa el ClienteModal
 
 const Ventas = () => {
   const [codigoProducto, setCodigoProducto] = useState('');
-  const [producto, setProducto] = useState(null); // Producto encontrado
-  const [cantidad, setCantidad] = useState(1); // Cantidad del producto
-  const [productosEnVenta, setProductosEnVenta] = useState([]); // Lista de productos en venta
-  const [mostrarModal, setMostrarModal] = useState(false); // Control de visibilidad del modal
-  const [listaProductos, setListaProductos] = useState([]); // Lista de productos para el modal
-  const [totalVenta, setTotalVenta] = useState(0); // Total de la venta
-  const [mostrarModalFactura, setMostrarModalFactura] = useState(false); // Control de visibilidad del modal de factura
-  const [datosVenta, setDatosVenta] = useState(null); // Datos de la venta para mostrar en el modal de factura
+  const [producto, setProducto] = useState(null);
+  const [cantidad, setCantidad] = useState(1);
+  const [productosEnVenta, setProductosEnVenta] = useState([]);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [listaProductos, setListaProductos] = useState([]);
+  const [totalVenta, setTotalVenta] = useState(0);
+  const [mostrarModalFactura, setMostrarModalFactura] = useState(false);
+  const [datosVenta, setDatosVenta] = useState(null);
+  const [cliente, setCliente] = useState(null);
+  const [mostrarModalCliente, setMostrarModalCliente] = useState(false); // Estado para el modal de cliente
+  const [clientes, setClientes] = useState([]); // Estado para almacenar la lista de clientes
 
-  // Función para buscar un producto por su código
+  useEffect(() => {
+    const clienteGuardado = localStorage.getItem("cliente");
+    if (clienteGuardado) {
+      setCliente(JSON.parse(clienteGuardado));
+    }
+  }, []);
+
+  // Cargar clientes cuando el componente se monte
+  useEffect(() => {
+    const obtenerClientes = async () => {
+      try {
+        const response = await API.get('/clientes');
+        setClientes(response.data);
+      } catch (error) {
+        console.error("Error al obtener los clientes:", error);
+      }
+    };
+    obtenerClientes();
+  }, []);
+
   const buscarProducto = async () => {
     try {
       const response = await API.get(`/productos/${codigoProducto}`);
       setProducto(response.data);
     } catch (error) {
       console.error("Error al buscar el producto:", error);
-      setProducto(null); // Si no se encuentra el producto, lo ponemos en null
+      setProducto(null);
     }
   };
 
-  // Función para obtener la lista de productos para el modal
   const obtenerListaProductos = async () => {
     try {
       const response = await API.get('/productos');
-      setListaProductos(response.data); // Asignamos los productos obtenidos
+      setListaProductos(response.data);
     } catch (error) {
       console.error("Error al obtener los productos:", error);
     }
   };
 
-  // Función para agregar un producto a la venta
   const agregarProducto = () => {
     if (producto) {
       const productoConCantidad = {
         ...producto,
         cantidad,
-        total: producto.precioVenta * cantidad, // Calcular total del producto
+        total: producto.precioVenta * cantidad,
       };
       setProductosEnVenta([...productosEnVenta, productoConCantidad]);
-
-      // Actualizar el total de la venta
-      setTotalVenta(totalVenta + productoConCantidad.total);
+      setTotalVenta(prevTotal => prevTotal + productoConCantidad.total);
 
       setCodigoProducto('');
       setProducto(null);
@@ -57,70 +76,71 @@ const Ventas = () => {
     }
   };
 
-  // Función para calcular el total de la venta (actualizado con cada producto agregado)
+  const abrirModalCliente = () => {
+    setMostrarModalCliente(true); // Abrir el modal de selección de cliente
+  };
+
+  const seleccionarCliente = (clienteSeleccionado) => {
+    setCliente(clienteSeleccionado); // Guardar el cliente seleccionado
+    localStorage.setItem("cliente", JSON.stringify(clienteSeleccionado)); // Guardar cliente en localStorage
+    setMostrarModalCliente(false); // Cerrar el modal
+  };
+
   const calcularTotalVenta = () => {
     return productosEnVenta.reduce((total, producto) => total + producto.total, 0);
   };
 
-  // Función que abre el modal y obtiene los productos
   const abrirModal = () => {
-    obtenerListaProductos(); // Obtener productos del backend
-    setMostrarModal(true); // Abrir el modal
+    obtenerListaProductos();
+    setMostrarModal(true);
   };
 
-  // Función para seleccionar un producto del modal
   const seleccionarProductoDelModal = (productoSeleccionado) => {
-    setProducto(productoSeleccionado); // Establecer el producto seleccionado
-    setCodigoProducto(productoSeleccionado.idProducto || ''); // Asignar el código del producto
-    setMostrarModal(false); // Cerrar el modal
+    setProducto(productoSeleccionado);
+    setCodigoProducto(productoSeleccionado.idProducto || '');
+    setMostrarModal(false);
   };
 
-  // Función para cerrar el modal
   const cerrarModal = () => {
-    setMostrarModal(false); // Cerrar el modal
+    setMostrarModal(false);
   };
 
-  // Función para generar la factura
   const generarFactura = () => {
-    setDatosVenta({
+    const ventaGenerada = {
       id: new Date().getTime(),
       fecha: new Date().toLocaleString(),
       productos: productosEnVenta,
-      total: totalVenta,
-    });
+      total: calcularTotalVenta(),
+    };
+    setDatosVenta(ventaGenerada);
     setMostrarModalFactura(true);
   };
 
-  // Función para descontar el stock de los productos vendidos
   const descontarStock = async () => {
     try {
-      // Descontar el stock de cada producto vendido
       for (let productoVenta of productosEnVenta) {
-        const nuevoStock = productoVenta.stock - productoVenta.cantidad; // Nuevo stock tras la venta
-
-        // Actualizar el stock del producto en la base de datos
+        const nuevoStock = productoVenta.stock - productoVenta.cantidad;
         await API.put(`/productos/${productoVenta.idProducto}`, {
           stock: nuevoStock
         });
       }
-
-      // Aquí podemos añadir un mensaje de éxito o lo que sea necesario.
-      alert("Productos descontados correctamente.");
     } catch (error) {
       console.error("Error al descontar el stock:", error);
-      alert("Error al descontar el stock.");
     }
   };
 
   const manejarCobro = async () => {
+    if (productosEnVenta.length === 0) {
+      alert("Agrega productos antes de cobrar.");
+      return;
+    }
+
     try {
-      // Descontamos el stock de los productos
       await descontarStock();
 
-      // 1. Armamos los datos de la venta
       const ventaData = {
-        idCliente: 1, // Usa un ID válido o agrega selector de cliente más adelante
-        idUsuario: 1, // Usa el ID del usuario logueado
+        idCliente: cliente ? cliente.idCliente : 0,
+        idUsuario: 1,
         tipo_comprobante: 'Factura',
         fecha_hora: new Date().toISOString(),
         impuesto: 0.18,
@@ -134,14 +154,11 @@ const Ventas = () => {
         }))
       };
 
-      // 2. Registramos la venta en el backend
       const response = await API.post('/ventas', ventaData);
       console.log(response.data.message);
 
-      // 3. Mostramos la factura
       generarFactura();
 
-      // 4. Limpiamos los datos de la venta
       setProductosEnVenta([]);
       setTotalVenta(0);
     } catch (error) {
@@ -152,7 +169,7 @@ const Ventas = () => {
 
   useEffect(() => {
     if (codigoProducto) {
-      buscarProducto(); // Si hay un código de producto, lo buscamos automáticamente
+      buscarProducto();
     }
   }, [codigoProducto]);
 
@@ -162,16 +179,12 @@ const Ventas = () => {
         <img src={Logo} alt="Carrito de compras" />
       </header>
 
-      {/* Fila de botones */}
       <section className="ventas-button-row">
         {Array.from({ length: 13 }, (_, index) => (
-          <button key={index} className="ventas-button">
-            Botón
-          </button>
+          <button key={index} className="ventas-button">Botón</button>
         ))}
       </section>
 
-      {/* Ingreso de datos de venta */}
       <section className="ventas-product-entry">
         <div className="ventas-titulo-container">
           <h2 className="ventas-titulo-gradiente">VENTA DE PRODUCTOS</h2>
@@ -187,11 +200,9 @@ const Ventas = () => {
               value={codigoProducto}
               onChange={(e) => setCodigoProducto(e.target.value)}
             />
-            {/* Botón para buscar producto */}
             <button className="ventas-add-btn" onClick={abrirModal}>
               <FontAwesomeIcon icon={faSearch} />
             </button>
-            {/* Botón para iniciar facturación */}
             <button className="ventas-add-btn" onClick={agregarProducto}>
               <FontAwesomeIcon icon={faCashRegister} />
             </button>
@@ -203,21 +214,19 @@ const Ventas = () => {
               type="number"
               className="input"
               value={cantidad}
-              onChange={(e) => setCantidad(e.target.value)}
+              onChange={(e) => setCantidad(Number(e.target.value))}
               min="1"
             />
           </div>
 
-          {/* Botón para agregar a la venta */}
           <button className="action-btn" onClick={agregarProducto}>Agregar a la venta</button>
-          <button className="action-btn">Registrar recarga</button>
+          <button className="action-btn" onClick={abrirModalCliente}>Seleccionar cliente</button>
           <button className="action-btn">Vender a granel</button>
           <button className="action-btn">Venta en espera</button>
         </div>
         <div className='ventas-separator' />
       </section>
 
-      {/* Lista de productos en venta */}
       <section className="ventas-product-list">
         <table>
           <thead>
@@ -245,7 +254,6 @@ const Ventas = () => {
         </table>
       </section>
 
-      {/* Acciones de venta */}
       <section className="ventas-actions">
         <div className="ventas-buttons-container">
           <div className="ventas-actions-grid">
@@ -259,7 +267,7 @@ const Ventas = () => {
         </div>
         <div className="ventas-payment-col">
           <button className="ventas-cobrar" onClick={manejarCobro}>F12 - Cobrar</button>
-          <div className="ventas-total">Total: ${calcularTotalVenta()}</div>
+          <div className="ventas-total">Total: ${calcularTotalVenta().toFixed(2)}</div>
         </div>
       </section>
 
@@ -270,7 +278,6 @@ const Ventas = () => {
         </div>
       </footer>
 
-      {/* Modal de productos */}
       {mostrarModal && (
         <div className="modal-backdrop">
           <div className="modal-content">
@@ -302,8 +309,16 @@ const Ventas = () => {
         </div>
       )}
 
-      {/* Modal de Factura */}
-      {mostrarModalFactura && (
+      {mostrarModalCliente && (
+        <ClienteModal
+          showModal={mostrarModalCliente}
+          handleClose={() => setMostrarModalCliente(false)}
+          clientes={clientes}
+          handleSelectCliente={seleccionarCliente}
+        />
+      )}
+
+      {mostrarModalFactura && datosVenta && (
         <FacturaModal
           show={mostrarModalFactura}
           onHide={() => setMostrarModalFactura(false)}

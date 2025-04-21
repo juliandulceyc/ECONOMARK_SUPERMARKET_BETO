@@ -104,6 +104,11 @@ body {
   justify-content: flex-start;
 }
 
+.ventas-controls-line .boton-seleccionar-cliente {
+  flex-shrink: 0; /* Evitar que el botón se achique */
+  width: auto; /* Asegurarse de que el botón tenga solo el tamaño necesario */
+}
+
 .input-group {
   display: flex;
   flex-direction: row;
@@ -115,6 +120,7 @@ body {
   font-weight: bold;
   font-size: 0.9rem;
 }
+
 
 .input {
   padding: 8px 12px;
@@ -326,135 +332,6 @@ body {
   padding: 0 30px;
 }
 
-/* ======================= */
-/* === RESPONSIVE ZONE === */
-/* ======================= */
-
-@media (max-width: 1200px) {
-  .ventas-actions {
-    flex-direction: column;
-    height: auto;
-    gap: 20px;
-  }
-
-  .ventas-buttons-container {
-    max-width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .ventas-actions-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    grid-template-rows: auto;
-    width: 100%;
-    justify-items: center;
-  }
-
-  .ventas-total {
-    width: 100%;
-    height: auto;
-    font-size: 2rem;
-    padding: 20px 0;
-  }
-
-  .ventas-cobrar {
-    width: 100%;
-    height: 70px;
-    font-size: 1.2rem;
-  }
-
-  .ventas-payment-col {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .ventas-controls-line {
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    padding: 10px;
-  }
-
-  .input {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .ventas-add-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-
-  .ventas-button-row {
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 6px;
-  }
-
-  .ventas-product-list table {
-    font-size: 0.9rem;
-  }
-
-  .ventas-product-list th,
-  .ventas-product-list td {
-    padding: 8px;
-  }
-
-  .ventas-actions-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  }
-
-  .action-btn {
-    width: 100%;
-    height: 42px;
-  }
-
-  .ventas-footer-content {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .ventas-header {
-    padding-left: 10px;
-    justify-content: center;
-  }
-
-  .ventas-header img {
-    width: 70px;
-    height: 70px;
-  }
-
-  .ventas-titulo-gradiente {
-    font-size: 1rem;
-    padding: 6px;
-    text-align: center;
-  }
-
-  .ventas-product-list table {
-    font-size: 0.8rem;
-  }
-
-  .ventas-footer::before,
-  .ventas-footer::after {
-    width: 100%;
-    left: 0;
-    right: 0;
-  }
-
-  .ventas-footer-content {
-    flex-direction: column;
-    padding: 5px;
-    font-size: 0.9rem;
-  }
-}
-
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -501,3 +378,47 @@ body {
   border: 1px solid #ddd;
   text-align: center;
 }
+
+.boton-seleccionar-cliente {
+  padding: 8px;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.boton-seleccionar-cliente:hover {
+  background-color: #0056b3;
+}
+/* Estilo para el modal de selección de cliente */
+.ventas-input-search {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.modal-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modal-table th, .modal-table td {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+}
+
+.modal-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.modal-table th {
+  background-color: #e9ecef;
+  font-weight: bold;
+}
+

@@ -1,6 +1,7 @@
 // Importamos el modelo
 import VentaModel from "../models/VentasModel.js";
 import DetalleVentaModel from "../models/DetalleVentasModel.js";
+import ClienteModel from "../models/ClientesModel.js";
 
 const generarComprobante = async (tipo) => {
     const serie = tipo === "Factura" ? "F001" : "B001";
@@ -46,15 +47,25 @@ export const getVenta = async (req, res) => {
 };
 
 export const createVenta = async (req, res) => {
-    const { detalle, ...ventaBase } = req.body;
+    const { detalle, idCliente, ...ventaBase } = req.body;
 
     try {
+        // Verificamos si el cliente existe
+        let clienteId = 0;  // Por defecto, cliente anónimo
+        if (idCliente) {
+            const cliente = await ClienteModel.findByPk(idCliente);
+            if (cliente) {
+                clienteId = idCliente;  // Si el cliente está registrado, usamos su id
+            }
+        }
+
         // Generar datos del comprobante
         const comprobante = await generarComprobante(ventaBase.tipo_comprobante);
 
-        // Crear la venta con los datos del comprobante
+        // Crear la venta con los datos del comprobante y el idCliente (que puede ser 0)
         const nuevaVenta = await VentaModel.create({
             ...ventaBase,
+            idCliente: clienteId, // Aquí asignamos el idCliente (0 si no está registrado)
             ...comprobante
         });
 
