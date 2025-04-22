@@ -1,194 +1,177 @@
 package economark.mobile
 
-import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.pdf.PdfDocument
+import android.graphics.*
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.FileProvider
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
+import economark.mobile.models.ReportesConfig
+import economark.mobile.models.Columna
+import okhttp3.*
+import org.json.JSONArray
 import java.io.File
 import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.util.*
+import java.io.IOException
 
 class Reports : AppCompatActivity() {
 
-    private lateinit var etFecha: EditText
-    private lateinit var iconoCalendario: ImageView
-    private lateinit var spinnerReportes: Spinner
-    private lateinit var btnGenerar: Button
-    private lateinit var btnDescargar: Button
-    private lateinit var btnHistorial: Button
-    private lateinit var reportGeneratedLayout: LinearLayout
-    private var archivoGenerado: File? = null
+    private lateinit var spinner: Spinner
+    private lateinit var progressBar: ProgressBar
+    private lateinit var client: OkHttpClient
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reports)
 
-        // Toolbar
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        // Configuración del Toolbar y el botón de regresar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)  // Configurar el Toolbar como la barra de acción
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)  // Habilitar el botón de regresar
 
-        // Referencias UI
-        etFecha = findViewById(R.id.etFecha)
-        iconoCalendario = findViewById(R.id.iconoCalendario)
-        spinnerReportes = findViewById(R.id.spinnerReportes)
-        btnGenerar = findViewById(R.id.btnGenerar)
-        btnDescargar = findViewById(R.id.btnDescargar)
-        btnHistorial = findViewById(R.id.btnHistorial)
-        reportGeneratedLayout = findViewById(R.id.reportGeneratedLayout)
+        // Acción del botón de regresar
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()  // Regresar a la actividad anterior
+        }
 
-        reportGeneratedLayout.visibility = View.GONE
+        spinner = findViewById(R.id.spinnerReportes)
+        progressBar = findViewById(R.id.progressBar)
+        client = OkHttpClient()
 
-        // Spinner
-        val opciones = arrayOf(
-            "Seleccione reporte...",
-            "Bajo Stock",
-            "Productos por fecha",
-            "Generar todos"
-        )
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, opciones)
+        val reportes = ReportesConfig.entidades.keys.toList()
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, reportes)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerReportes.adapter = adapter
+        spinner.adapter = adapter
 
-        // Calendario
-        iconoCalendario.setOnClickListener { mostrarDatePicker() }
-
-        // Botón Generar
-        btnGenerar.setOnClickListener {
-            val seleccion = spinnerReportes.selectedItem.toString()
-            when (seleccion) {
-                "Bajo Stock" -> generarReporteBajoStock()
-                else -> Toast.makeText(this, "Funcionalidad no implementada aún", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // Botón Descargar
-        btnDescargar.setOnClickListener {
-            archivoGenerado?.let { file ->
-                val uri = FileProvider.getUriForFile(
-                    this,
-                    "${packageName}.provider",
-                    file
-                )
-                val intent = Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(uri, "application/pdf")
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-                try {
-                    startActivity(Intent.createChooser(intent, "Abrir reporte con..."))
-                } catch (e: ActivityNotFoundException) {
-                    Toast.makeText(this, "No hay visor de PDF instalado", Toast.LENGTH_SHORT).show()
-                }
-            } ?: Toast.makeText(this, "No se ha generado ningún archivo aún", Toast.LENGTH_SHORT).show()
-        }
-
-        // Botón Historial
-        btnHistorial.setOnClickListener {
-            Toast.makeText(this, "Funcionalidad de historial aún no implementada", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun mostrarDatePicker() {
-        val calendar = Calendar.getInstance()
-        val datePicker = DatePickerDialog(
-            this,
-            { _, year, month, day ->
-                etFecha.setText("$day/${month + 1}/$year")
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePicker.show()
-    }
-
-    private fun generarReporteBajoStock() {
-        btnGenerar.isEnabled = false
-        btnGenerar.text = "Generando..."
-
-        lifecycleScope.launch {
-            try {
-                val datos = listOf(
-                    Triple(1, "Producto A", "5 unidades"),
-                    Triple(2, "Producto B", "2 unidades"),
-                    Triple(3, "Producto C", "1 unidad")
-                )
-
-                generarPDF(datos)
-                Toast.makeText(this@Reports, "Reporte generado", Toast.LENGTH_SHORT).show()
-                reportGeneratedLayout.visibility = View.VISIBLE
-
-            } catch (e: Exception) {
-                Toast.makeText(this@Reports, "Error al generar reporte", Toast.LENGTH_SHORT).show()
-            } finally {
-                btnGenerar.isEnabled = true
-                btnGenerar.text = "Generar"
+        findViewById<Button>(R.id.btnGenerarReporte).setOnClickListener {
+            val tipoReporte = spinner.selectedItem.toString()
+            val entidad = ReportesConfig.entidades[tipoReporte]
+            if (entidad != null) {
+                fetchAndGenerateReport(entidad.label, entidad.url, entidad.columnas)
+            } else {
+                Toast.makeText(this, "Tipo de reporte no reconocido", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun generarPDF(datos: List<Triple<Int, String, String>>) {
-        val pdf = PdfDocument()
-        val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
-        val page = pdf.startPage(pageInfo)
+    private fun fetchAndGenerateReport(title: String, url: String, columnas: List<Columna>) {
+        progressBar.visibility = View.VISIBLE
+
+        val request = Request.Builder().url(url).build()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(this@Reports, "Error al obtener datos", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                runOnUiThread { progressBar.visibility = View.GONE }
+
+                if (response.isSuccessful) {
+                    val jsonArray = JSONArray(response.body?.string())
+                    val pdfFile = generatePdf(title, columnas, jsonArray)
+                    openPdf(pdfFile)
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@Reports, "Error al generar reporte", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun generatePdf(title: String, columnas: List<Columna>, data: JSONArray): File {
+        val config = ReportesConfig.entidades[title] ?: return File("")
+        val columnas = config.columnas
+
+        val document = android.graphics.pdf.PdfDocument()
+        val pageInfo = android.graphics.pdf.PdfDocument.PageInfo.Builder(595, 842, 1).create()
+        val page = document.startPage(pageInfo)
+
         val canvas = page.canvas
+        val paint = Paint()
+        val headerPaint = Paint()
+        val linePaint = Paint()
 
-        val titlePaint = Paint().apply {
-            color = Color.BLACK
-            textSize = 22f
-            textAlign = Paint.Align.CENTER
+        headerPaint.typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
+        headerPaint.textSize = 14f
+        headerPaint.color = Color.WHITE
+
+        paint.textSize = 12f
+        paint.color = Color.BLACK
+
+        linePaint.color = Color.BLACK
+        linePaint.strokeWidth = 1f
+
+        val cellHeight = 30f
+        val cellPadding = 6f
+        val startX = 40f
+        var startY = 80f
+        val cellWidth = (500f / columnas.size)
+
+        // Título
+        val titlePaint = Paint()
+        titlePaint.typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
+        titlePaint.textSize = 20f
+        titlePaint.color = Color.rgb(33, 150, 243)
+        canvas.drawText("Reporte: $title", startX, 50f, titlePaint)
+
+        // Encabezados
+        for ((i, col) in columnas.withIndex()) {
+            val left = startX + i * cellWidth
+            canvas.drawRect(left, startY, left + cellWidth, startY + cellHeight, Paint().apply { color = Color.rgb(33, 150, 243) })
+            canvas.drawText(col.label, left + cellPadding, startY + cellHeight / 2 + 5f, headerPaint)
         }
 
-        val headerPaint = Paint().apply {
-            color = Color.BLACK
-            textSize = 14f
-            isFakeBoldText = true
+        startY += cellHeight
+
+        // Datos
+        for (i in 0 until data.length()) {
+            val obj = data.getJSONObject(i)
+
+            for ((j, col) in columnas.withIndex()) {
+                val left = startX + j * cellWidth
+                val value = if (obj.has(col.key)) obj.getString(col.key) else ""
+                canvas.drawRect(left, startY, left + cellWidth, startY + cellHeight, Paint().apply { color = Color.WHITE })
+                canvas.drawText(value, left + cellPadding, startY + cellHeight / 2 + 5f, paint)
+            }
+
+            startY += cellHeight
+            if (startY + cellHeight > 800f) break // salto de página aún no implementado
         }
 
-        val textPaint = Paint().apply {
-            color = Color.BLACK
-            textSize = 12f
+        // Cuadrícula (líneas verticales)
+        for (i in 0..columnas.size) {
+            val x = startX + i * cellWidth
+            canvas.drawLine(x, 80f, x, startY, linePaint)
         }
 
-        var y = 80f
-        canvas.drawText("Reporte Bajo Stock", 297f, y, titlePaint)
-        y += 40f
-        val fecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-        canvas.drawText("Generado el: $fecha", 297f, y, textPaint)
-
-        y += 40f
-        canvas.drawText("ID", 50f, y, headerPaint)
-        canvas.drawText("Nombre", 150f, y, headerPaint)
-        canvas.drawText("Stock", 350f, y, headerPaint)
-
-        y += 20f
-        canvas.drawLine(50f, y, 545f, y, headerPaint)
-
-        for (item in datos) {
-            y += 30f
-            canvas.drawText(item.first.toString(), 50f, y, textPaint)
-            canvas.drawText(item.second, 150f, y, textPaint)
-            canvas.drawText(item.third, 350f, y, textPaint)
+        // Líneas horizontales
+        val rowCount = data.length().coerceAtMost(((800f - 80f) / cellHeight).toInt())
+        for (i in 0..rowCount) {
+            val y = 80f + i * cellHeight
+            canvas.drawLine(startX, y, startX + columnas.size * cellWidth, y, linePaint)
         }
 
-        pdf.finishPage(page)
+        document.finishPage(page)
 
-        val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "reporte_economark_${System.currentTimeMillis()}.pdf")
-        pdf.writeTo(FileOutputStream(file))
-        pdf.close()
-        archivoGenerado = file
+        val file = File(getExternalFilesDir(null), "$title.pdf")
+        document.writeTo(FileOutputStream(file))
+        document.close()
+
+        return file
+    }
+
+    private fun openPdf(file: File) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(
+            androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.provider", file),
+            "application/pdf"
+        )
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(intent)
     }
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="economark.mobile">
+
+    <!-- Permiso para leer archivos (no siempre necesario en getExternalFilesDir, pero útil si expandís la app) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:networkSecurityConfig="@xml/network_security_config"
@@ -14,6 +18,7 @@
         android:theme="@style/Theme.Economark"
         tools:targetApi="31">
 
+        <!-- Actividades de la app -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,5 +32,17 @@
         <activity android:name=".ui.activities.RegisterActivity" />
         <activity android:name=".ui.activities.RecuperarContrasenaActivity" />
         <activity android:name=".Reports" />
+
+        <!-- FileProvider para compartir PDFs generados -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 </manifest>
