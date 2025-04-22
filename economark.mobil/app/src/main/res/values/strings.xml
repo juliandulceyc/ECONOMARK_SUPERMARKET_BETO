@@ -10,4 +10,10 @@
     <string name="ha_dimenticato_la_password"><u>Ha olvidado la contraseña?</u></string>
     <string name="iscriviti_qui">Registrarse</string>
     <string name="torna_al_login"><u>Volver al Login</u></string>
+    <string-array name="user_types">
+        <item></item>
+        <item>Empleado</item>
+        <item>Admin</item>
+    </string-array>
+
 </resources>

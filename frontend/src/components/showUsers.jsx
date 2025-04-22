@@ -1,109 +1,139 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom'
-import { Container, Row, Col, Table, Button, Modal, Form, Dropdown } from 'react-bootstrap';
-import Sidebar from '../components/Sidebar';
-import DashboardStats from '../components/DashboardStats';
-import SalesChart from '../components/SalesChart';
-import RecentOrders from '../components/RecentOrders';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../App.css';
+import { Table, Button, Modal, Form } from "react-bootstrap";
 import SearchBar from "./SearchBar";
-import CompEditUser from "./editUser";
-import CompCreateUser from "./createUser";
+import Inventario from "../components/inventario/inventario"; // ruta según tu estructura
 
-const URL = 'http://localhost:3000/credenciales/'
-
+const { label, url, columns, initialData, idField } = Inventario["usuarios"];
 
 const CompShowUsers = () => {
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [editUser, setEditUser] = useState(null);
+    const [data, setData] = useState([]);
+    const [editData, setEditData] = useState(initialData);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [showModal, setShowModal] = useState(false);
 
-    const handleAdd = () => {
-        setShowCreateModal(true);
+    const getData = async () => {
+        const response = await axios.get(url);
+        setData(response.data);
     };
 
-    const handleEdit = (user) => {
-        setEditUser(user);
-        setShowEditModal(true);
-    };
-
-    const handleCloseEdit = () => {
-        setShowEditModal(false);
-        setEditProduct(null);
-    };
-
-    const handleCloseCreate = () => {
-        setShowCreateModal(false);
-    };
-
-    const [users, setUsers] = useState([])
     useEffect(() => {
-        getUsers()
-    }, [])
+        getData();
+    }, []);
 
-    //procedimiento para mostar todos los usuarios
-    const getUsers = async () => {
-        const response = await axios.get(URL)
-        setUsers(response.data)
-    }
+    const handleDelete = async (id) => {
+        await axios.delete(`${url}${id}`);
+        getData();
+    };
 
-    //procedimiento para eliminar un usuario
-    const deleteUser = async (id) => {
-        await axios.delete(`${URL}${id}`)
-        getUsers()
-    }
+    const handleSave = async (e) => {
+        e.preventDefault();
+        if (editData[idField]) {
+            await axios.put(`${url}${editData[idField]}`, editData);
+        } else {
+            await axios.post(url, editData);
+        }
+        setShowModal(false);
+        getData();
+    };
+
+    const filteredData = data.filter((item) =>
+        Object.values(item).some((value) =>
+            value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
 
     return (
         <div className="container">
-            <Button onClick={handleAdd} className="btn btn-primary mt-4 w-100">
-                <i className="fas fa-plus-square"></i>
+            <Button
+                onClick={() => {
+                    setEditData(initialData);
+                    setShowModal(true);
+                }}
+                className="btn btn-primary mt-4 w-100"
+            >
+                <i className="fas fa-plus-square"></i> Añadir {label}
             </Button>
+
             <div className="mt-4">
-                <SearchBar></SearchBar>
+                <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
             </div>
-            <div className="table-responsive card shadow-sm">
+
+            <div className="table-responsive card shadow-sm mt-3">
                 <Table className="table table-hover mb-0">
-                    <thead>
-                        <tr className="table-header-gradient text-white">
-                            <th className="text-center py-3 border-end">ROL</th>
-                            <th className="text-center py-3 border-end">USERNAME</th>
-                            <th className="text-center py-3 border-end">PASSWORD</th>
+                    <thead className="table-header-gradient text-white">
+                        <tr>
+                            {columns.map((col) => (
+                                <th key={col.key} className="text-center py-3 border-end">
+                                    {col.label}
+                                </th>
+                            ))}
                             <th className="text-center py-3 border-end">ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user) => (
-                            <tr key={user.id}>
-                                <td className="text-center align-middle border-end">{user.rol}</td>
-                                <td className="text-center align-middle border-end">{user.username}</td>
-                                <td className="text-center align-middle border-end">{user.password}</td>
+                        {filteredData.map((item) => (
+                            <tr key={item[idField]}>
+                                {columns.map((col) => (
+                                    <td key={col.key} className="text-center align-middle border-end">
+                                        {item[col.key]}
+                                    </td>
+                                ))}
                                 <td className="text-center align-middle border-end">
-                                    <Button onClick={() => handleEdit(user)} className='btn btn-info mx-2'><i className="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button onClick={() => deleteUser(user.id)} className="btn btn-danger"><i className="fa-solid fa-eraser"></i></Button>
+                                    <Button
+                                        className="btn btn-info mx-2"
+                                        onClick={() => {
+                                            setEditData(item);
+                                            setShowModal(true);
+                                        }}
+                                    >
+                                        <i className="fa-solid fa-pen-to-square"></i>
+                                    </Button>
+                                    <Button
+                                        className="btn btn-danger"
+                                        onClick={() => handleDelete(item[idField])}
+                                    >
+                                        <i className="fa-solid fa-eraser"></i>
+                                    </Button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
             </div>
-            <CompEditUser
-                showModal={showEditModal}
-                handleClose={handleCloseEdit}
-                user={editUser}
-                refreshUsers={getUsers}
-            />
-            <CompCreateUser
-                showModal={showCreateModal}
-                handleClose={handleCloseCreate}
-                refreshUsers={getUsers}
-            />
 
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{editData[idField] ? "Editar" : "Crear"} {label}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSave}>
+                        {Object.entries(initialData).map(([key, value]) => (
+                            <Form.Group key={key} className="mb-3">
+                                <Form.Label>{key.toUpperCase()}</Form.Label>
+                                <Form.Control
+                                    type={key === "password" ? "password" : "text"}
+                                    value={editData[key] || ""}
+                                    onChange={(e) =>
+                                        setEditData({ ...editData, [key]: e.target.value })
+                                    }
+                                    required
+                                />
+                            </Form.Group>
+                        ))}
+                        <div className="text-end">
+                            <Button variant="secondary" className="me-2" onClick={() => setShowModal(false)}>
+                                Cancelar
+                            </Button>
+                            <Button type="submit" variant="primary">
+                                Guardar
+                            </Button>
+                        </div>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </div>
-    )
-}
+    );
+};
 
-export default CompShowUsers
+export default CompShowUsers;

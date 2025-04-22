@@ -53,6 +53,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Spinner para seleccionar tipo de usuario -->
+        <LinearLayout
+            android:id="@+id/userTypeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/view2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de usuario"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/userTypeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/user_types"
+                android:padding="8dp"/>
+        </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputFirstName"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -64,30 +93,10 @@
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view2">
+            app:layout_constraintTop_toBottomOf="@+id/userTypeLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/firstName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLastName"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:hint="Apellido"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputFirstName">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/lastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -104,7 +113,7 @@
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputLastName"
+            app:layout_constraintTop_toBottomOf="@+id/inputFirstName"
             app:startIconDrawable="@drawable/ic_email">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -170,7 +179,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/inputConfirmPassword"/>
+            app:layout_constraintTop_toBottomOf="@id/inputConfirmPassword" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/registerButton"
@@ -205,7 +214,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ya tienes cuenta?"
+                android:text="¿Ya estas registrado?"
                 android:textSize="16sp" />
 
             <TextView
@@ -215,7 +224,7 @@
                 android:layout_marginStart="10dp"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:foregroundTintMode="src_in"
-                android:text="Ingresa"
+                android:text="Iniciar sesión"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />

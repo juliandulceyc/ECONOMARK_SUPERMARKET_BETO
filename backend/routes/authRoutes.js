@@ -78,18 +78,27 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body
 
     if (!username || !password) {
-        return res.status(400).json({ success: false, message: "Nombre de usuario y contraseña requeridos" })
+        return res.status(400).json({ success: false, message: "Nombre de usuario/correo y contraseña requeridos" })
     }
 
     try {
         const db = await connectToDataBase()
-        const [rows] = await db.query('SELECT * FROM credenciales WHERE username = ?', [username])
+
+        // Buscar por username o correo
+        const [rows] = await db.query(
+            'SELECT * FROM credenciales WHERE username = ? OR correo = ?',
+            [username, username]
+        )
+
+        if (rows.length === 0) {
+            return res.status(401).json({ success: false, message: 'Usuario o correo no encontrado' })
+        }
 
         const user = rows[0]
 
-        const isMatch = user && await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) {
-            return res.status(401).json({ success: false, message: 'Credenciales inválidas' })
+            return res.status(401).json({ success: false, message: 'Contraseña incorrecta' })
         }
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_KEY, { expiresIn: '3h' })
@@ -106,6 +115,7 @@ router.post('/login', async (req, res) => {
         return res.status(500).json({ success: false, message: 'Error en el servidor' })
     }
 })
+
 
 // Rutas protegidas
 router.get('/home', verifyToken, async (req, res) => {

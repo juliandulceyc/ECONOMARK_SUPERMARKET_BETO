@@ -1,4 +1,19 @@
- const Inventario = {
+const Inventario = {
+    usuarios: {
+        label: "Usuarios",
+        url: "http://localhost:3000/credenciales/",
+        columns: [
+            { key: "id", label: "ID" },
+            { key: "rol", label: "ROL" },
+            { key: "username", label: "USUARIO" },
+            { key: "correo", label: "CORREO" },
+            { key: "password", label: "CONTRASEÑA" }
+        ],
+        initialData: {
+            rol: "", username: "", correo: "", password: ""
+        },
+        idField: "id"
+    },
     products: {
         label: "Productos",
         url: "http://localhost:3000/productos/",

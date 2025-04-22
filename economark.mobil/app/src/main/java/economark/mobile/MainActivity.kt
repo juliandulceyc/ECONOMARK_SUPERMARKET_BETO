@@ -1,12 +1,13 @@
 package economark.mobile
 
+import economark.mobile.ui.activities.RecuperarContrasenaActivity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import economark.mobile.HomeActivity
+import economark.mobile.Home
 import com.google.android.material.snackbar.Snackbar
 import economark.mobile.utils.SessionManager
 import economark.network.LoginRequest
@@ -113,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun redirectToHome() {
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, Home::class.java)
         startActivity(intent)
         finish()
     }

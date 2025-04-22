@@ -23,8 +23,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".Home" />
         <activity android:name=".ui.activities.RegisterActivity" />
-        <activity android:name=".RecuperarContrasenaActivity" />
+        <activity android:name=".ui.activities.RecuperarContrasenaActivity" />
+        <activity android:name=".Reports" />
     </application>
 </manifest>

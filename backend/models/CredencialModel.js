@@ -6,6 +6,7 @@ import { DataTypes } from "sequelize";
 const CredencialModel = db.define('credenciales', {
     rol: { type: DataTypes.STRING },
     username: { type: DataTypes.STRING },
+    correo: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING }
 })
 
