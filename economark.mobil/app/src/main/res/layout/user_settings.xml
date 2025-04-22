@@ -38,7 +38,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:paddingEnd="5dp"
-                    android:text="Setting"
+                    android:text="Ajustes"
                     android:textColor="@color/white"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -83,7 +83,7 @@
             android:paddingTop="5dp"
             android:paddingEnd="10dp"
             android:paddingBottom="5dp"
-            android:text="Edit"
+            android:text="Editar"
             android:textColor="@color/colorPrimaryLight"
             android:textSize="22sp" />
 
@@ -96,7 +96,7 @@
             android:layout_marginTop="30dp"
             android:textColor="@color/colorPrimaryLight"
             android:textSize="22sp"
-            tools:text="Sergio Vargas"/>
+            tools:text="Jefferson Contreras"/>
 
         <TextView
             android:id="@+id/textViewGender"
@@ -107,7 +107,7 @@
             android:layout_marginTop="3dp"
             android:textColor="@color/colorPrimaryLight"
             android:textSize="18sp"
-            tools:text="Male"/>
+            tools:text="Masculino"/>
 
         <TextView
             android:id="@+id/textViewEmail"

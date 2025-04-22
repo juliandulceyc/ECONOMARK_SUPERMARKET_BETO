@@ -27,12 +27,12 @@ class Reports : AppCompatActivity() {
 
         // Configuración del Toolbar y el botón de regresar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)  // Configurar el Toolbar como la barra de acción
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)  // Habilitar el botón de regresar
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Acción del botón de regresar
+        // Asegurarse de que el botón de regreso funciona correctamente
         toolbar.setNavigationOnClickListener {
-            onBackPressed()  // Regresar a la actividad anterior
+            onBackPressed() // Utilizamos onBackPressed() para garantizar el comportamiento esperado
         }
 
         spinner = findViewById(R.id.spinnerReportes)
