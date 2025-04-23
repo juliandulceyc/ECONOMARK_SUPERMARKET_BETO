@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Card } from 'react-bootstrap';
+import { Card, Spinner } from 'react-bootstrap';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,17 +23,41 @@ ChartJS.register(
 );
 
 function SalesChart() {
-  const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Sales 2024',
-        data: [12, 19, 3, 5, 2, 3],
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSalesData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/ventas/resumen-productos');
+        const data = await response.json();
+
+        // Extraemos nombres de productos y cantidades vendidas
+        const labels = data.map(item => item.nombreProducto);
+        const cantidades = data.map(item => item.totalCantidad);
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: 'Ventas por Producto',
+              data: cantidades,
+              borderColor: 'rgb(75, 192, 192)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              tension: 0.2,
+              fill: true,
+            }
+          ]
+        });
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error cargando datos:", error);
       }
-    ]
-  };
+    };
+
+    fetchSalesData();
+  }, []);
 
   const options = {
     responsive: true,
@@ -41,7 +66,8 @@ function SalesChart() {
         position: 'top'
       },
       title: {
-        display: false
+        display: true,
+        text: 'Ventas por Producto'
       }
     }
   };
@@ -52,7 +78,13 @@ function SalesChart() {
         <h5 className="mb-0">Resumen de Ventas</h5>
       </Card.Header>
       <Card.Body>
-        <Line options={options} data={data} />
+        {loading ? (
+          <div className="text-center">
+            <Spinner animation="border" role="status" />
+          </div>
+        ) : (
+          <Line options={options} data={chartData} />
+        )}
       </Card.Body>
     </Card>
   );

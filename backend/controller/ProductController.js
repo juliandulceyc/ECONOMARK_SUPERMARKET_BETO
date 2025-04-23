@@ -1,5 +1,5 @@
 //importamos el modelo 
-import ProductModel from "../models/ProductModel.js";
+import ProductModel from "../models/ProductoModel.js";
 
 //** Métodos para el CRUD **//
 

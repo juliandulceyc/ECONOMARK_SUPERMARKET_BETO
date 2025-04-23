@@ -3,44 +3,64 @@ import { Row, Col, Card, Spinner } from 'react-bootstrap';
 import Inventario from '../components/inventario/inventario';
 
 const iconMap = {
+  usuarios: 'bi-person',
+  products: 'bi-box-seam',
+  categorias: 'bi-tags',
+  clientes: 'bi-people',
+  ventas: 'bi-cart-check',
+  entradas: 'bi-box-arrow-in-down',
+  proveedores: 'bi-truck',
   totalVentas: 'bi-graph-up-arrow',
   ganancias: 'bi-currency-dollar',
-  totalProductos: 'bi-box-seam',
-  bajoStock: 'bi-box',
 };
 
 const colorMap = {
+  usuarios: 'primary',
+  products: 'success',
+  categorias: 'warning',
+  clientes: 'danger',
+  ventas: 'info',
+  entradas: 'secondary',
+  proveedores: 'dark',
   totalVentas: 'success',
   ganancias: 'warning',
-  totalProductos: 'primary',
-  bajoStock: 'danger',
 };
+
+const includedKeys = [
+  'usuarios',
+  'products',
+  'categorias',
+  'clientes',
+  'ventas',
+  'entradas',
+  'proveedores',
+];
 
 function DashboardStats() {
   const [counts, setCounts] = useState({});
   const [totalVentas, setTotalVentas] = useState(0);
   const [ganancias, setGanancias] = useState(0);
-  const [totalProductos, setTotalProductos] = useState(0);
-  const [bajoStock, setBajoStock] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      const entries = await Promise.all(
+        includedKeys.map(async (key) => {
+          const url = Inventario[key].url;
+          try {
+            const res = await fetch(url);
+            const data = await res.json();
+            return [key, Array.isArray(data) ? data.length : 0];
+          } catch (err) {
+            console.error(`Error al obtener ${key}:`, err);
+            return [key, 0];
+          }
+        })
+      );
 
-      // Fetch productos para total de productos y bajo stock
-      try {
-        const productosRes = await fetch(Inventario.products.url);
-        const productosData = await productosRes.json();
-        const total = productosData.length;
-        const bajoStockCount = productosData.filter(producto => parseInt(producto.stock) < 10).length;
-        setTotalProductos(total);
-        setBajoStock(bajoStockCount);
-      } catch (err) {
-        console.error('Error al obtener productos:', err);
-        setTotalProductos(0);
-        setBajoStock(0);
-      }
+      const result = Object.fromEntries(entries);
+      setCounts(result);
 
       // Fetch ventas para total y ganancias
       try {
@@ -48,7 +68,7 @@ function DashboardStats() {
         const ventasData = await ventasRes.json();
         const total = ventasData.reduce((sum, venta) => sum + (parseFloat(venta.total) || 0), 0);
         setTotalVentas(total);
-        setGanancias(total * 0.3); // 30% de ganancia
+        setGanancias(total * 0.3); // Por ejemplo, 30% de ganancia
       } catch (err) {
         console.error('Error al obtener ventas:', err);
         setTotalVentas(0);
@@ -62,6 +82,11 @@ function DashboardStats() {
   }, []);
 
   const allCards = [
+    ...includedKeys.map((key) => ({
+      key,
+      label: Inventario[key].label,
+      value: counts[key],
+    })),
     {
       key: 'totalVentas',
       label: 'Total Ventas',
@@ -71,16 +96,6 @@ function DashboardStats() {
       key: 'ganancias',
       label: 'Ganancias',
       value: `$${ganancias.toLocaleString()}`,
-    },
-    {
-      key: 'totalProductos',
-      label: 'Total Productos',
-      value: totalProductos,
-    },
-    {
-      key: 'bajoStock',
-      label: 'Bajo Stock',
-      value: bajoStock,
     },
   ];
 

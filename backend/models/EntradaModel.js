@@ -1,8 +1,10 @@
-import db from "../lib/database.js"; 
-import { DataTypes } from "sequelize"; 
-import ProveedorModel from "./ProveedorModel.js"; 
+// EntradaModel.js
+import db from "../lib/database.js";
+import { DataTypes } from "sequelize";
+import ProveedorModel from "./ProveedorModel.js";
 import UsuarioModel from "./CredencialModel.js";
 
+// Definición del modelo de Entrada
 const EntradaModel = db.define('entradas', {
     idEntrada: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }, 
     idProveedor: { type: DataTypes.INTEGER, allowNull: false }, 
@@ -18,7 +20,14 @@ const EntradaModel = db.define('entradas', {
     tableName: 'entradas', timestamps: true
 });
 
-EntradaModel.belongsTo(ProveedorModel, { foreignKey: 'idProveedor', as: 'proveedor' });
-EntradaModel.belongsTo(UsuarioModel, { foreignKey: 'idUsuario', as: 'usuario' });
+// Importación dinámica para evitar dependencia circular
+(async () => {
+    const EntradaProductoModel = (await import("./EntradaProductoModel.js")).default;
+
+    // Relaciones
+    EntradaModel.belongsTo(ProveedorModel, { foreignKey: 'idProveedor', as: 'proveedor' });
+    EntradaModel.belongsTo(UsuarioModel, { foreignKey: 'idUsuario', as: 'usuario' });
+    EntradaModel.hasMany(EntradaProductoModel, { foreignKey: 'idEntrada', as: 'productos' });
+})();
 
 export default EntradaModel;

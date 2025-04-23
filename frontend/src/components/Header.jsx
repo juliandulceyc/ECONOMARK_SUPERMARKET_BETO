@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Dropdown, Badge, Modal, Form, Button } from 'react-bootstrap';
-import { Link, useNavigate } from "react-router-dom";
 import './head.css';
 
-function Header() {
+function Header({ currentView }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileImage, setProfileImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_iwynnKUnSZbPBC5SiPy6Ay9-3cIEezn6w&s');
@@ -13,14 +12,25 @@ function Header() {
     role: 'Administrador'
   });
 
-  // Hook para redireccionar
-  const navigate = useNavigate();
-
   const notifications = [
     { id: 1, text: '2 Productos vencidos', time: 'Hace 5 minutos', read: false },
     { id: 2, text: 'Faltan productos de una categoria!', time: 'Hace una hora', read: false },
     { id: 3, text: 'Nuevo usuario registrado', time: 'Hace dos horas', read: false }
   ];
+
+  const viewNames = {
+    dashboard: 'Inicio',
+    users: 'Usuarios',
+    products: 'Inventario',
+    proveedores: 'Proveedores',
+    estadisticas: 'Estadísticas',
+    reports: 'Reportes',
+    entry: 'Entradas/Salidas',
+    sell: 'Ventas',
+    settings: 'Ajustes'
+  };
+
+  const currentTitle = viewNames[currentView] || 'Panel';
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -38,18 +48,15 @@ function Header() {
     setShowProfileModal(false);
   };
 
-  // Función para cerrar sesión: elimina el token y redirige al login.
   const handleLogout = () => {
     localStorage.removeItem('token');
-    // Esta redirección completa borra el historial previo
     window.location.replace('/login');
   };
-
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white px-4 py-3 shadow-sm header-custom">
       <div className="d-flex justify-content-between w-100 align-items-center">
-        <h4 className="mb-0 header-title">Dashboard</h4>
+        <h4 className="mb-0 header-title">{currentTitle}</h4>
         <div className="d-flex align-items-center">
           <Dropdown show={showNotifications} onToggle={setShowNotifications}>
             <Dropdown.Toggle variant="link" className="text-dark position-relative me-3 bg-transparent border-0">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Card, Row, Col } from 'react-bootstrap';
+import { Person, Envelope, Bell, Palette } from 'react-bootstrap-icons'; // Usando íconos más sutiles
 
 const Settings = () => {
   const [username, setUsername] = useState('');
@@ -16,10 +17,14 @@ const Settings = () => {
 
   return (
     <div className="settings">
-      <h2 className="my-4">Ajustes</h2>
+      <h2 className="my-4 text-center" style={{ color: '#6c757d' }}>Ajustes de Perfil</h2>
       <Form onSubmit={handleSave}>
-        <Card className="mb-4">
-          <Card.Header>Ajustes de Perfil</Card.Header>
+        {/* Card de Ajustes de Perfil */}
+        <Card className="mb-4 shadow-sm border-light">
+          <Card.Header style={{ backgroundColor: '#f8f9fa', color: '#495057' }}>
+            <Person style={{ marginRight: '10px', fontSize: '1.2em' }} />
+            Ajustes de Perfil
+          </Card.Header>
           <Card.Body>
             <Row>
               <Col md={6}>
@@ -31,6 +36,7 @@ const Settings = () => {
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Ingresa tu nombre de usuario"
                     required
+                    style={{ borderColor: '#dcdfe1' }}
                   />
                 </Form.Group>
               </Col>
@@ -43,6 +49,7 @@ const Settings = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Ingresa tu correo electrónico"
                     required
+                    style={{ borderColor: '#dcdfe1' }}
                   />
                 </Form.Group>
               </Col>
@@ -50,8 +57,12 @@ const Settings = () => {
           </Card.Body>
         </Card>
 
-        <Card className="mb-4">
-          <Card.Header>Configuración de Notificaciones</Card.Header>
+        {/* Card de Configuración de Notificaciones */}
+        <Card className="mb-4 shadow-sm border-light">
+          <Card.Header style={{ backgroundColor: '#f8f9fa', color: '#495057' }}>
+            <Bell style={{ marginRight: '10px', fontSize: '1.2em' }} />
+            Configuración de Notificaciones
+          </Card.Header>
           <Card.Body>
             <Form.Check
               type="switch"
@@ -59,12 +70,17 @@ const Settings = () => {
               label="Recibir notificaciones por correo electrónico"
               checked={notifications}
               onChange={(e) => setNotifications(e.target.checked)}
+              style={{ color: '#495057' }}
             />
           </Card.Body>
         </Card>
 
-        <Card className="mb-4">
-          <Card.Header>Opciones de Tema</Card.Header>
+        {/* Card de Opciones de Tema */}
+        <Card className="mb-4 shadow-sm border-light">
+          <Card.Header style={{ backgroundColor: '#f8f9fa', color: '#495057' }}>
+            <Palette style={{ marginRight: '10px', fontSize: '1.2em' }} />
+            Opciones de Tema
+          </Card.Header>
           <Card.Body>
             <Form.Group>
               <Form.Label>Tema</Form.Label>
@@ -72,6 +88,7 @@ const Settings = () => {
                 as="select"
                 value={theme}
                 onChange={(e) => setTheme(e.target.value)}
+                style={{ borderColor: '#dcdfe1' }}
               >
                 <option value="light">Claro</option>
                 <option value="dark">Oscuro</option>
@@ -80,8 +97,19 @@ const Settings = () => {
           </Card.Body>
         </Card>
 
+        {/* Botón para guardar */}
         <div className="text-end">
-          <Button variant="primary" type="submit">
+          <Button
+            variant="primary"
+            type="submit"
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#007bff',
+              borderColor: '#007bff',
+              borderRadius: '5px',
+            }}
+          >
             Guardar Cambios
           </Button>
         </div>

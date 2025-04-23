@@ -39,7 +39,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Inicio</span>
             </div>
           </div>
-          
+
           {userRole === 'admin' && (
             <>
               <div
@@ -104,7 +104,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               </div>
             </>
           )}
-          
+
           <div
             role="button"
             className={`nav-item ${currentView === 'sell' ? 'active' : ''}`}

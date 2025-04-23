@@ -1,12 +1,13 @@
 import express from 'express';
-import { getAllVentas, getVenta, createVenta, updateVenta, deleteVenta } from '../controller/VentaController.js';
+import { getAllVentas, getVenta, createVenta, updateVenta, deleteVenta, getResumenVentasPorProducto } from '../controller/VentaController.js';
 
-const routes = express.Router();
+const routesVentas = express.Router();
 
-routes.get('/', getAllVentas);
-routes.get('/:id', getVenta);
-routes.post('/', createVenta);
-routes.put('/:id', updateVenta);
-routes.delete('/:id', deleteVenta);
+routesVentas.get('/resumen-productos', getResumenVentasPorProducto);
+routesVentas.get('/', getAllVentas);
+routesVentas.get('/:id', getVenta);
+routesVentas.post('/', createVenta);
+routesVentas.put('/:id', updateVenta);
+routesVentas.delete('/:id', deleteVenta);
 
-export default routes;
+export default routesVentas;

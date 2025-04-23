@@ -64,6 +64,8 @@ const Inventario = {
         columns: [
             { key: "idEntrada", label: "ID" },
             { key: "idProveedor", label: "PROVEEDOR" },
+            { key: "productos", label: "PRODUCTOS" },
+            { key: "cantidad", label: "CANTIDAD" },   
             { key: "idUsuario", label: "USUARIO" },
             { key: "tipo_comprobante", label: "TIPO COMPROBANTE" },
             { key: "serie_comprobante", label: "SERIE COMPROBANTE" },
@@ -72,12 +74,24 @@ const Inventario = {
             { key: "impuesto", label: "IMPUESTO" },
             { key: "total", label: "TOTAL" },
             { key: "estado", label: "ESTADO" }
+
         ],
         initialData: {
-            idProveedor: "", idUsuario: "", tipo_comprobante: "", serie_comprobante: "", num_comprobante: "", fecha: "", impuesto: "", total: "", estado: ""
+            productos: [],
+            cantidad: [],
+            idProveedor: "",
+            idUsuario: "",
+            tipo_comprobante: "",
+            serie_comprobante: "",
+            num_comprobante: "",
+            fecha: "",
+            impuesto: "",
+            total: "",
+            estado: ""
         },
         idField: "idEntrada"
-    },
+    }
+    ,
     proveedores: {
         label: "Proveedores",
         url: "http://localhost:3000/proveedores/",

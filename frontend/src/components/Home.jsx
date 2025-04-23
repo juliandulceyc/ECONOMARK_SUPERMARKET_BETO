@@ -17,6 +17,9 @@ import Ventas from './ventas/ventas';
 import Reports from './reportes/Reports';
 import Preview from './preview';
 import Settings from './settings';
+import MainMenu from './Inicio';
+import MenuChart from './MenuChart';
+import EntradasSalidasMenu from './EntradasSalidasMenu';
 
 // Interceptor global para manejar expiración de token
 axios.interceptors.response.use(
@@ -37,7 +40,7 @@ function Home() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
-  // Obtener usuario y rol
+  // Función para obtener el rol del usuario
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -48,7 +51,6 @@ function Home() {
       console.log('Rol obtenido:', role);
       setUserRole(role);
     } catch (err) {
-      // Si hay error (p.ej. 401), redirigir al login
       navigate('/login', { replace: true });
       console.error(err);
     }
@@ -56,7 +58,6 @@ function Home() {
 
   useEffect(() => {
     fetchUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Bloquear botón atrás hacia login
@@ -67,45 +68,34 @@ function Home() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Renderizar contenido según vista seleccionada
+  // Función para renderizar contenido según la vista actual
   const renderContent = () => {
     switch (currentView) {
       case 'dashboard':
-        return (
-          <>
-            <SalesChart />
-            <RecentOrders />
-          </>
-        );
+        return <MainMenu />;
       case 'products':
-        return (
-          <>
-            <DashboardStats />
-            <CompShowProducts />
-          </>
-        );
+        return <>
+          <DashboardStats />
+          <CompShowProducts />
+        </>;
       case 'users':
-        return userRole === 'admin' ? (
-          <>
-            <DashboardStats />
-            <CompShowUsers />
-          </>
-        ) : (
-          <div>No tienes permisos para acceder a esta sección.</div>
-        );
+        return userRole === 'admin' ? <>
+          <DashboardStats />
+          <CompShowUsers />
+        </> : <div>No tienes permisos para acceder a esta sección.</div>;
       case 'proveedores':
-        return userRole === 'admin' ? (
-          <>
-            <DashboardStats />
-            <CompShowProveedores />
-          </>
-        ) : (
-          <div>No tienes permisos para acceder a esta sección.</div>
-        );
+        return userRole === 'admin' ? <>
+          <DashboardStats />
+          <CompShowProveedores />
+        </> : <div>No tienes permisos para acceder a esta sección.</div>;
       case 'reports':
         return <Reports />;
+      case 'estadisticas':
+        return <MenuChart />;
       case 'sell':
         return <Ventas />;
+      case 'entry':
+        return <EntradasSalidasMenu />;
       case 'analytics':
         return <Preview />;
       case 'settings':
@@ -115,7 +105,7 @@ function Home() {
     }
   };
 
-  // Alternar colapsado del sidebar
+  // Alternar el estado de colapsado del sidebar
   const handleToggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
   return (
@@ -130,7 +120,7 @@ function Home() {
         />
       </div>
       <div className="main-content">
-        <Header />
+        <Header currentView={currentView} />
         <Container fluid className="px-4 py-4">
           {renderContent()}
         </Container>

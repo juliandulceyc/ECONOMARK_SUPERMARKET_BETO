@@ -1,5 +1,5 @@
 // Importamos el modelo
-import EntradaModel from "../models/EntradasModel.js";
+import EntradaModel from "../models/EntradaModel.js";
 
 // ** Métodos para el CRUD ** //
 

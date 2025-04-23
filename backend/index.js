@@ -12,6 +12,7 @@ import routesClientes from './routes/routesClientes.js'
 import routesEntradas from './routes/routesEntradas.js'
 import routesVentas from './routes/routesVentas.js'
 import routesDetalleVentas from './routes/routesDetalleVentas.js'
+import routesEntradaProductos from './routes/routesEntradaProductos.js'
 
 const app = express()
 
@@ -31,6 +32,7 @@ app.use('/entradas', routesEntradas)
 app.use('/detalle_entradas', routesEntradas)
 app.use('/ventas', routesVentas)
 app.use('/detalle_ventas', routesDetalleVentas)
+app.use('/entrada_productos', routesEntradaProductos)
 
 // Escuchar puerto
 const PORT = process.env.PORT || 3000

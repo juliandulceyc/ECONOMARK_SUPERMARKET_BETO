@@ -1,7 +1,9 @@
-// Importamos el modelo
+// Importamos los modelos
 import VentaModel from "../models/VentasModel.js";
 import DetalleVentaModel from "../models/DetalleVentasModel.js";
 import ClienteModel from "../models/ClientesModel.js";
+import ProductoModel from "../models/ProductoModel.js";
+import { Sequelize } from "sequelize";
 
 const generarComprobante = async (tipo) => {
     const serie = tipo === "Factura" ? "F001" : "B001";
@@ -20,9 +22,6 @@ const generarComprobante = async (tipo) => {
 
     return { tipo_comprobante: tipo, serie_comprobante: serie, num_comprobante: nuevoNumero };
 };
-
-
-// ** Métodos para el CRUD ** //
 
 // Mostrar todos los registros
 export const getAllVentas = async (req, res) => {
@@ -46,30 +45,27 @@ export const getVenta = async (req, res) => {
     }
 };
 
+// Crear venta con detalles
 export const createVenta = async (req, res) => {
     const { detalle, idCliente, ...ventaBase } = req.body;
 
     try {
-        // Verificamos si el cliente existe
-        let clienteId = 0;  // Por defecto, cliente anónimo
+        let clienteId = 0;
         if (idCliente) {
             const cliente = await ClienteModel.findByPk(idCliente);
             if (cliente) {
-                clienteId = idCliente;  // Si el cliente está registrado, usamos su id
+                clienteId = idCliente;
             }
         }
 
-        // Generar datos del comprobante
         const comprobante = await generarComprobante(ventaBase.tipo_comprobante);
 
-        // Crear la venta con los datos del comprobante y el idCliente (que puede ser 0)
         const nuevaVenta = await VentaModel.create({
             ...ventaBase,
-            idCliente: clienteId, // Aquí asignamos el idCliente (0 si no está registrado)
+            idCliente: clienteId,
             ...comprobante
         });
 
-        // Crear los detalles de venta asociados
         if (detalle && Array.isArray(detalle)) {
             for (const item of detalle) {
                 await DetalleVentaModel.create({
@@ -85,7 +81,6 @@ export const createVenta = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 // Actualizar un registro
 export const updateVenta = async (req, res) => {
@@ -111,4 +106,27 @@ export const deleteVenta = async (req, res) => {
     }
 };
 
+// Obtener resumen de ventas por producto
+export const getResumenVentasPorProducto = async (req, res) => {
+    try {
+        const resumen = await DetalleVentaModel.findAll({
+            attributes: [
+                'idProducto',
+                [Sequelize.fn('SUM', Sequelize.col('cantidad')), 'totalCantidad']
+            ],
+            include: [
+                {
+                    model: ProductoModel,
+                    as: 'producto',
+                    attributes: ['nombreProducto']
+                }
+            ],
+            group: ['idProducto', 'producto.idProducto']
+        });
 
+        res.json(resumen);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};

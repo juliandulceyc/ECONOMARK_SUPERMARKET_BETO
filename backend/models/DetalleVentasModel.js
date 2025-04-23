@@ -4,7 +4,7 @@ import db from "../lib/database.js";
 import { DataTypes } from "sequelize";
 // importamos los modelos relacionados
 import VentaModel from './VentasModel.js';
-import ProductoModel from './ProductModel.js';
+import ProductoModel from './ProductoModel.js';
 
 // Definimos el modelo para la tabla detalle_venta
 const DetalleVentaModel = db.define('detalle_venta', {
