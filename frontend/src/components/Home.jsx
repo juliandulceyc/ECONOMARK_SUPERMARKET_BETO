@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
@@ -16,10 +15,11 @@ import CompShowProveedores from './showProveedores'; // Componente para proveedo
 import Ventas from './ventas/ventas';
 import Reports from './reportes/Reports';
 import Preview from './preview';
-import Settings from './settings';
+import Settings from './settings'; // Aquí
 import MainMenu from './Inicio';
 import MenuChart from './MenuChart';
 import EntradasSalidasMenu from './EntradasSalidasMenu';
+import axios from 'axios';
 
 // Interceptor global para manejar expiración de token
 axios.interceptors.response.use(
@@ -37,6 +37,11 @@ axios.interceptors.response.use(
 function Home() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [userRole, setUserRole] = useState(null);
+  const [profileData, setProfileData] = useState({
+    name: '',
+    email: '',
+    role: ''
+  });
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
@@ -47,9 +52,9 @@ function Home() {
       const response = await axios.get('http://localhost:3000/auth/home', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      const role = response.data.user.rol;
-      console.log('Rol obtenido:', role);
-      setUserRole(role);
+      const { username, correo, rol } = response.data.user;
+      setProfileData({ name: username, email: correo, role: rol });
+      setUserRole(rol);
     } catch (err) {
       navigate('/login', { replace: true });
       console.error(err);
@@ -93,13 +98,13 @@ function Home() {
       case 'estadisticas':
         return <MenuChart />;
       case 'sell':
-        return <Ventas />;
+        return <Ventas cajero={profileData.name} />; // Aquí pasamos el nombre del cajero
       case 'entry':
         return <EntradasSalidasMenu />;
       case 'analytics':
         return <Preview />;
       case 'settings':
-        return <Settings />;
+        return <Settings profileData={profileData} />;
       default:
         return <div>Próximamente</div>;
     }
@@ -120,7 +125,7 @@ function Home() {
         />
       </div>
       <div className="main-content">
-        <Header currentView={currentView} />
+        <Header currentView={currentView} profileData={profileData} />
         <Container fluid className="px-4 py-4">
           {renderContent()}
         </Container>

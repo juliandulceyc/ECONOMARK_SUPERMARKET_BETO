@@ -1,16 +1,13 @@
-import { useState } from 'react';
+// Header.jsx
+import { useState, useEffect } from 'react';
 import { Dropdown, Badge, Modal, Form, Button } from 'react-bootstrap';
 import './head.css';
 
-function Header({ currentView }) {
+function Header({ currentView, profileData }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileImage, setProfileImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_iwynnKUnSZbPBC5SiPy6Ay9-3cIEezn6w&s');
-  const [profileData, setProfileData] = useState({
-    name: 'Jefferson',
-    email: 'jefferson@westcol.com',
-    role: 'Administrador'
-  });
+  const [loading, setLoading] = useState(false);  // Ya no necesitamos este estado ya que profileData lo pasamos desde Home.
 
   const notifications = [
     { id: 1, text: '2 Productos vencidos', time: 'Hace 5 minutos', read: false },
@@ -50,6 +47,7 @@ function Header({ currentView }) {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     window.location.replace('/login');
   };
 
@@ -140,7 +138,7 @@ function Header({ currentView }) {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Usuario</Form.Label>
+              <Form.Label>Correo</Form.Label>
               <Form.Control
                 type="email"
                 value={profileData.email}

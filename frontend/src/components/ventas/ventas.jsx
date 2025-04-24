@@ -3,11 +3,12 @@ import './ventas.css';
 import Logo from './carrito-de-compras.png';
 import API from './services/axiosConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCashRegister } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCashRegister, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import FacturaModal from './FacturaModal';
-import ClienteModal from './ClienteModal'; // Importa el ClienteModal
+import ClienteModal from './ClienteModal';
+import Swal from 'sweetalert2';
 
-const Ventas = () => {
+const Ventas = ({ cajero }) => {
   const [codigoProducto, setCodigoProducto] = useState('');
   const [producto, setProducto] = useState(null);
   const [cantidad, setCantidad] = useState(1);
@@ -18,24 +19,36 @@ const Ventas = () => {
   const [mostrarModalFactura, setMostrarModalFactura] = useState(false);
   const [datosVenta, setDatosVenta] = useState(null);
   const [cliente, setCliente] = useState(null);
-  const [mostrarModalCliente, setMostrarModalCliente] = useState(false); // Estado para el modal de cliente
-  const [clientes, setClientes] = useState([]); // Estado para almacenar la lista de clientes
+  const [mostrarModalCliente, setMostrarModalCliente] = useState(false);
+  const [clientes, setClientes] = useState([]);
+  const [usuario, setUsuario] = useState(null);
+  const [horaActual, setHoraActual] = useState(new Date().toLocaleTimeString());
 
   useEffect(() => {
     const clienteGuardado = localStorage.getItem("cliente");
     if (clienteGuardado) {
       setCliente(JSON.parse(clienteGuardado));
     }
+
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (usuarioGuardado) {
+      setUsuario(JSON.parse(usuarioGuardado));
+    }
+
+    const intervalo = setInterval(() => {
+      setHoraActual(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(intervalo);
   }, []);
 
-  // Cargar clientes cuando el componente se monte
   useEffect(() => {
     const obtenerClientes = async () => {
       try {
         const response = await API.get('/clientes');
         setClientes(response.data);
       } catch (error) {
-        console.error("Error al obtener los clientes:", error);
+        Swal.fire("Error", "Error al obtener los clientes", "error");
       }
     };
     obtenerClientes();
@@ -46,8 +59,8 @@ const Ventas = () => {
       const response = await API.get(`/productos/${codigoProducto}`);
       setProducto(response.data);
     } catch (error) {
-      console.error("Error al buscar el producto:", error);
       setProducto(null);
+      Swal.fire("Producto no encontrado", "Verifica el código ingresado", "warning");
     }
   };
 
@@ -56,34 +69,40 @@ const Ventas = () => {
       const response = await API.get('/productos');
       setListaProductos(response.data);
     } catch (error) {
-      console.error("Error al obtener los productos:", error);
+      Swal.fire("Error", "No se pudo obtener la lista de productos", "error");
     }
   };
 
   const agregarProducto = () => {
-    if (producto) {
-      const productoConCantidad = {
-        ...producto,
-        cantidad,
-        total: producto.precioVenta * cantidad,
-      };
-      setProductosEnVenta([...productosEnVenta, productoConCantidad]);
-      setTotalVenta(prevTotal => prevTotal + productoConCantidad.total);
-
-      setCodigoProducto('');
-      setProducto(null);
-      setCantidad(1);
+    if (!producto) {
+      Swal.fire("Advertencia", "Primero debes buscar o seleccionar un producto", "warning");
+      return;
     }
+
+    const productoConCantidad = {
+      ...producto,
+      cantidad,
+      total: producto.precioVenta * cantidad,
+    };
+
+    setProductosEnVenta([...productosEnVenta, productoConCantidad]);
+    setTotalVenta(prevTotal => prevTotal + productoConCantidad.total);
+
+    setCodigoProducto('');
+    setProducto(null);
+    setCantidad(1);
+    Swal.fire("Agregado", "Producto agregado correctamente", "success");
   };
 
   const abrirModalCliente = () => {
-    setMostrarModalCliente(true); // Abrir el modal de selección de cliente
+    setMostrarModalCliente(true);
   };
 
   const seleccionarCliente = (clienteSeleccionado) => {
-    setCliente(clienteSeleccionado); // Guardar el cliente seleccionado
-    localStorage.setItem("cliente", JSON.stringify(clienteSeleccionado)); // Guardar cliente en localStorage
-    setMostrarModalCliente(false); // Cerrar el modal
+    setCliente(clienteSeleccionado);
+    localStorage.setItem("cliente", JSON.stringify(clienteSeleccionado));
+    setMostrarModalCliente(false);
+    Swal.fire("Cliente seleccionado", `Cliente: ${clienteSeleccionado.nombre}`, "success");
   };
 
   const calcularTotalVenta = () => {
@@ -125,13 +144,13 @@ const Ventas = () => {
         });
       }
     } catch (error) {
-      console.error("Error al descontar el stock:", error);
+      Swal.fire("Error", "No se pudo actualizar el stock", "error");
     }
   };
 
   const manejarCobro = async () => {
     if (productosEnVenta.length === 0) {
-      alert("Agrega productos antes de cobrar.");
+      Swal.fire("Advertencia", "Agrega productos antes de cobrar", "warning");
       return;
     }
 
@@ -140,7 +159,7 @@ const Ventas = () => {
 
       const ventaData = {
         idCliente: cliente ? cliente.idCliente : 0,
-        idUsuario: 1,
+        idUsuario: usuario?.idUsuario || 1,
         tipo_comprobante: 'Factura',
         fecha_hora: new Date().toISOString(),
         impuesto: 0.18,
@@ -155,7 +174,7 @@ const Ventas = () => {
       };
 
       const response = await API.post('/ventas', ventaData);
-      console.log(response.data.message);
+      Swal.fire("Venta registrada", response.data.message || "Venta realizada con éxito", "success");
 
       generarFactura();
 
@@ -163,7 +182,20 @@ const Ventas = () => {
       setTotalVenta(0);
     } catch (error) {
       console.error("Error al registrar la venta:", error);
-      alert("Ocurrió un error al registrar la venta.");
+      Swal.fire("Error", "Ocurrió un error al registrar la venta", "error");
+    }
+  };
+
+  const eliminarProducto = (productoAEliminar) => {
+    setProductosEnVenta(productosEnVenta.filter(producto => producto.idProducto !== productoAEliminar.idProducto));
+    setTotalVenta(prevTotal => prevTotal - productoAEliminar.total);
+    Swal.fire("Eliminado", "Producto eliminado de la venta", "info");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      agregarProducto();
     }
   };
 
@@ -180,10 +212,14 @@ const Ventas = () => {
       </header>
 
       <section className="ventas-button-row">
-        {Array.from({ length: 13 }, (_, index) => (
+        <button key="abrir-turno" className="ventas-button abrir-turno">Abrir Turno</button>
+        {Array.from({ length: 11 }, (_, index) => (
           <button key={index} className="ventas-button">Botón</button>
         ))}
+        <button key="cerrar-turno" className="ventas-button cerrar-turno">Cerrar Turno</button>
       </section>
+
+
 
       <section className="ventas-product-entry">
         <div className="ventas-titulo-container">
@@ -199,6 +235,7 @@ const Ventas = () => {
               maxLength="15"
               value={codigoProducto}
               onChange={(e) => setCodigoProducto(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <button className="ventas-add-btn" onClick={abrirModal}>
               <FontAwesomeIcon icon={faSearch} />
@@ -231,23 +268,27 @@ const Ventas = () => {
         <table>
           <thead>
             <tr>
-              <th>No. de producto</th>
               <th>Código</th>
               <th>Nombre</th>
               <th>Cantidad</th>
               <th>Precio unitario</th>
               <th>Total</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {productosEnVenta.map((producto, index) => (
               <tr key={index}>
                 <td>{producto.idProducto}</td>
-                <td>{producto.codigo}</td>
                 <td>{producto.nombreProducto}</td>
                 <td>{producto.cantidad}</td>
                 <td>${producto.precioVenta}</td>
                 <td>${producto.total}</td>
+                <td>
+                  <button onClick={() => eliminarProducto(producto)}>
+                    <FontAwesomeIcon icon={faTrashAlt} />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -273,8 +314,8 @@ const Ventas = () => {
 
       <footer className="ventas-footer">
         <div className="ventas-footer-content">
-          <div>Cajero en turno: Jefferson Andres Contreras</div>
-          <div>14:24</div>
+          <div>Cajero en turno: {cajero || 'No identificado'}</div>
+          <div>{horaActual}</div>
         </div>
       </footer>
 
