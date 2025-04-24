@@ -25,7 +25,6 @@ class Home : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // DrawerLayout y NavigationView
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
 
@@ -73,8 +72,6 @@ class Home : AppCompatActivity() {
             val intent = Intent(this, Reports::class.java)
             startActivity(intent)
         }
-
-        // Podés agregar más acciones a los demás CardView si querés
     }
 
     // Inflar el menú en la Toolbar
@@ -88,7 +85,7 @@ class Home : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 // Abrir el Drawer cuando se presiona el ícono del menú
-                drawerLayout.openDrawer(GravityCompat.START)  // Cambié END a START para abrir desde la izquierda
+                drawerLayout.openDrawer(GravityCompat.START)
                 true
             }
             R.id.menu_usuario -> {

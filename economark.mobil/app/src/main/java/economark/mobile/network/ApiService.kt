@@ -17,7 +17,7 @@ data class LoginResponse(
     val token: String,
     val rol: String,
     val userId: String,
-    val fotoPerfil: String? // si no estás usando fotoPerfil aún, puedes ponerlo como null
+    val fotoPerfil: String?
 )
 
 // Datos que se envían al backend para registrar un nuevo usuario

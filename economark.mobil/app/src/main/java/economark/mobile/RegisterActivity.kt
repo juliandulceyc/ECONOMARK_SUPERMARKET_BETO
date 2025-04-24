@@ -25,7 +25,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // Obtén las referencias de los campos
+        // referencias de los campos
         val firstName = findViewById<TextInputEditText>(R.id.firstName)
         val email = findViewById<TextInputEditText>(R.id.registerEmail)
         val password = findViewById<TextInputEditText>(R.id.registerPassword)

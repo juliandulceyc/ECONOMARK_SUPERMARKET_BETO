@@ -28,7 +28,6 @@ class RecuperarContrasenaActivity : AppCompatActivity() {
         val buttonForgot = findViewById<MaterialButton>(R.id.buttonForgot)
         val backToLoginText = findViewById<TextView>(R.id.backToLoginText)
 
-        // Click listener for the "Enviar" button to initiate password recovery
         buttonForgot.setOnClickListener {
             val email = sendEmailEditText.text.toString().trim()
 
@@ -41,8 +40,8 @@ class RecuperarContrasenaActivity : AppCompatActivity() {
 
         // Click listener for the "Volver al login" link
         backToLoginText.setOnClickListener {
-            // Go back to the login screen
-            finish() // Or startActivity(Intent(this, LoginActivity::class.java))
+            // volver al login
+            finish()
         }
     }
 
@@ -55,7 +54,7 @@ class RecuperarContrasenaActivity : AppCompatActivity() {
             recuperarContrasena(email)
         }
         builder.setNegativeButton("No") { dialog, _ ->
-            dialog.dismiss()  // Solo cierra la alerta si el usuario elige "No"
+            dialog.dismiss()
         }
         builder.create().show()
     }
@@ -66,7 +65,7 @@ class RecuperarContrasenaActivity : AppCompatActivity() {
 
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body = json.toString().toRequestBody(mediaType)
-        val url = "http://10.0.2.2:3000/auth/forgot-password" // Cambia la URL si es necesario
+        val url = "http://10.0.2.2:3000/auth/forgot-password"
 
         val request = Request.Builder()
             .url(url)
@@ -84,10 +83,8 @@ class RecuperarContrasenaActivity : AppCompatActivity() {
                 val responseBody = response.body?.string()
                 runOnUiThread {
                     if (response.isSuccessful) {
-                        // If the request is successful, show a confirmation message
                         mostrarAlertaExito()
                     } else {
-                        // If there is an error, show the error message
                         mostrarAlertaError(responseBody ?: "Error desconocido")
                     }
                 }
@@ -101,7 +98,7 @@ class RecuperarContrasenaActivity : AppCompatActivity() {
         builder.setTitle("Éxito")
         builder.setMessage("Correo enviado para recuperar contraseña. Revisa tu bandeja de entrada.")
         builder.setPositiveButton("Aceptar") { dialog, _ ->
-            dialog.dismiss()  // Cierra el diálogo cuando el usuario hace clic en "Aceptar"
+            dialog.dismiss()
             finish() // Finaliza la actividad para regresar a la pantalla de login
         }
         builder.create().show()

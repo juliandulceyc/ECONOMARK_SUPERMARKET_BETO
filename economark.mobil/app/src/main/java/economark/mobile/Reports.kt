@@ -30,9 +30,8 @@ class Reports : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Asegurarse de que el botón de regreso funciona correctamente
         toolbar.setNavigationOnClickListener {
-            onBackPressed() // Utilizamos onBackPressed() para garantizar el comportamiento esperado
+            onBackPressed()
         }
 
         spinner = findViewById(R.id.spinnerReportes)
