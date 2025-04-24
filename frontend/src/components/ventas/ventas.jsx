@@ -107,27 +107,28 @@ const Ventas = ({ cajero }) => {
       Swal.fire("Advertencia", "Primero debes buscar o seleccionar un producto", "warning");
       return;
     }
-
+  
     // Verificación de stock antes de agregar el producto
     if (producto.stock < cantidad) {
-      Swal.fire("Stock insuficiente", `El producto ${producto.nombreProducto} no tiene suficiente stock`, "warning");
+      Swal.fire("Stock insuficiente", `Solo quedan ${producto.stock} unidades de ${producto.nombreProducto}. No puedes agregar más de ${producto.stock} al carrito.`, "warning");
       return; // Si no hay suficiente stock, no se agrega el producto
     }
-
+  
     const productoConCantidad = {
       ...producto,
       cantidad,
       total: producto.precioVenta * cantidad,
     };
-
+  
     setProductosEnVenta([...productosEnVenta, productoConCantidad]);
     setTotalVenta(prevTotal => prevTotal + productoConCantidad.total);
-
+  
     setCodigoProducto('');
     setProducto(null);
     setCantidad(1);
     Swal.fire("Agregado", "Producto agregado correctamente", "success");
   };
+  
 
 
   const manejarCobro = async () => {
