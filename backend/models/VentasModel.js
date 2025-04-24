@@ -15,7 +15,7 @@ const VentaModel = db.define('venta', {
     total: { type: DataTypes.DECIMAL(11, 2), allowNull: false },
     estado: { type: DataTypes.STRING(20), allowNull: false }
 }, {
-    timestamps: false // 👈 esto evita el error
+    timestamps: false
 });
 
 

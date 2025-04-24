@@ -4,10 +4,10 @@ import { getAllEntradas, getEntrada, createEntrada, updateEntrada, deleteEntrada
 const routesEntradas = express.Router();
 
 // Rutas para el CRUD de Entradas
-routesEntradas.get('/', getAllEntradas); // Obtener todas las entradas
-routesEntradas.get('/:id', getEntrada); // Obtener una entrada por ID
-routesEntradas.post('/', createEntrada); // Crear una nueva entrada
+routesEntradas.get('/', getAllEntradas);
+routesEntradas.get('/:id', getEntrada); 
+routesEntradas.post('/', createEntrada); 
 routesEntradas.put('/:id', updateEntrada); // Actualizar una entrada existente
-routesEntradas.delete('/:id', deleteEntrada); // Eliminar una entrada por ID
+routesEntradas.delete('/:id', deleteEntrada); 
 
 export default routesEntradas;

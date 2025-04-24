@@ -5,8 +5,8 @@ import { FileDown, ChevronDown, ChevronUp } from 'lucide-react';
 import Inventario from '../inventario/inventario';
 import * as XLSX from 'xlsx';
 import { pdf } from '@react-pdf/renderer';
-import TablePDF from './TablePDF'; // Asegúrate de que la ruta sea correcta
-import Swal from 'sweetalert2'; // Importa SweetAlert2
+import TablePDF from './TablePDF';
+import Swal from 'sweetalert2'; 
 import './reportCard.css';
 
 const ReportCard = ({ entityKey }) => {
@@ -46,7 +46,7 @@ const ReportCard = ({ entityKey }) => {
         text: 'El archivo Excel se descargó correctamente.',
       });
     } catch (error) {
-      // Alerta en caso de error
+      
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
@@ -93,7 +93,6 @@ const ReportCard = ({ entityKey }) => {
   return (
     <Card className="card-custom shadow-lg rounded-4 border-0 mb-4 transition-all">
       <Card.Body className="d-flex flex-column justify-content-between">
-        {/* Header con toggle */}
         <div
           className="card-header-custom d-flex align-items-center justify-content-between mb-3"
           onClick={() => setShowOptions((prev) => !prev)}

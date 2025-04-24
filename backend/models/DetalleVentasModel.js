@@ -1,12 +1,11 @@
 // importamos la conexión a la base de datos
 import db from "../lib/database.js";
-// importamos sequelize
 import { DataTypes } from "sequelize";
 // importamos los modelos relacionados
 import VentaModel from './VentasModel.js';
 import ProductoModel from './ProductoModel.js';
 
-// Definimos el modelo para la tabla detalle_venta
+
 const DetalleVentaModel = db.define('detalle_venta', {
     idDetalle_venta: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     idVenta: { type: DataTypes.INTEGER,  allowNull: false },

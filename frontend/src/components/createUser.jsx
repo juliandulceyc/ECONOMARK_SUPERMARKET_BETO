@@ -9,12 +9,12 @@ const CompCreateUser = ({ showModal, handleClose, refreshUsers }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    // Procedimiento para guardar
+    
     const store = async (e) => {
         e.preventDefault();
         await axios.post(URL, { rol, username, password });
-        refreshUsers(); // Refresca la lista de productos después de añadir uno nuevo
-        handleClose(); // Cierra el modal
+        refreshUsers(); 
+        handleClose(); 
     };
 
     return (

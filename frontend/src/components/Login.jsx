@@ -148,7 +148,6 @@ const Login = () => {
       <main className="form-signin w-100 m-auto">
         <form onSubmit={handleSubmit}>
           <div className="text-center">
-            {/* Efecto hover en el logo */}
             <img
               className="mb-4 img-fluid logo-hover"
               src={Logo}
@@ -219,7 +218,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Reducido el espacio superior del botón para que esté más pegado al link */}
           <button className="btn btn-primary w-100 py-2 login-btn" type="submit" style={{ marginTop: '-15px' }}>
             Ingresar
           </button>

@@ -6,13 +6,13 @@ import {
     createEntradaProducto, 
     updateEntradaProducto, 
     deleteEntradaProducto 
-} from "../controller/EntradaProductoController.js";  // Cambié "controller" por "controllers" y añadí la extensión ".js"
+} from "../controller/EntradaProductoController.js";  
 
 const routesEntradaProductos = express.Router();
 
 // Rutas
-routesEntradaProductos.get("/", getAllEntradaProductos);  // Usé "getAllEntradaProductos"
-routesEntradaProductos.get("/:id", getEntradaProducto);  // Usé "getEntradaProducto"
+routesEntradaProductos.get("/", getAllEntradaProductos);  
+routesEntradaProductos.get("/:id", getEntradaProducto); 
 routesEntradaProductos.post("/", createEntradaProducto);
 routesEntradaProductos.put("/:id", updateEntradaProducto);
 routesEntradaProductos.delete("/:id", deleteEntradaProducto);

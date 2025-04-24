@@ -12,7 +12,7 @@ const ShowEditProveedor = ({ showModal, handleClose, proveedor, refreshProveedor
 
     useEffect(() => {
         if (proveedor) {
-            setFormData(proveedor); // Cargar los datos del proveedor a editar
+            setFormData(proveedor); 
         }
     }, [proveedor]);
 

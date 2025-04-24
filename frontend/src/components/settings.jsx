@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Card, Row, Col, Badge } from 'react-bootstrap';
-import { Person, Envelope, Bell, Palette } from 'react-bootstrap-icons'; // Usando íconos más sutiles
+import { Person, Envelope, Bell, Palette } from 'react-bootstrap-icons'; 
 
 const Settings = ({ profileData }) => { // Recibimos `profileData` como prop
   const [username, setUsername] = useState('');
@@ -19,7 +19,6 @@ const Settings = ({ profileData }) => { // Recibimos `profileData` como prop
     <div className="settings">
       <h2 className="my-4 text-center" style={{ color: '#6c757d', fontWeight: '600' }}>Ajustes de Perfil</h2>
 
-      {/* Mostrar la información del perfil de usuario alineado a la izquierda */}
       <Card className="mb-4 shadow-sm border-light">
         <Card.Body>
           <Row>
@@ -33,8 +32,6 @@ const Settings = ({ profileData }) => { // Recibimos `profileData` como prop
               </div>
             </Col>
             <Col md={6} className="d-flex justify-content-center align-items-center">
-              {/* Aquí podemos agregar una imagen de perfil si lo deseas */}
-              {/* <img src="path_to_image" alt="profile" className="img-fluid rounded-circle" /> */}
             </Col>
           </Row>
         </Card.Body>

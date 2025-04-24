@@ -7,7 +7,7 @@ function Header({ currentView, profileData }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileImage, setProfileImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_iwynnKUnSZbPBC5SiPy6Ay9-3cIEezn6w&s');
-  const [loading, setLoading] = useState(false);  // Ya no necesitamos este estado ya que profileData lo pasamos desde Home.
+  const [loading, setLoading] = useState(false); 
 
   const notifications = [
     { id: 1, text: '2 Productos vencidos', time: 'Hace 5 minutos', read: false },

@@ -62,13 +62,13 @@ function DashboardStats() {
       const result = Object.fromEntries(entries);
       setCounts(result);
 
-      // Fetch ventas para total y ganancias
+      // total y ganancias
       try {
         const ventasRes = await fetch(Inventario.ventas.url);
         const ventasData = await ventasRes.json();
         const total = ventasData.reduce((sum, venta) => sum + (parseFloat(venta.total) || 0), 0);
         setTotalVentas(total);
-        setGanancias(total * 0.3); // Por ejemplo, 30% de ganancia
+        setGanancias(total * 0.3);
       } catch (err) {
         console.error('Error al obtener ventas:', err);
         setTotalVentas(0);

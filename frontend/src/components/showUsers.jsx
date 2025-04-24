@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import SearchBar from "./SearchBar";
-import Inventario from "../components/inventario/inventario"; // ruta según tu estructura
+import Inventario from "../components/inventario/inventario"; 
 
 const { label, url, columns, initialData, idField } = Inventario["usuarios"];
 

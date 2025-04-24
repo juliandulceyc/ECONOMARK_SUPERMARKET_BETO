@@ -6,21 +6,21 @@ html, body, #root {
 .wrapper {
   display: flex;
   height: 100vh;
-  background: #f8f9fa; /* Fondo claro para contraste con sidebar */
+  background: #f8f9fa; 
 }
 
 .sidebar-wrapper {
   transition: width 0.3s ease;
   height: 100%;
-  background: #1a1d23; /* Color oscuro para sidebar */
-  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+  background: #1a1d23; 
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4); 
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
   height: 100%;
-  color: #ffffff; /* Texto blanco puro */
+  color: #ffffff; 
 }
 
 .main-content {
@@ -29,27 +29,27 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background: #ffffff; /* Fondo blanco para contraste */
+  background: #ffffff; 
 }
 
-/* Mejoras de contraste en elementos del sidebar */
+
 .sidebar-header {
-  border-bottom: 2px solid #2d323b; /* Borde más contrastado */
-  background: #24282f !important; /* Fondo de header más claro que el sidebar */
+  border-bottom: 2px solid #2d323b; 
+  background: #24282f !important; 
 }
 
 .nav-link {
-  color: #e0e0e0 !important; /* Texto gris claro */
-  border-bottom: 1px solid #343a46 !important; /* Borde más visible */
+  color: #e0e0e0 !important; 
+  border-bottom: 1px solid #343a46 !important; 
 }
 
 .nav-link.active {
-  background: #2a5db0 !important; /* Azul más vibrante */
+  background: #2a5db0 !important; 
   border-left: 3px solid #ffffff !important;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.05) !important; /* Hover sutil pero perceptible */
+  background: rgba(255, 255, 255, 0.05) !important; 
 }
 
 /* Botón de colapso */
@@ -64,7 +64,7 @@ html, body, #root {
 
 /* Iconos */
 .bi {
-  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5)); /* Mayor definición */
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5)); 
 }
 
 /* Estado colapsado */
@@ -73,14 +73,14 @@ html, body, #root {
 }
 
 .sidebar.collapsed .nav-link:hover .nav-item-text {
-  background: #1a1d23; /* Fondo tooltip igual al sidebar */
+  background: #1a1d23; 
   color: #ffffff !important;
   box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.5); /* Sombra más intensa */
 }
 
 /* Textos */
 .nav-item-text {
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Mejor legibilidad */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); 
 }
 
 /* Mantenemos todas las transiciones y dimensiones originales */

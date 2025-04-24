@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Form, Button, Modal } from 'react-bootstrap'; //punto de restauración
+import { Form, Button, Modal } from 'react-bootstrap';
 
 const URL = 'http://localhost:3000/credenciales/';
 

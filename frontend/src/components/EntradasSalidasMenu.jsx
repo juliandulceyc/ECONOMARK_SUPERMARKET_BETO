@@ -25,14 +25,14 @@ const EntradasSalidasMenu = () => {
     e.preventDefault();
     console.log('Entrada guardada:', entradaData);
     alert('Entrada registrada correctamente');
-    setShowEntradasForm(false); // Ocultar formulario después de guardar
+    setShowEntradasForm(false); 
   };
 
   const handleSaveSalida = (e) => {
     e.preventDefault();
     console.log('Salida guardada:', salidaData);
     alert('Salida registrada correctamente');
-    setShowSalidasForm(false); // Ocultar formulario después de guardar
+    setShowSalidasForm(false);
   };
 
   return (

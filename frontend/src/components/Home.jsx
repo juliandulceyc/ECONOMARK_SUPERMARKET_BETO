@@ -73,7 +73,7 @@ function Home() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Función para renderizar contenido según la vista actual
+  // Función para renderizar
   const renderContent = () => {
     switch (currentView) {
       case 'dashboard':

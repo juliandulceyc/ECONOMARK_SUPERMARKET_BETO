@@ -1,4 +1,4 @@
-/* Alternativa más elegante y minimalista */
+
 .table {
   border-collapse: separate;
   border-spacing: 0 8px;
@@ -42,13 +42,13 @@
   background-color: #fff;
 }
 
-/* Elimina el borde derecho para la última columna */
+
 .table tbody td:last-child,
 .table thead th:last-child {
   border-right: none;
 }
 
-/* Acción buttons */
+
 .table .btn {
   font-size: 14px;
   padding: 6px 10px;

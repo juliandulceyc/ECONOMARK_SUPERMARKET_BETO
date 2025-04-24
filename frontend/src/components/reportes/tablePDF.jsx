@@ -78,7 +78,7 @@ const TablePDF = ({ data = [], columns = [], title = 'Reporte' }) => (
             key={i}
             style={[
               styles.tableRow,
-              i % 2 === 1 ? styles.zebra : null, // Zebra striping
+              i % 2 === 1 ? styles.zebra : null,
             ]}
           >
             {columns.map((col, j) => (

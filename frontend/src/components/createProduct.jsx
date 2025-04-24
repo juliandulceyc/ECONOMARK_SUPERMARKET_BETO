@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Button, Modal, Form } from 'react-bootstrap'; //punto de restauración
+import { Button, Modal, Form } from 'react-bootstrap'; 
 
 const URL = 'http://localhost:3000/tablas/';
 
