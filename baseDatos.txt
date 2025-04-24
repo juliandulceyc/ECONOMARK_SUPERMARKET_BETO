@@ -39,7 +39,7 @@ CREATE TABLE productos (
   idProducto INT AUTO_INCREMENT PRIMARY KEY,
   idCategoria INT NOT NULL,
   nombreProducto VARCHAR(80) NOT NULL UNIQUE,
-  precioVenta DECIMAL(10,3) NOT NULL,
+  precioVenta DECIMAL(10,2) NOT NULL,
   stock INT DEFAULT 0,
   estado VARCHAR(80),
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,

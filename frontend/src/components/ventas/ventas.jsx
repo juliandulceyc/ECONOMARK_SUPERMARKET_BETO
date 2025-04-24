@@ -7,6 +7,7 @@ import { faSearch, faCashRegister, faTrashAlt } from '@fortawesome/free-solid-sv
 import FacturaModal from './FacturaModal';
 import ClienteModal from './ClienteModal';
 import Swal from 'sweetalert2';
+import { Modal } from 'react-bootstrap';
 
 const Ventas = ({ cajero }) => {
   const [codigoProducto, setCodigoProducto] = useState('');
@@ -19,28 +20,38 @@ const Ventas = ({ cajero }) => {
   const [mostrarModalFactura, setMostrarModalFactura] = useState(false);
   const [datosVenta, setDatosVenta] = useState(null);
   const [cliente, setCliente] = useState(null);
-  const [mostrarModalCliente, setMostrarModalCliente] = useState(false);
+  const [showClienteModal, setShowClienteModal] = useState(false);
   const [clientes, setClientes] = useState([]);
   const [usuario, setUsuario] = useState(null);
   const [horaActual, setHoraActual] = useState(new Date().toLocaleTimeString());
+  const [cronometroActivo, setCronometroActivo] = useState(false);
+  const [segundos, setSegundos] = useState(0);
 
   useEffect(() => {
     const clienteGuardado = localStorage.getItem("cliente");
-    if (clienteGuardado) {
-      setCliente(JSON.parse(clienteGuardado));
-    }
+    if (clienteGuardado) setCliente(JSON.parse(clienteGuardado));
 
     const usuarioGuardado = localStorage.getItem("usuario");
-    if (usuarioGuardado) {
-      setUsuario(JSON.parse(usuarioGuardado));
-    }
+    if (usuarioGuardado) setUsuario(JSON.parse(usuarioGuardado));
 
-    const intervalo = setInterval(() => {
+    const intervaloReloj = setInterval(() => {
       setHoraActual(new Date().toLocaleTimeString());
     }, 1000);
 
-    return () => clearInterval(intervalo);
+    return () => clearInterval(intervaloReloj);
   }, []);
+
+  useEffect(() => {
+    let cronometroIntervalo;
+    if (cronometroActivo) {
+      cronometroIntervalo = setInterval(() => {
+        setSegundos(prev => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(cronometroIntervalo);
+    }
+    return () => clearInterval(cronometroIntervalo);
+  }, [cronometroActivo]);
 
   useEffect(() => {
     const obtenerClientes = async () => {
@@ -53,6 +64,24 @@ const Ventas = ({ cajero }) => {
     };
     obtenerClientes();
   }, []);
+
+  const abrirTurno = () => {
+    setCronometroActivo(true);
+    setSegundos(0);
+    Swal.fire("Turno iniciado", "El turno ha comenzado", "success");
+  };
+
+  const cerrarTurno = () => {
+    setCronometroActivo(false);
+    Swal.fire("Turno finalizado", `Tiempo trabajado: ${formatearTiempo(segundos)}`, "info");
+  };
+
+  const formatearTiempo = (seg) => {
+    const h = Math.floor(seg / 3600);
+    const m = Math.floor((seg % 3600) / 60);
+    const s = seg % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   const buscarProducto = async () => {
     try {
@@ -94,60 +123,6 @@ const Ventas = ({ cajero }) => {
     Swal.fire("Agregado", "Producto agregado correctamente", "success");
   };
 
-  const abrirModalCliente = () => {
-    setMostrarModalCliente(true);
-  };
-
-  const seleccionarCliente = (clienteSeleccionado) => {
-    setCliente(clienteSeleccionado);
-    localStorage.setItem("cliente", JSON.stringify(clienteSeleccionado));
-    setMostrarModalCliente(false);
-    Swal.fire("Cliente seleccionado", `Cliente: ${clienteSeleccionado.nombre}`, "success");
-  };
-
-  const calcularTotalVenta = () => {
-    return productosEnVenta.reduce((total, producto) => total + producto.total, 0);
-  };
-
-  const abrirModal = () => {
-    obtenerListaProductos();
-    setMostrarModal(true);
-  };
-
-  const seleccionarProductoDelModal = (productoSeleccionado) => {
-    setProducto(productoSeleccionado);
-    setCodigoProducto(productoSeleccionado.idProducto || '');
-    setMostrarModal(false);
-  };
-
-  const cerrarModal = () => {
-    setMostrarModal(false);
-  };
-
-  const generarFactura = () => {
-    const ventaGenerada = {
-      id: new Date().getTime(),
-      fecha: new Date().toLocaleString(),
-      productos: productosEnVenta,
-      total: calcularTotalVenta(),
-    };
-    setDatosVenta(ventaGenerada);
-    setMostrarModalFactura(true);
-  };
-
-  const descontarStock = async () => {
-    try {
-      for (let productoVenta of productosEnVenta) {
-        const nuevoStock = productoVenta.stock - productoVenta.cantidad;
-        await API.put(`/productos/${productoVenta.idProducto}`, {
-          stock: nuevoStock
-        });
-      }
-    } catch (error) {
-      Swal.fire("Error", "No se pudo actualizar el stock", "error");
-    }
-  };
-
   const manejarCobro = async () => {
     if (productosEnVenta.length === 0) {
       Swal.fire("Advertencia", "Agrega productos antes de cobrar", "warning");
@@ -174,35 +149,106 @@ const Ventas = ({ cajero }) => {
       };
 
       const response = await API.post('/ventas', ventaData);
-      Swal.fire("Venta registrada", response.data.message || "Venta realizada con éxito", "success");
 
-      generarFactura();
+      const ventaGenerada = {
+        id: response.data.id || new Date().getTime(),
+        fecha: new Date().toLocaleString(),
+        productos: productosEnVenta,
+        total: calcularTotalVenta(),
+      };
 
+      setDatosVenta(ventaGenerada);
+      setMostrarModalFactura(true);
       setProductosEnVenta([]);
       setTotalVenta(0);
     } catch (error) {
-      console.error("Error al registrar la venta:", error);
       Swal.fire("Error", "Ocurrió un error al registrar la venta", "error");
     }
   };
 
-  const eliminarProducto = (productoAEliminar) => {
-    setProductosEnVenta(productosEnVenta.filter(producto => producto.idProducto !== productoAEliminar.idProducto));
-    setTotalVenta(prevTotal => prevTotal - productoAEliminar.total);
-    Swal.fire("Eliminado", "Producto eliminado de la venta", "info");
+  const descontarStock = async () => {
+    try {
+      for (let productoVenta of productosEnVenta) {
+        const nuevoStock = productoVenta.stock - productoVenta.cantidad;
+        await API.put(`/productos/${productoVenta.idProducto}`, { stock: nuevoStock });
+      }
+    } catch (error) {
+      Swal.fire("Error", "No se pudo actualizar el stock", "error");
+    }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       agregarProducto();
+    } else if (e.key === 'F11') {
+      e.preventDefault();
+      busquedaRapida();
+    } else if (e.key === 'F12') {
+      e.preventDefault();
+      manejarCobro();
     }
   };
 
-  useEffect(() => {
-    if (codigoProducto) {
-      buscarProducto();
+  const calcularTotalVenta = () => productosEnVenta.reduce((total, p) => total + p.total, 0);
+
+  const cancelarVenta = () => {
+    setProductosEnVenta([]);
+    setTotalVenta(0);
+    Swal.fire("Venta cancelada", "La venta ha sido cancelada", "info");
+  };
+
+  const eliminarProducto = (productoAEliminar) => {
+    setProductosEnVenta(productosEnVenta.filter(producto => producto.idProducto !== productoAEliminar.idProducto));
+    setTotalVenta(prev => prev - productoAEliminar.total);
+    Swal.fire("Eliminado", "Producto eliminado de la venta", "info");
+  };
+
+  const busquedaRapida = () => {
+    if (!codigoProducto.trim()) {
+      Swal.fire("Advertencia", "Por favor ingresa un código de producto", "warning");
+      return;
     }
+
+    const productosFiltrados = listaProductos.filter(p =>
+      p.idProducto.toString().includes(codigoProducto) ||
+      p.nombreProducto.toLowerCase().includes(codigoProducto.toLowerCase())
+    );
+
+    if (productosFiltrados.length > 0) {
+      setListaProductos(productosFiltrados);
+      Swal.fire("Resultados encontrados", `${productosFiltrados.length} productos encontrados`, "success");
+    } else {
+      Swal.fire("Sin resultados", "No se encontraron productos que coincidan", "info");
+    }
+  };
+
+  const abrirModal = () => {
+    obtenerListaProductos();
+    setMostrarModal(true);
+  };
+
+  const cerrarModal = () => {
+    setMostrarModal(false);
+  };
+
+  const seleccionarProductoDelModal = (productoSeleccionado) => {
+    setProducto(productoSeleccionado);
+    setCodigoProducto(productoSeleccionado.idProducto || '');
+    setMostrarModal(false);
+  };
+
+  const handleSelectCliente = (clienteSeleccionado) => {
+    setCliente(clienteSeleccionado);
+    setShowClienteModal(false);
+    localStorage.setItem("cliente", JSON.stringify(clienteSeleccionado));
+    Swal.fire("Cliente seleccionado", `Cliente: ${clienteSeleccionado.nombreCliente}`, "success");
+  };
+
+  useEffect(() => {
+    if (codigoProducto) buscarProducto();
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [codigoProducto]);
 
   return (
@@ -212,20 +258,15 @@ const Ventas = ({ cajero }) => {
       </header>
 
       <section className="ventas-button-row">
-        <button key="abrir-turno" className="ventas-button abrir-turno">Abrir Turno</button>
+        <button className="ventas-button abrir-turno" onClick={abrirTurno}>Abrir Turno</button>
         {Array.from({ length: 11 }, (_, index) => (
           <button key={index} className="ventas-button">Botón</button>
         ))}
-        <button key="cerrar-turno" className="ventas-button cerrar-turno">Cerrar Turno</button>
+        <button className="ventas-button cerrar-turno" onClick={cerrarTurno}>Cerrar Turno</button>
       </section>
 
-
-
       <section className="ventas-product-entry">
-        <div className="ventas-titulo-container">
-          <h2 className="ventas-titulo-gradiente">VENTA DE PRODUCTOS</h2>
-        </div>
-
+        <h2 className="ventas-titulo-gradiente">VENTA DE PRODUCTOS</h2>
         <div className="ventas-controls-line">
           <div className="input-group">
             <label>Código del producto:</label>
@@ -237,14 +278,9 @@ const Ventas = ({ cajero }) => {
               onChange={(e) => setCodigoProducto(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <button className="ventas-add-btn" onClick={abrirModal}>
-              <FontAwesomeIcon icon={faSearch} />
-            </button>
-            <button className="ventas-add-btn" onClick={agregarProducto}>
-              <FontAwesomeIcon icon={faCashRegister} />
-            </button>
+            <button className="ventas-add-btn" onClick={abrirModal}><FontAwesomeIcon icon={faSearch} /></button>
+            <button className="ventas-add-btn" onClick={agregarProducto}><FontAwesomeIcon icon={faCashRegister} /></button>
           </div>
-
           <div className="input-group">
             <label>Cantidad:</label>
             <input
@@ -255,13 +291,12 @@ const Ventas = ({ cajero }) => {
               min="1"
             />
           </div>
-
           <button className="action-btn" onClick={agregarProducto}>Agregar a la venta</button>
-          <button className="action-btn" onClick={abrirModalCliente}>Seleccionar cliente</button>
-          <button className="action-btn">Vender a granel</button>
-          <button className="action-btn">Venta en espera</button>
+          <button className="action-btn" onClick={() => setShowClienteModal(true)}>Seleccionar cliente</button>
+          <button className="action-btn" onClick={busquedaRapida}>Vender a granel</button>
+          <button className="action-btn" onClick={cancelarVenta}>Venta en espera</button>
         </div>
-        <div className='ventas-separator' />
+        <div className="ventas-separator" />
       </section>
 
       <section className="ventas-product-list">
@@ -285,9 +320,7 @@ const Ventas = ({ cajero }) => {
                 <td>${producto.precioVenta}</td>
                 <td>${producto.total}</td>
                 <td>
-                  <button onClick={() => eliminarProducto(producto)}>
-                    <FontAwesomeIcon icon={faTrashAlt} />
-                  </button>
+                  <button onClick={() => eliminarProducto(producto)}><FontAwesomeIcon icon={faTrashAlt} /></button>
                 </td>
               </tr>
             ))}
@@ -296,15 +329,13 @@ const Ventas = ({ cajero }) => {
       </section>
 
       <section className="ventas-actions">
-        <div className="ventas-buttons-container">
-          <div className="ventas-actions-grid">
-            <button className="action-btn">Artículo común</button>
-            <button className="action-btn">Datos extra al ticket</button>
-            <button className="action-btn">F11 - Búsqueda rápida</button>
-            <button className="action-btn">Cancelar venta</button>
-            <button className="action-btn">Editar venta</button>
-            <button className="action-btn">Reimprimir último ticket</button>
-          </div>
+        <div className="ventas-actions-grid">
+          <button className="action-btn">Artículo común</button>
+          <button className="action-btn">Datos extra al ticket</button>
+          <button className="action-btn">F11 - Búsqueda rápida</button>
+          <button className="action-btn" onClick={cancelarVenta}>Cancelar venta</button>
+          <button className="action-btn">Editar venta</button>
+          <button className="action-btn">Reimprimir último ticket</button>
         </div>
         <div className="ventas-payment-col">
           <button className="ventas-cobrar" onClick={manejarCobro}>F12 - Cobrar</button>
@@ -316,6 +347,7 @@ const Ventas = ({ cajero }) => {
         <div className="ventas-footer-content">
           <div>Cajero en turno: {cajero || 'No identificado'}</div>
           <div>{horaActual}</div>
+          <div>Cronómetro: {formatearTiempo(segundos)}</div>
         </div>
       </footer>
 
@@ -338,9 +370,7 @@ const Ventas = ({ cajero }) => {
                     <td>{producto.idProducto}</td>
                     <td>{producto.nombreProducto}</td>
                     <td>
-                      <button onClick={() => seleccionarProductoDelModal(producto)}>
-                        Seleccionar
-                      </button>
+                      <button onClick={() => seleccionarProductoDelModal(producto)}>Seleccionar</button>
                     </td>
                   </tr>
                 ))}
@@ -350,22 +380,20 @@ const Ventas = ({ cajero }) => {
         </div>
       )}
 
-      {mostrarModalCliente && (
-        <ClienteModal
-          showModal={mostrarModalCliente}
-          handleClose={() => setMostrarModalCliente(false)}
-          clientes={clientes}
-          handleSelectCliente={seleccionarCliente}
-        />
-      )}
-
-      {mostrarModalFactura && datosVenta && (
+      {mostrarModalFactura && (
         <FacturaModal
           show={mostrarModalFactura}
           onHide={() => setMostrarModalFactura(false)}
           datosVenta={datosVenta}
         />
       )}
+
+      <ClienteModal
+        show={showClienteModal}
+        onHide={() => setShowClienteModal(false)}
+        clientes={clientes}
+        onSelectCliente={handleSelectCliente}
+      />
     </div>
   );
 };
