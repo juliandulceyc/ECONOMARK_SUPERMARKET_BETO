@@ -6,6 +6,7 @@ import Inventario from '../inventario/inventario';
 import * as XLSX from 'xlsx';
 import { pdf } from '@react-pdf/renderer';
 import TablePDF from './TablePDF'; // Asegúrate de que la ruta sea correcta
+import Swal from 'sweetalert2'; // Importa SweetAlert2
 import './reportCard.css';
 
 const ReportCard = ({ entityKey }) => {
@@ -20,6 +21,11 @@ const ReportCard = ({ entityKey }) => {
         setData(res.data);
       } catch (error) {
         console.error(`Error al obtener datos de ${entityKey}`, error);
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: `No se pudieron cargar los datos de ${entityKey}. Por favor, intenta nuevamente.`,
+        });
       }
     };
 
@@ -27,27 +33,59 @@ const ReportCard = ({ entityKey }) => {
   }, [entity.url, entityKey]);
 
   const handleDownloadExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, entity.label);
-    XLSX.writeFile(workbook, `${entityKey}.xlsx`);
+    try {
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, entity.label);
+      XLSX.writeFile(workbook, `${entityKey}.xlsx`);
+
+      // SweetAlert de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'El archivo Excel se descargó correctamente.',
+      });
+    } catch (error) {
+      // Alerta en caso de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Hubo un problema al generar el archivo Excel.',
+      });
+    }
   };
 
   const handleDownloadPDF = async () => {
-    const blob = await pdf(
-      <TablePDF
-        data={data}
-        columns={entity.columns}
-        title={entity.label} // Pasa el nombre de la tabla como título
-      />
-    ).toBlob();
+    try {
+      const blob = await pdf(
+        <TablePDF
+          data={data}
+          columns={entity.columns}
+          title={entity.label} // Pasa el nombre de la tabla como título
+        />
+      ).toBlob();
 
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${entityKey}.pdf`;
-    link.click();
-    URL.revokeObjectURL(url);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${entityKey}.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
+
+      // SweetAlert de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'El archivo PDF se descargó correctamente.',
+      });
+    } catch (error) {
+      // Alerta en caso de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Hubo un problema al generar el archivo PDF.',
+      });
+    }
   };
 
   if (!entity) return null;

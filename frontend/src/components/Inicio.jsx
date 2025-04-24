@@ -103,7 +103,13 @@ function DashboardStats() {
     <Row className="g-3 mb-4">
       {allCards.map(({ key, label, value }) => (
         <Col md={3} key={key}>
-          <Card className={`text-white bg-${colorMap[key] || 'primary'}`}>
+          <Card
+            className={`text-white bg-${colorMap[key] || 'primary'} shadow-lg rounded-4 border-0 transform-hover`}
+            style={{
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+            }}
+          >
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center">
                 <div>
@@ -116,7 +122,15 @@ function DashboardStats() {
                     )}
                   </h3>
                 </div>
-                <i className={`bi ${iconMap[key] || 'bi-collection'} h1`}></i>
+                <i
+                  className={`bi ${iconMap[key] || 'bi-collection'} h1`}
+                  style={{
+                    transition: 'transform 0.3s ease, color 0.3s ease',
+                    color: 'rgba(255, 255, 255, 0.8)',
+                  }}
+                  onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
+                  onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+                ></i>
               </div>
             </Card.Body>
           </Card>
