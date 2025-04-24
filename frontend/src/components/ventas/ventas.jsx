@@ -108,6 +108,12 @@ const Ventas = ({ cajero }) => {
       return;
     }
 
+    // Verificación de stock antes de agregar el producto
+    if (producto.stock < cantidad) {
+      Swal.fire("Stock insuficiente", `El producto ${producto.nombreProducto} no tiene suficiente stock`, "warning");
+      return; // Si no hay suficiente stock, no se agrega el producto
+    }
+
     const productoConCantidad = {
       ...producto,
       cantidad,
@@ -123,10 +129,19 @@ const Ventas = ({ cajero }) => {
     Swal.fire("Agregado", "Producto agregado correctamente", "success");
   };
 
+
   const manejarCobro = async () => {
     if (productosEnVenta.length === 0) {
       Swal.fire("Advertencia", "Agrega productos antes de cobrar", "warning");
       return;
+    }
+
+    // Verificación de stock
+    for (let productoVenta of productosEnVenta) {
+      if (productoVenta.stock < productoVenta.cantidad) {
+        Swal.fire("Stock insuficiente", `El producto ${productoVenta.nombreProducto} no tiene suficiente stock`, "warning");
+        return; // Si algún producto no tiene suficiente stock, se detiene el proceso
+      }
     }
 
     try {
@@ -165,6 +180,7 @@ const Ventas = ({ cajero }) => {
       Swal.fire("Error", "Ocurrió un error al registrar la venta", "error");
     }
   };
+
 
   const descontarStock = async () => {
     try {
