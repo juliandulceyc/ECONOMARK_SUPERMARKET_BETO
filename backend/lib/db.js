@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise'
 
 let connection;
-
+console.log('DB_HOST:', process.env.DB_HOST);
 export const connectToDataBase = async () => {
     try{
         if(!connection){

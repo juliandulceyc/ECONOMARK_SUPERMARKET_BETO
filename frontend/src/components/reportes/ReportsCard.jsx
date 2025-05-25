@@ -5,7 +5,7 @@ import { FileDown, ChevronDown, ChevronUp } from 'lucide-react';
 import Inventario from '../inventario/inventario';
 import * as XLSX from 'xlsx';
 import { pdf } from '@react-pdf/renderer';
-import TablePDF from './TablePDF';
+import TablePDF from "./TablePDF";
 import Swal from 'sweetalert2'; 
 import './reportCard.css';
 

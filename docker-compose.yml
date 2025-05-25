@@ -12,13 +12,15 @@ services:
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
-    image: dulceydev/economark-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: economark-backend
     restart: always
     env_file:
@@ -29,19 +31,14 @@ services:
     ports:
       - "3000:3000"
     working_dir: /app
-    # Si necesitas montar el código local para desarrollo, descomenta la siguiente línea:
-    # volumes:
-    #   - ./backend:/app
 
   frontend:
-    image: dulceydev/economark-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: economark-frontend
-    restart: always
     ports:
       - "5173:80"
-    # Si necesitas montar el código local para desarrollo, descomenta la siguiente línea:
-    # volumes:
-    #   - ./frontend:/usr/share/nginx/html
 
 volumes:
   db_data:

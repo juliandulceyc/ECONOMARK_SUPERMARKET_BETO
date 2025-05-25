@@ -13,6 +13,7 @@ import routesEntradas from './routes/routesEntradas.js'
 import routesVentas from './routes/routesVentas.js'
 import routesDetalleVentas from './routes/routesDetalleVentas.js'
 import routesEntradaProductos from './routes/routesEntradaProductos.js'
+import connectToDataBase from './lib/db.js';
 
 const app = express()
 
@@ -33,6 +34,9 @@ app.use('/detalle_entradas', routesEntradas)
 app.use('/ventas', routesVentas)
 app.use('/detalle_ventas', routesDetalleVentas)
 app.use('/entrada_productos', routesEntradaProductos)
+
+// Conectar a la base de datos
+connectToDataBase();
 
 // Escuchar puerto
 const PORT = process.env.PORT || 3000
