@@ -14,6 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  // Bloquea el botón atrás en el login
   useEffect(() => {
     window.history.pushState(null, document.title, window.location.href);
     const handlePopState = () => {
@@ -68,7 +69,6 @@ const Login = () => {
       const response = await axios.post('http://localhost:3000/auth/login', values);
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
-        console.log('Login exitoso, navegando a /home');
         navigate('/home', { replace: true });
       }
     } catch (err) {
@@ -229,7 +229,7 @@ const Login = () => {
             </Link>
           </div>
         </form>
-        
+
         {/* SVG Icons */}
         <svg xmlns="http://www.w3.org/2000/svg" className="d-none">
           <symbol id="check2" viewBox="0 0 16 16">

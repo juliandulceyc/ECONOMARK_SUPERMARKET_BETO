@@ -149,7 +149,6 @@ const Register = () => {
                 value={values.rol}
               >
                 <option value="0"></option>
-                <option value="admin">Admin</option>
                 <option value="empleado">Empleado</option>
               </select>
               <label htmlFor="rol">Seleccione su Rol</label>

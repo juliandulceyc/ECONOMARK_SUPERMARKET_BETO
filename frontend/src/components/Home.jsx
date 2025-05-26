@@ -45,6 +45,14 @@ function Home() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
+  // 🚩 Verifica el token antes de renderizar Home
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login', { replace: true });
+    }
+  }, [navigate]);
+
   // Función para obtener el rol del usuario
   const fetchUser = async () => {
     try {

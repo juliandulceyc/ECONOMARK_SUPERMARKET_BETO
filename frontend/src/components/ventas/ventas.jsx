@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './ventas.css';
 import Logo from './carrito-de-compras.png';
 import API from './services/axiosConfig';
@@ -9,6 +9,31 @@ import ClienteModal from './ClienteModal';
 import Swal from 'sweetalert2';
 import { Modal } from 'react-bootstrap';
 
+// Hook personalizado para el cronómetro
+function useCronometro() {
+  const [activo, setActivo] = useState(false);
+  const [segundos, setSegundos] = useState(0);
+
+  useEffect(() => {
+    let intervalo;
+    if (activo) {
+      intervalo = setInterval(() => setSegundos(s => s + 1), 1000);
+    }
+    return () => clearInterval(intervalo);
+  }, [activo]);
+
+  const iniciar = () => {
+    setActivo(true);
+    setSegundos(0);
+  };
+
+  const detener = () => setActivo(false);
+
+  return { activo, segundos, iniciar, detener, setSegundos };
+}
+
+const formatoMoneda = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' });
+
 const Ventas = ({ cajero }) => {
   const [codigoProducto, setCodigoProducto] = useState('');
   const [producto, setProducto] = useState(null);
@@ -16,7 +41,6 @@ const Ventas = ({ cajero }) => {
   const [productosEnVenta, setProductosEnVenta] = useState([]);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [listaProductos, setListaProductos] = useState([]);
-  const [totalVenta, setTotalVenta] = useState(0);
   const [mostrarModalFactura, setMostrarModalFactura] = useState(false);
   const [datosVenta, setDatosVenta] = useState(null);
   const [cliente, setCliente] = useState(null);
@@ -24,36 +48,25 @@ const Ventas = ({ cajero }) => {
   const [clientes, setClientes] = useState([]);
   const [usuario, setUsuario] = useState(null);
   const [horaActual, setHoraActual] = useState(new Date().toLocaleTimeString());
-  const [cronometroActivo, setCronometroActivo] = useState(false);
-  const [segundos, setSegundos] = useState(0);
 
+  // Cronómetro con hook personalizado
+  const { activo: cronometroActivo, segundos, iniciar, detener } = useCronometro();
+
+  // Actualiza la hora cada segundo
   useEffect(() => {
-    const clienteGuardado = localStorage.getItem("cliente");
-    if (clienteGuardado) setCliente(JSON.parse(clienteGuardado));
-
-    const usuarioGuardado = localStorage.getItem("usuario");
-    if (usuarioGuardado) setUsuario(JSON.parse(usuarioGuardado));
-
     const intervaloReloj = setInterval(() => {
       setHoraActual(new Date().toLocaleTimeString());
     }, 1000);
-
     return () => clearInterval(intervaloReloj);
   }, []);
 
+  // Carga clientes al montar
   useEffect(() => {
-    let cronometroIntervalo;
-    if (cronometroActivo) {
-      cronometroIntervalo = setInterval(() => {
-        setSegundos(prev => prev + 1);
-      }, 1000);
-    } else {
-      clearInterval(cronometroIntervalo);
-    }
-    return () => clearInterval(cronometroIntervalo);
-  }, [cronometroActivo]);
+    const clienteGuardado = localStorage.getItem("cliente");
+    if (clienteGuardado) setCliente(JSON.parse(clienteGuardado));
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (usuarioGuardado) setUsuario(JSON.parse(usuarioGuardado));
 
-  useEffect(() => {
     const obtenerClientes = async () => {
       try {
         const response = await API.get('/clientes');
@@ -65,25 +78,12 @@ const Ventas = ({ cajero }) => {
     obtenerClientes();
   }, []);
 
-  const abrirTurno = () => {
-    setCronometroActivo(true);
-    setSegundos(0);
-    Swal.fire("Turno iniciado", "El turno ha comenzado", "success");
-  };
-
-  const cerrarTurno = () => {
-    setCronometroActivo(false);
-    Swal.fire("Turno finalizado", `Tiempo trabajado: ${formatearTiempo(segundos)}`, "info");
-  };
-
-  const formatearTiempo = (seg) => {
-    const h = Math.floor(seg / 3600);
-    const m = Math.floor((seg % 3600) / 60);
-    const s = seg % 60;
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const buscarProducto = async () => {
+  // Buscar producto por código
+  const buscarProducto = useCallback(async () => {
+    if (!codigoProducto.trim()) {
+      setProducto(null);
+      return;
+    }
     try {
       const response = await API.get(`/productos/${codigoProducto}`);
       setProducto(response.data);
@@ -91,8 +91,9 @@ const Ventas = ({ cajero }) => {
       setProducto(null);
       Swal.fire("Producto no encontrado", "Verifica el código ingresado", "warning");
     }
-  };
+  }, [codigoProducto]);
 
+  // Obtener lista de productos para el modal
   const obtenerListaProductos = async () => {
     try {
       const response = await API.get('/productos');
@@ -102,52 +103,63 @@ const Ventas = ({ cajero }) => {
     }
   };
 
-  const agregarProducto = () => {
+  // Agregar producto a la venta
+  const agregarProducto = useCallback(() => {
     if (!producto) {
       Swal.fire("Advertencia", "Primero debes buscar o seleccionar un producto", "warning");
       return;
     }
-  
-    // Verificación de stock antes de agregar el producto
     if (producto.stock < cantidad) {
-      Swal.fire("Stock insuficiente", `Solo quedan ${producto.stock} unidades de ${producto.nombreProducto}. No puedes agregar más de ${producto.stock} al carrito.`, "warning");
-      return; // Si no hay suficiente stock, no se agrega el producto
+      Swal.fire("Stock insuficiente", `Solo quedan ${producto.stock} unidades de ${producto.nombreProducto}.`, "warning");
+      return;
     }
-  
-    const productoConCantidad = {
-      ...producto,
-      cantidad,
-      total: producto.precioVenta * cantidad,
-    };
-  
-    setProductosEnVenta([...productosEnVenta, productoConCantidad]);
-    setTotalVenta(prevTotal => prevTotal + productoConCantidad.total);
-  
+    // Si ya está en la venta, suma la cantidad
+    const existente = productosEnVenta.find(p => p.idProducto === producto.idProducto);
+    if (existente) {
+      const nuevaCantidad = existente.cantidad + cantidad;
+      if (nuevaCantidad > producto.stock) {
+        Swal.fire("Stock insuficiente", `No puedes agregar más de ${producto.stock} unidades.`, "warning");
+        return;
+      }
+      setProductosEnVenta(productosEnVenta.map(p =>
+        p.idProducto === producto.idProducto
+          ? { ...p, cantidad: nuevaCantidad, total: nuevaCantidad * p.precioVenta }
+          : p
+      ));
+    } else {
+      setProductosEnVenta([
+        ...productosEnVenta,
+        {
+          ...producto,
+          cantidad,
+          total: producto.precioVenta * cantidad,
+        }
+      ]);
+    }
     setCodigoProducto('');
     setProducto(null);
     setCantidad(1);
     Swal.fire("Agregado", "Producto agregado correctamente", "success");
-  };
-  
+  }, [producto, cantidad, productosEnVenta]);
 
+  // Calcular total de la venta
+  const calcularTotalVenta = useCallback(() =>
+    productosEnVenta.reduce((total, p) => total + p.total, 0), [productosEnVenta]);
 
+  // Cobrar venta
   const manejarCobro = async () => {
     if (productosEnVenta.length === 0) {
       Swal.fire("Advertencia", "Agrega productos antes de cobrar", "warning");
       return;
     }
-
-    // Verificación de stock
     for (let productoVenta of productosEnVenta) {
       if (productoVenta.stock < productoVenta.cantidad) {
         Swal.fire("Stock insuficiente", `El producto ${productoVenta.nombreProducto} no tiene suficiente stock`, "warning");
-        return; // Si algún producto no tiene suficiente stock, se detiene el proceso
+        return;
       }
     }
-
     try {
       await descontarStock();
-
       const ventaData = {
         idCliente: cliente ? cliente.idCliente : 0,
         idUsuario: usuario?.idUsuario || 1,
@@ -163,26 +175,22 @@ const Ventas = ({ cajero }) => {
           descuento: 0
         }))
       };
-
       const response = await API.post('/ventas', ventaData);
-
       const ventaGenerada = {
         id: response.data.id || new Date().getTime(),
         fecha: new Date().toLocaleString(),
         productos: productosEnVenta,
         total: calcularTotalVenta(),
       };
-
       setDatosVenta(ventaGenerada);
       setMostrarModalFactura(true);
       setProductosEnVenta([]);
-      setTotalVenta(0);
     } catch (error) {
-      Swal.fire("Error", "Ocurrió un error al registrar la venta", "error");
+      Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al registrar la venta", "error");
     }
   };
 
-
+  // Descontar stock
   const descontarStock = async () => {
     try {
       for (let productoVenta of productosEnVenta) {
@@ -194,44 +202,50 @@ const Ventas = ({ cajero }) => {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      agregarProducto();
-    } else if (e.key === 'F11') {
-      e.preventDefault();
-      busquedaRapida();
-    } else if (e.key === 'F12') {
-      e.preventDefault();
-      manejarCobro();
-    }
-  };
-
-  const calcularTotalVenta = () => productosEnVenta.reduce((total, p) => total + p.total, 0);
-
-  const cancelarVenta = () => {
-    setProductosEnVenta([]);
-    setTotalVenta(0);
-    Swal.fire("Venta cancelada", "La venta ha sido cancelada", "info");
-  };
-
+  // Eliminar producto de la venta
   const eliminarProducto = (productoAEliminar) => {
     setProductosEnVenta(productosEnVenta.filter(producto => producto.idProducto !== productoAEliminar.idProducto));
-    setTotalVenta(prev => prev - productoAEliminar.total);
     Swal.fire("Eliminado", "Producto eliminado de la venta", "info");
   };
 
+  // Cancelar venta
+  const cancelarVenta = () => {
+    setProductosEnVenta([]);
+    Swal.fire("Venta cancelada", "La venta ha sido cancelada", "info");
+  };
+
+  // Modal de productos
+  const abrirModal = () => {
+    obtenerListaProductos();
+    setMostrarModal(true);
+  };
+  const cerrarModal = () => setMostrarModal(false);
+
+  // Seleccionar producto del modal
+  const seleccionarProductoDelModal = (productoSeleccionado) => {
+    setProducto(productoSeleccionado);
+    setCodigoProducto(productoSeleccionado.idProducto || '');
+    setMostrarModal(false);
+  };
+
+  // Seleccionar cliente
+  const handleSelectCliente = (clienteSeleccionado) => {
+    setCliente(clienteSeleccionado);
+    setShowClienteModal(false);
+    localStorage.setItem("cliente", JSON.stringify(clienteSeleccionado));
+    Swal.fire("Cliente seleccionado", `Cliente: ${clienteSeleccionado.nombreCliente}`, "success");
+  };
+
+  // Búsqueda rápida
   const busquedaRapida = () => {
     if (!codigoProducto.trim()) {
       Swal.fire("Advertencia", "Por favor ingresa un código de producto", "warning");
       return;
     }
-
     const productosFiltrados = listaProductos.filter(p =>
       p.idProducto.toString().includes(codigoProducto) ||
       p.nombreProducto.toLowerCase().includes(codigoProducto.toLowerCase())
     );
-
     if (productosFiltrados.length > 0) {
       setListaProductos(productosFiltrados);
       Swal.fire("Resultados encontrados", `${productosFiltrados.length} productos encontrados`, "success");
@@ -240,33 +254,36 @@ const Ventas = ({ cajero }) => {
     }
   };
 
-  const abrirModal = () => {
-    obtenerListaProductos();
-    setMostrarModal(true);
-  };
-
-  const cerrarModal = () => {
-    setMostrarModal(false);
-  };
-
-  const seleccionarProductoDelModal = (productoSeleccionado) => {
-    setProducto(productoSeleccionado);
-    setCodigoProducto(productoSeleccionado.idProducto || '');
-    setMostrarModal(false);
-  };
-
-  const handleSelectCliente = (clienteSeleccionado) => {
-    setCliente(clienteSeleccionado);
-    setShowClienteModal(false);
-    localStorage.setItem("cliente", JSON.stringify(clienteSeleccionado));
-    Swal.fire("Cliente seleccionado", `Cliente: ${clienteSeleccionado.nombreCliente}`, "success");
-  };
-
+  // Manejo de teclas global
   useEffect(() => {
-    if (codigoProducto) buscarProducto();
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        agregarProducto();
+      } else if (e.key === 'F11') {
+        e.preventDefault();
+        busquedaRapida();
+      } else if (e.key === 'F12') {
+        e.preventDefault();
+        manejarCobro();
+      }
+    };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [codigoProducto]);
+  }, [agregarProducto, busquedaRapida, manejarCobro]);
+
+  // Buscar producto cuando cambia el código
+  useEffect(() => {
+    if (codigoProducto) buscarProducto();
+  }, [codigoProducto, buscarProducto]);
+
+  // Formatear tiempo
+  const formatearTiempo = (seg) => {
+    const h = Math.floor(seg / 3600);
+    const m = Math.floor((seg % 3600) / 60);
+    const s = seg % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="ventas-container">
@@ -275,40 +292,43 @@ const Ventas = ({ cajero }) => {
       </header>
 
       <section className="ventas-button-row">
-        <button className="ventas-button abrir-turno" onClick={abrirTurno}>Abrir Turno</button>
+        <button className="ventas-button abrir-turno" onClick={iniciar}>Abrir Turno</button>
         {Array.from({ length: 11 }, (_, index) => (
           <button key={index} className="ventas-button">Botón</button>
         ))}
-        <button className="ventas-button cerrar-turno" onClick={cerrarTurno}>Cerrar Turno</button>
+        <button className="ventas-button cerrar-turno" onClick={detener}>Cerrar Turno</button>
       </section>
 
       <section className="ventas-product-entry">
         <h2 className="ventas-titulo-gradiente">VENTA DE PRODUCTOS</h2>
         <div className="ventas-controls-line">
           <div className="input-group">
-            <label>Código del producto:</label>
+            <label htmlFor="codigoProducto">Código del producto:</label>
             <input
+              id="codigoProducto"
               type="text"
               className="input"
               maxLength="15"
               value={codigoProducto}
               onChange={(e) => setCodigoProducto(e.target.value)}
-              onKeyDown={handleKeyDown}
+              aria-label="Código del producto"
             />
-            <button className="ventas-add-btn" onClick={abrirModal}><FontAwesomeIcon icon={faSearch} /></button>
-            <button className="ventas-add-btn" onClick={agregarProducto}><FontAwesomeIcon icon={faCashRegister} /></button>
+            <button className="ventas-add-btn" onClick={abrirModal} aria-label="Buscar producto"><FontAwesomeIcon icon={faSearch} /></button>
+            <button className="ventas-add-btn" onClick={agregarProducto} aria-label="Agregar producto"><FontAwesomeIcon icon={faCashRegister} /></button>
           </div>
           <div className="input-group">
-            <label>Cantidad:</label>
+            <label htmlFor="cantidad">Cantidad:</label>
             <input
+              id="cantidad"
               type="number"
               className="input"
               value={cantidad}
               onChange={(e) => setCantidad(Number(e.target.value))}
               min="1"
+              aria-label="Cantidad"
             />
           </div>
-          <button className="action-btn" onClick={agregarProducto}>Agregar a la venta</button>
+          <button className="action-btn" onClick={agregarProducto} disabled={!producto || cantidad < 1}>Agregar a la venta</button>
           <button className="action-btn" onClick={() => setShowClienteModal(true)}>Seleccionar cliente</button>
           <button className="action-btn" onClick={busquedaRapida}>Vender a granel</button>
           <button className="action-btn" onClick={cancelarVenta}>Venta en espera</button>
@@ -334,10 +354,12 @@ const Ventas = ({ cajero }) => {
                 <td>{producto.idProducto}</td>
                 <td>{producto.nombreProducto}</td>
                 <td>{producto.cantidad}</td>
-                <td>${producto.precioVenta}</td>
-                <td>${producto.total}</td>
+                <td>{formatoMoneda.format(producto.precioVenta)}</td>
+                <td>{formatoMoneda.format(producto.total)}</td>
                 <td>
-                  <button onClick={() => eliminarProducto(producto)}><FontAwesomeIcon icon={faTrashAlt} /></button>
+                  <button aria-label="Eliminar producto" onClick={() => eliminarProducto(producto)}>
+                    <FontAwesomeIcon icon={faTrashAlt} />
+                  </button>
                 </td>
               </tr>
             ))}
@@ -355,8 +377,8 @@ const Ventas = ({ cajero }) => {
           <button className="action-btn">Reimprimir último ticket</button>
         </div>
         <div className="ventas-payment-col">
-          <button className="ventas-cobrar" onClick={manejarCobro}>F12 - Cobrar</button>
-          <div className="ventas-total">Total: ${calcularTotalVenta().toFixed(2)}</div>
+          <button className="ventas-cobrar" onClick={manejarCobro} disabled={productosEnVenta.length === 0}>F12 - Cobrar</button>
+          <div className="ventas-total">Total: {formatoMoneda.format(calcularTotalVenta())}</div>
         </div>
       </section>
 
@@ -369,10 +391,10 @@ const Ventas = ({ cajero }) => {
       </footer>
 
       {mostrarModal && (
-        <div className="modal-backdrop">
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
           <div className="modal-content">
             <h3>Seleccionar producto</h3>
-            <button className="modal-close" onClick={cerrarModal}>✖</button>
+            <button className="modal-close" onClick={cerrarModal} aria-label="Cerrar modal">✖</button>
             <table className="modal-table">
               <thead>
                 <tr>

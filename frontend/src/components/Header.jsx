@@ -1,6 +1,7 @@
 // Header.jsx
 import { useState, useEffect } from 'react';
 import { Dropdown, Badge, Modal, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import './head.css';
 
 function Header({ currentView, profileData }) {
@@ -8,6 +9,7 @@ function Header({ currentView, profileData }) {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileImage, setProfileImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_iwynnKUnSZbPBC5SiPy6Ay9-3cIEezn6w&s');
   const [loading, setLoading] = useState(false); 
+  const navigate = useNavigate();
 
   const notifications = [
     { id: 1, text: '2 Productos vencidos', time: 'Hace 5 minutos', read: false },
@@ -48,7 +50,7 @@ function Header({ currentView, profileData }) {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.replace('/login');
+    navigate('/login', { replace: true });
   };
 
   return (

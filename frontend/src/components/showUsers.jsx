@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import SearchBar from "./SearchBar";
@@ -11,6 +11,10 @@ const CompShowUsers = () => {
     const [editData, setEditData] = useState(initialData);
     const [searchQuery, setSearchQuery] = useState("");
     const [showModal, setShowModal] = useState(false);
+
+    // NUEVO: Estados para filtro por columna
+    const [filterByColumn, setFilterByColumn] = useState("");
+    const [filterByValue, setFilterByValue] = useState("");
 
     const getData = async () => {
         const response = await axios.get(url);
@@ -37,11 +41,25 @@ const CompShowUsers = () => {
         getData();
     };
 
-    const filteredData = data.filter((item) =>
-        Object.values(item).some((value) =>
-            value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
-        )
-    );
+    // NUEVO: Filtrado mejorado
+    const filteredData = useMemo(() => {
+        return data.filter((item) => {
+            // Filtro general (solo si hay texto)
+            const matchesSearch = searchQuery
+                ? Object.values(item).some((value) =>
+                    value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                : true;
+            // Filtro por columna (solo si hay columna y valor)
+            const matchesColumn = filterByColumn && filterByValue
+                ? ((item[filterByColumn] ?? "")
+                    .toString()
+                    .toLowerCase()
+                    .includes(filterByValue.toLowerCase()))
+                : true;
+            return matchesSearch && matchesColumn;
+        });
+    }, [data, searchQuery, filterByColumn, filterByValue]);
 
     return (
         <div className="container">
@@ -56,7 +74,15 @@ const CompShowUsers = () => {
             </Button>
 
             <div className="mt-4">
-                <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+                <SearchBar
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    filterByColumn={filterByColumn}
+                    onFilterColumnChange={setFilterByColumn}
+                    filterByValue={filterByValue}
+                    onFilterValueChange={setFilterByValue}
+                    columns={columns}
+                />
             </div>
 
             <div className="table-responsive card shadow-sm mt-3">
