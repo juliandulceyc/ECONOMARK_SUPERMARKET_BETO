@@ -14,7 +14,8 @@ CREATE TABLE credenciales (
 );
 
 INSERT INTO credenciales (rol, username, correo, password) VALUES
-('admin',   'HCD',   'admin@correo.com',  '$2b$10$g/oBQPO9KrWLoxDG6NJbjeMfW/...'),
+('admin',   'HCD',   'admin@correo.com',  '123'),
+('admin',   'julian',   'julian7456@hotmail.com',  '123'),
 ('empleado','Acutor','acutor@correo.com','$2b$10$F8Bp2qS5td6W/...');
 
 -- 2) Categorías

@@ -18,9 +18,13 @@ import connectToDataBase from './lib/db.js';
 const app = express()
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173',
+        'http://172.210.65.94',         // IP pública de tu VM
+        'http://172.210.65.94:5173'     // Si usas Vite en ese puerto
+    ],
     credentials: true
-  }))
+}))
 app.use(express.json())
 
 app.use('/auth', authRouter)

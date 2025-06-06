@@ -48,7 +48,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', values);
+      const response = await axios.post('http://172.210.65.94:3000/auth/register', values);
       if (response.status === 201) {
         navigate('/login', { replace: true });
       }
@@ -149,6 +149,7 @@ const Register = () => {
                 value={values.rol}
               >
                 <option value="0"></option>
+                <option value="admin">Admin</option>
                 <option value="empleado">Empleado</option>
               </select>
               <label htmlFor="rol">Seleccione su Rol</label>
