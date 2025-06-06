@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('http://localhost:3000/auth/forgot-password', { correo: email });
+      const response = await axios.post('http://172.210.65.94:3000/auth/forgot-password', { correo: email });
       if (response.status === 200) {
         setMessage('Se ha enviado un correo con instrucciones para restablecer tu contraseña.');
       }

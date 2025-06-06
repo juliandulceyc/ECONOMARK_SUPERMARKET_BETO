@@ -4,7 +4,7 @@ import { Card, Button, Modal, Spinner, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CompShowCategories from './showCategories';
 
-const URL = 'http://localhost:3000/tablas/';
+const URL = 'http://172.210.65.94:3000/tablas/';
 
 const CompTablePreview = () => {
     const [products, setProducts] = useState([]);

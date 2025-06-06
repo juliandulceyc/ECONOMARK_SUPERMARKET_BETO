@@ -1,7 +1,7 @@
 const Inventario = {
     usuarios: {
         label: "Usuarios",
-        url: "http://localhost:3000/credenciales/",
+        url: "http://172.210.65.94:3000/credenciales/",
         columns: [
             { key: "id", label: "ID" },
             { key: "rol", label: "ROL" },
@@ -16,7 +16,7 @@ const Inventario = {
     },
     products: {
         label: "Productos",
-        url: "http://localhost:3000/productos/",
+        url: "http://172.210.65.94:3000/productos/",
         columns: [
             { key: "idProducto", label: "ID" },
             { key: "nombreProducto", label: "ARTICULO" },
@@ -32,7 +32,7 @@ const Inventario = {
     },
     categorias: {
         label: "Categorias",
-        url: "http://localhost:3000/categorias/",
+        url: "http://172.210.65.94:3000/categorias/",
         columns: [
             { key: "idCategoria", label: "ID" },
             { key: "nombreCategoria", label: "NOMBRE" },
@@ -46,7 +46,7 @@ const Inventario = {
     },
     clientes: {
         label: "Clientes",
-        url: "http://localhost:3000/clientes/",
+        url: "http://172.210.65.94:3000/clientes/",
         columns: [
             { key: "idCliente", label: "ID" },
             { key: "nombreCliente", label: "NOMBRE" },
@@ -60,7 +60,7 @@ const Inventario = {
     },
     entradas: {
         label: "Entradas",
-        url: "http://localhost:3000/entradas/",
+        url: "http://172.210.65.94:3000/entradas/",
         columns: [
             { key: "idEntrada", label: "ID" },
             { key: "idProveedor", label: "PROVEEDOR" },
@@ -94,7 +94,7 @@ const Inventario = {
     ,
     proveedores: {
         label: "Proveedores",
-        url: "http://localhost:3000/proveedores/",
+        url: "http://172.210.65.94:3000/proveedores/",
         columns: [
             { key: "idProveedor", label: "ID" },
             { key: "nombreProveedor", label: "NOMBRE" },
@@ -108,7 +108,7 @@ const Inventario = {
     },
     detalle_entradas: {
         label: "Detalle Entradas",
-        url: "http://localhost:3000/detalle_entradas/",
+        url: "http://172.210.65.94:3000/detalle_entradas/",
         columns: [
             { key: "idDetalle_entrada", label: "ID" },
             { key: "idEntrada", label: "ENTRADA" },
@@ -126,7 +126,7 @@ const Inventario = {
     },
     ventas: {
         label: "Ventas",
-        url: "http://localhost:3000/ventas/",
+        url: "http://172.210.65.94:3000/ventas/",
         columns: [
             { key: "idVenta", label: "ID" },
             { key: "idCliente", label: "CLIENTE" },
@@ -146,7 +146,7 @@ const Inventario = {
     },
     detalle_ventas: {
         label: "Detalle Ventas",
-        url: "http://localhost:3000/detalle_ventas/",
+        url: "http://172.210.65.94:3000/detalle_ventas/",
         columns: [
             { key: "idDetalle_venta", label: "ID" },
             { key: "idVenta", label: "VENTA" },

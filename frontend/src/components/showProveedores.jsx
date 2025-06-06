@@ -8,7 +8,7 @@ import './show.css'
 const entityConfig = {
     proveedores: {
         label: "Proveedoress",
-        url: "http://localhost:3000/proveedores/",
+        url: "http://172.210.65.94:3000/proveedores/", // <-- Cambia localhost por la IP pública
         columns: [
             { key: "idProveedor", label: "ID" },
             { key: "nombreProveedor", label: "NOMBRE" },

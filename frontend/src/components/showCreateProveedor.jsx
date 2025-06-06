@@ -18,7 +18,7 @@ const ShowCreateProveedor = ({ showModal, handleClose, refreshProveedores }) => 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await fetch("http://localhost:3000/proveedores/register", {
+            await fetch("http://172.210.65.94:3000/proveedores/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

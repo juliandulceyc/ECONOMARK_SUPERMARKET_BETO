@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../App.css';
 
-const URL = 'http://localhost:3000/categorias/'
+const URL = 'http://172.210.65.94:3000/categorias/'
 
 const CompShowCategories = () => {
     const [categories, setCategories] = useState([])

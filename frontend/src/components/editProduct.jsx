@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Form, Button, Modal } from 'react-bootstrap';
 
-const URL = 'http://localhost:3000/productos/';
+const URL = 'http://172.210.65.94:3000/productos/';
 
 const CompEditProduct = ({ showModal, handleClose, product, refreshProducts }) => {
     const [nombreProducto, setNombreProducto] = useState('');

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Button, Modal, Form } from 'react-bootstrap'; 
 
-const URL = 'http://localhost:3000/tablas/';
+const URL = 'http://172.210.65.94:3000/tablas/';
 
 const CompCreateProduct = ({ showModal, handleClose, refreshProducts }) => {
     const [nombre, setNombre] = useState('');

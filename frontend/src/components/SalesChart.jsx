@@ -29,7 +29,7 @@ function SalesChart() {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/ventas/resumen-productos');
+        const response = await fetch('http://172.210.65.94:3000/ventas/resumen-productos');
         const data = await response.json();
 
         // Extraemos nombres de productos y cantidades vendidas

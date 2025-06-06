@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Button, Modal, Form } from 'react-bootstrap';
 
-const URL = 'http://localhost:3000/credenciales/';
+const URL = 'http://172.210.65.94:3000/credenciales/';
 
 const CompCreateUser = ({ showModal, handleClose, refreshUsers }) => {
     const [rol, setRol] = useState('');

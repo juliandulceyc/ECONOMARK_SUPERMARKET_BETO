@@ -24,7 +24,7 @@ const ShowEditProveedor = ({ showModal, handleClose, proveedor, refreshProveedor
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await fetch(`http://localhost:3000/proveedores/update/${formData.id}`, {
+            await fetch(`http://172.210.65.94:3000/proveedores/update/${formData.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
