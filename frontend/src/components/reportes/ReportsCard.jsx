@@ -177,4 +177,4 @@ const ReportsCard = ({ entityKey }) => {
   );
 };
 
-export default ReportCard;
+export default ReportsCard;
