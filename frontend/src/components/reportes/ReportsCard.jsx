@@ -9,7 +9,7 @@ import TablePDF from "./tablePDF";
 import Swal from 'sweetalert2';
 import './reportCard.css';
 
-const ReportCard = ({ entityKey }) => {
+const ReportsCard = ({ entityKey }) => {
   const [data, setData] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
   const entity = Inventario[entityKey];

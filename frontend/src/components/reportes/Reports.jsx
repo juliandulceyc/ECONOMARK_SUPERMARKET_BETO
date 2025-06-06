@@ -1,6 +1,6 @@
 // src/components/reportes/Reports.jsx
 import React from 'react';
-import ReportCard from './ReportsCard';
+import ReportsCard from './ReportsCard';
 import Inventario from '../inventario/inventario';
 
 const Reports = () => {
@@ -13,7 +13,7 @@ const Reports = () => {
           return (
             entity && (
               <div key={entityKey} className="col-md-6 col-lg-4">
-                <ReportCard entityKey={entityKey} />
+                <ReportsCard entityKey={entityKey} />
               </div>
             )
           );
