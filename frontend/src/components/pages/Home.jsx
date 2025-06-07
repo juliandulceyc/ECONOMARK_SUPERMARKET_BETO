@@ -8,14 +8,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../App.css';
 import CompShowProducts from '../productos/showProducts';
-import CompShowUsers from './showUsers';
-import CompShowProveedores from './showProveedores'; 
+import CompShowUsers from '../usuarios/showUsers';
+import CompShowProveedores from '../proveedores/showProveedores'; 
 import Ventas from '../ventas/ventas';
 import Reports from '../reportes/Reports';
 import Preview from '../preview/preview';
 import Settings from '../settings/settings'; 
 import MainMenu from '../pages/Inicio';
-import MenuChart from '..MenuChart/';
+import MenuChart from '../MenuChart';
 import EntradasSalidasMenu from '../entradasSalidas/EntradasSalidasMenu';
 import axios from 'axios';
 
