@@ -4,8 +4,8 @@ import Swal from "sweetalert2"; // Importa SweetAlert2
 import SearchBar from "./SearchBar";
 import { Table, Button, Form, Modal, Spinner, Alert } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './show.css'
-import Inventario from "./inventario/inventario";
+import '../styles/show.css'
+import Inventario from "../inventario/inventario";
 
 // Modal reutilizable para crear/editar productos
 const FormModal = ({ showModal, setShowModal, handleSubmit, editData, handleChange, config }) => (

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import '../sign-in.css'; // Asegúrate de que este archivo CSS esté correctamente vinculado
-import Logo from '../img/carrito-de-compras.png'; // Asegúrate de que la ruta de la imagen sea correcta
+import '../styles/sign-in.css'; 
+import Logo from '../img/carrito-de-compras.png'; 
 
 const ResetPassword = () => {
   const { token } = useParams();  // Obtenemos el token de la URL

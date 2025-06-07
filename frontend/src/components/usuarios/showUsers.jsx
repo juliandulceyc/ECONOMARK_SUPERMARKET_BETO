@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { Table, Button, Modal, Form } from "react-bootstrap";
-import SearchBar from "./SearchBar";
-import Inventario from "../components/inventario/inventario"; 
+import SearchBar from "../common/SearchBar";
+import Inventario from "../inventario/inventario";
 
 const { label, url, columns, initialData, idField } = Inventario["usuarios"];
 

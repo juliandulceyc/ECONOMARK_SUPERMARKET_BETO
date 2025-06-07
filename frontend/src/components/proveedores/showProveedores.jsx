@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SearchBar from "./SearchBar";
+import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './show.css'
+import '../styles/show.css'
 
 const entityConfig = {
     proveedores: {

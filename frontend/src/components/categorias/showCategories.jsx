@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Dropdown, Table, Button} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../App.css';
+import '../../App.css';
 
 const URL = 'http://172.210.65.94:3000/categorias/'
 

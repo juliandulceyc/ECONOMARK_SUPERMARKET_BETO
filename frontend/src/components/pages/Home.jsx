@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import Sidebar from './Sidebar';
+import Sidebar from '../layout/Sidebar';
 import DashboardStats from './DashboardStats';
-import SalesChart from './SalesChart';
-import RecentOrders from './RecentOrders';
-import Header from './Header';
+import Header from '../layout/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../App.css';
-import CompShowProducts from './showProducts';
+import CompShowProducts from '../productos/showProducts';
 import CompShowUsers from './showUsers';
-import CompShowProveedores from './showProveedores'; // Componente para proveedores
-import Ventas from './ventas/ventas';
-import Reports from './reportes/Reports';
-import Preview from './preview';
-import Settings from './settings'; // Aquí
-import MainMenu from './Inicio';
-import MenuChart from './MenuChart';
-import EntradasSalidasMenu from './EntradasSalidasMenu';
+import CompShowProveedores from './showProveedores'; 
+import Ventas from '../ventas/ventas';
+import Reports from '../reportes/Reports';
+import Preview from '../preview/preview';
+import Settings from '../settings/settings'; 
+import MainMenu from '../pages/Inicio';
+import MenuChart from '..MenuChart/';
+import EntradasSalidasMenu from '../entradasSalidas/EntradasSalidasMenu';
 import axios from 'axios';
 
 // Interceptor global para manejar expiración de token

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './ventas.css';
-import Logo from './carrito-de-compras.png';
-import API from './services/axiosConfig';
+import Logo from '../img/carrito-de-compras.png';
+import API from '../services/axiosConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCashRegister, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import FacturaModal from './FacturaModal';

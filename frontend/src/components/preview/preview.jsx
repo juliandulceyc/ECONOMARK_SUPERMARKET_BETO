@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Button, Modal, Spinner, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CompShowCategories from './showCategories';
+import CompShowCategories from '../categorias/showCategories';
 
 const URL = 'http://172.210.65.94:3000/tablas/';
 

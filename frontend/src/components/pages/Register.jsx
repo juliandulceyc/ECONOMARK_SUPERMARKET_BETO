@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './sign-in.css';
-import Logo from './img/carrito-de-compras.png';
+import '../styles/sign-in.css';
+import Logo from '../img/carrito-de-compras.png';
 
 const Register = () => {
   const [values, setValues] = useState({

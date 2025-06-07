@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import '../sign-in.css';
+import '../styles/sign-in.css';
 import Logo from '../img/carrito-de-compras.png';
 
 const ForgotPassword = () => {
