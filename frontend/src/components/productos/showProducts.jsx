@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import Swal from "sweetalert2"; // Importa SweetAlert2
-import SearchBar from "./SearchBar";
+import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal, Spinner, Alert } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/show.css'
