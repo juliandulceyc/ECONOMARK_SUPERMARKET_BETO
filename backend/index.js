@@ -14,6 +14,7 @@ import routesEntradas from './routes/routesEntradas.js'
 import routesVentas from './routes/routesVentas.js'
 import routesDetalleVentas from './routes/routesDetalleVentas.js'
 import routesEntradaProductos from './routes/routesEntradaProductos.js'
+import routesDetalleEntradas from './routes/routesDetalleEntradas.js'
 import connectToDataBase from './lib/db.js';
 import errorHandler from './middleware/errorHandler.js';
 import swaggerUi from 'swagger-ui-express';
@@ -39,7 +40,7 @@ app.use('/categorias', routesCategorias)
 app.use('/proveedores', routesProveedores)
 app.use('/clientes', routesClientes)
 app.use('/entradas', routesEntradas)
-app.use('/detalle_entradas', routesEntradas)
+app.use('/detalle_entradas', routesDetalleEntradas)
 app.use('/ventas', routesVentas)
 app.use('/detalle_ventas', routesDetalleVentas)
 app.use('/entrada_productos', routesEntradaProductos)
@@ -51,10 +52,12 @@ connectToDataBase();
 // Al final de todas las rutas:
 app.use(errorHandler);
 
-// Escuchar puerto
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-    console.log(`✓ Escuchando en el puerto: ${PORT}`)
-})
+// Escuchar puerto solo si no es test
+if (process.env.NODE_ENV !== 'test') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`✓ Escuchando en el puerto: ${PORT}`);
+    });
+}
 
 export default app;
