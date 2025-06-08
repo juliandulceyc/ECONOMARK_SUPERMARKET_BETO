@@ -3,6 +3,7 @@ import { connectToDataBase } from '../lib/db.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { sendResetEmail } from '../lib/mailer.js'
+import { body, validationResult } from 'express-validator'
 
 const router = express.Router()
 
@@ -40,7 +41,20 @@ const verifyToken = async (req, res, next) => {
 }
 
 // Rutas públicas
-router.post('/register', async (req, res) => {
+router.post(
+  '/register',
+  [
+    body('rol').notEmpty().withMessage('El rol es obligatorio'),
+    body('username').notEmpty().withMessage('El nombre de usuario es obligatorio'),
+    body('correo').isEmail().withMessage('Correo inválido'),
+    body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
     const { rol, username, correo, password } = req.body
 
     if (!rol || !username || !correo || !password) {
@@ -74,7 +88,18 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.post(
+  '/login',
+  [
+    body('username').notEmpty().withMessage('Nombre de usuario/correo requerido'),
+    body('password').notEmpty().withMessage('Contraseña requerida')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
     const { username, password } = req.body
 
     if (!username || !password) {
@@ -135,7 +160,17 @@ router.get('/home', verifyToken, async (req, res) => {
 })
 
 // Solicitar recuperación
-router.post('/forgot-password', async (req, res) => {
+router.post(
+  '/forgot-password',
+  [
+    body('correo').isEmail().withMessage('Correo válido requerido')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
     const { correo } = req.body
     if (!correo) return res.status(400).json({ success: false, message: "Correo requerido" })
 
@@ -158,7 +193,18 @@ router.post('/forgot-password', async (req, res) => {
 })
 
 // Resetear contraseña
-router.post('/reset-password', async (req, res) => {
+router.post(
+  '/reset-password',
+  [
+    body('token').notEmpty().withMessage('Token requerido'),
+    body('newPassword').isLength({ min: 6 }).withMessage('La nueva contraseña debe tener al menos 6 caracteres')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
     const { token, newPassword } = req.body
     if (!token || !newPassword) return res.status(400).json({ success: false, message: "Datos incompletos" })
 

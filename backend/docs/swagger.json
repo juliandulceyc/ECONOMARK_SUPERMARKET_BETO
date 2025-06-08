@@ -1,0 +1,409 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API total backend",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/proveedores": {
+      "post": {
+        "summary": "Crear proveedor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombreProveedor": { "type": "string" },
+                  "email": { "type": "string" },
+                  "telefono": { "type": "string" }
+                },
+                "required": ["nombreProveedor", "email", "telefono"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Proveedor creado"
+          },
+          "400": {
+            "description": "Error de validación"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Registrar un nuevo usuario",
+        "tags": ["Autenticación"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rol": { "type": "string", "example": "admin" },
+                  "username": { "type": "string", "example": "usuario1" },
+                  "correo": { "type": "string", "example": "usuario@correo.com" },
+                  "password": { "type": "string", "example": "123456" }
+                },
+                "required": ["rol", "username", "correo", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuario registrado exitosamente" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Iniciar sesión",
+        "tags": ["Autenticación"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "usuario1" },
+                  "password": { "type": "string", "example": "123456" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login exitoso" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "summary": "Solicitar restablecimiento de contraseña",
+        "tags": ["Autenticación"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "correo": { "type": "string", "example": "usuario@correo.com" }
+                },
+                "required": ["correo"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Correo de recuperación enviado" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "summary": "Restablecer contraseña",
+        "tags": ["Autenticación"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": { "type": "string", "example": "token123" },
+                  "newPassword": { "type": "string", "example": "nuevacontraseña123" }
+                },
+                "required": ["token", "newPassword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Contraseña restablecida exitosamente" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/productos": {
+      "post": {
+        "summary": "Crear producto",
+        "tags": ["Productos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombreProducto": { "type": "string", "example": "Coca Cola" },
+                  "idCategoria": { "type": "integer", "example": 1 },
+                  "precioVenta": { "type": "number", "example": 100 },
+                  "stock": { "type": "integer", "example": 10 },
+                  "estado": { "type": "string", "example": "ACTIVO" }
+                },
+                "required": ["nombreProducto", "idCategoria", "precioVenta", "estado"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Producto creado" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/categorias": {
+      "post": {
+        "summary": "Crear categoría",
+        "tags": ["Categorías"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombreCategoria": { "type": "string", "example": "Bebidas" },
+                  "descripcionCategoria": { "type": "string", "example": "Bebidas frías y calientes" },
+                  "estado": { "type": "boolean", "example": true }
+                },
+                "required": ["nombreCategoria"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Categoría creada" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/clientes": {
+      "post": {
+        "summary": "Crear cliente",
+        "tags": ["Clientes"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombreCliente": { "type": "string", "example": "Juan Pérez" },
+                  "email": { "type": "string", "example": "juan@correo.com" },
+                  "telefono": { "type": "string", "example": "123456789" }
+                },
+                "required": ["nombreCliente", "email", "telefono"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Cliente creado" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/credenciales": {
+      "post": {
+        "summary": "Crear credencial",
+        "tags": ["Credenciales"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rol": { "type": "string", "example": "admin" },
+                  "username": { "type": "string", "example": "usuario1" },
+                  "correo": { "type": "string", "example": "usuario@correo.com" },
+                  "password": { "type": "string", "example": "123456" }
+                },
+                "required": ["rol", "username", "correo", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Credencial creada" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/detalle_entradas": {
+      "post": {
+        "summary": "Crear detalle de entrada",
+        "tags": ["DetalleEntradas"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idEntrada": { "type": "integer", "example": 1 },
+                  "idProducto": { "type": "integer", "example": 2 },
+                  "cantidad": { "type": "integer", "example": 10 },
+                  "precio": { "type": "number", "example": 15.5 }
+                },
+                "required": ["idEntrada", "idProducto", "cantidad", "precio"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Detalle de entrada creado" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/detalle_ventas": {
+      "post": {
+        "summary": "Crear detalle de venta",
+        "tags": ["DetalleVentas"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idVenta": { "type": "integer", "example": 1 },
+                  "idProducto": { "type": "integer", "example": 2 },
+                  "cantidad": { "type": "integer", "example": 10 },
+                  "precio": { "type": "number", "example": 15.5 },
+                  "descuento": { "type": "number", "example": 0 }
+                },
+                "required": ["idVenta", "idProducto", "cantidad", "precio", "descuento"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Detalle de venta creado" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/entrada_productos": {
+      "post": {
+        "summary": "Crear entrada de producto",
+        "tags": ["EntradaProductos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idEntrada": { "type": "integer", "example": 1 },
+                  "idProducto": { "type": "integer", "example": 2 },
+                  "cantidad": { "type": "integer", "example": 10 }
+                },
+                "required": ["idEntrada", "idProducto", "cantidad"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Entrada de producto creada" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/entradas": {
+      "post": {
+        "summary": "Crear entrada",
+        "tags": ["Entradas"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idProveedor": { "type": "integer", "example": 1 },
+                  "idUsuario": { "type": "integer", "example": 2 },
+                  "tipo_comprobante": { "type": "string", "example": "FACTURA" },
+                  "serie_comprobante": { "type": "string", "example": "A001" },
+                  "num_comprobante": { "type": "string", "example": "12345" },
+                  "fecha": { "type": "string", "format": "date", "example": "2024-06-07" },
+                  "impuesto": { "type": "number", "example": 19 },
+                  "total": { "type": "number", "example": 100 },
+                  "estado": { "type": "string", "example": "ACTIVO" }
+                },
+                "required": [
+                  "idProveedor",
+                  "idUsuario",
+                  "tipo_comprobante",
+                  "num_comprobante",
+                  "fecha",
+                  "impuesto",
+                  "total",
+                  "estado"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Entrada creada" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    },
+    "/ventas": {
+      "post": {
+        "summary": "Crear venta",
+        "tags": ["Ventas"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idCliente": { "type": "integer", "example": 1 },
+                  "idUsuario": { "type": "integer", "example": 2 },
+                  "tipo_comprobante": { "type": "string", "example": "FACTURA" },
+                  "serie_comprobante": { "type": "string", "example": "A001" },
+                  "num_comprobante": { "type": "string", "example": "12345" },
+                  "fecha_hora": { "type": "string", "format": "date-time", "example": "2024-06-07T10:00:00Z" },
+                  "impuesto": { "type": "number", "example": 19 },
+                  "total": { "type": "number", "example": 100 },
+                  "estado": { "type": "string", "example": "ACTIVO" }
+                },
+                "required": [
+                  "idCliente",
+                  "idUsuario",
+                  "tipo_comprobante",
+                  "num_comprobante",
+                  "fecha_hora",
+                  "impuesto",
+                  "total",
+                  "estado"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Venta creada" },
+          "400": { "description": "Errores de validación" }
+        }
+      }
+    }
+  }
+}
