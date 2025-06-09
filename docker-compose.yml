@@ -40,6 +40,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: economark-frontend
+    restart: always
     ports:
       - "5173:80"
 
