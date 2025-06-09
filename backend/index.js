@@ -24,15 +24,13 @@ const app = express()
 
 app.use(express.json())
 app.use(helmet())
-
-
-// Permite cualquier origin durante pruebas
 app.use(cors({
-  origin: (origin, callback) => {
-    // Permite solicitudes sin origin (como Postman) o desde cualquier frontend
-    callback(null, true);
-  },
-  credentials: true
+    origin: [
+        'http://localhost:5173',
+        'http://172.210.65.94',         // IP pública VM
+        'http://172.210.65.94:5173'     //  Vite 
+    ],
+    credentials: true
 }))
 
 app.use('/auth', authRouter)
