@@ -54,8 +54,8 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               </div>
               <div
                 role="button"
-                className={`nav-item ${currentView === 'products' ? 'active' : ''}`}
-                onClick={() => onNavigate('products')}
+                className={`nav-item ${currentView === 'inventory' ? 'active' : ''}`}
+                onClick={() => onNavigate('inventory')}
               >
                 <div className="nav-content">
                   <i className="bi bi-box"></i>

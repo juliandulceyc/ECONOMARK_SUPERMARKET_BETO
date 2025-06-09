@@ -84,7 +84,7 @@ function Home() {
     switch (currentView) {
       case 'dashboard':
         return <MainMenu />;
-      case 'products':
+      case 'inventory':
         return <>
           <DashboardStats />
           <CompShowProducts />
