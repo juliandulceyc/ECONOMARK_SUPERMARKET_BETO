@@ -20,12 +20,27 @@ const FormModal = ({ showModal, setShowModal, handleSubmit, editData, handleChan
                 {Object.keys(config.initialData).map((key) => (
                     <Form.Group key={key} className="mb-3">
                         <Form.Label>{key.charAt(0).toUpperCase() + key.slice(1)}</Form.Label>
-                        <Form.Control
-                            name={key}
-                            value={editData?.[key] || ""}
-                            onChange={handleChange}
-                            required
-                        />
+                        {key === "estado" ? (
+                            <Form.Select
+                                name={key}
+                                value={editData?.[key] || ""}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">Selecciona estado</option>
+                                <option value="disponible">Disponible</option>
+                                <option value="agotado">Agotado</option>
+                            </Form.Select>
+                        ) : (
+                            <Form.Control
+                                name={key}
+                                value={editData?.[key] || ""}
+                                onChange={handleChange}
+                                required
+                                type={key === "stock" ? "number" : "text"}
+                                min={key === "stock" ? 0 : undefined}
+                            />
+                        )}
                     </Form.Group>
                 ))}
                 <div className="text-end">
