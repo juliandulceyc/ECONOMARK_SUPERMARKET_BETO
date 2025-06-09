@@ -33,6 +33,7 @@ app.use(cors({
     credentials: true
 }))
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use('/auth', authRouter)
 app.use('/productos', routes)
 app.use('/credenciales', routesCredenciales)
@@ -44,7 +45,6 @@ app.use('/detalle_entradas', routesDetalleEntradas)
 app.use('/ventas', routesVentas)
 app.use('/detalle_ventas', routesDetalleVentas)
 app.use('/entrada_productos', routesEntradaProductos)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Conectar a la base de datos
 connectToDataBase();
