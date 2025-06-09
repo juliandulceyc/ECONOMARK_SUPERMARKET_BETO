@@ -195,7 +195,8 @@ const Ventas = ({ cajero }) => {
     try {
       for (let productoVenta of productosEnVenta) {
         const nuevoStock = productoVenta.stock - productoVenta.cantidad;
-        await API.put(`/productos/${productoVenta.idProducto}`, { stock: nuevoStock });
+        const nuevoEstado = nuevoStock > 0 ? "disponible" : "agotado";
+        await API.put(`/productos/${productoVenta.idProducto}`, { stock: nuevoStock, estado: nuevoEstado });
       }
     } catch (error) {
       Swal.fire("Error", "No se pudo actualizar el stock", "error");
