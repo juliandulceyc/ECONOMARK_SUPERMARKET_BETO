@@ -164,6 +164,7 @@ const Ventas = ({ cajero }) => {
         idCliente: cliente ? cliente.idCliente : 0,
         idUsuario: usuario?.idUsuario || 1,
         tipo_comprobante: 'Factura',
+        num_comprobante: new Date().getTime().toString(), 
         fecha_hora: new Date().toISOString(),
         impuesto: 0.18,
         total: calcularTotalVenta(),
