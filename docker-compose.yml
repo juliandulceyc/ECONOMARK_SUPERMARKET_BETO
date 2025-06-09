@@ -31,9 +31,9 @@ services:
     ports:
       - "3000:3000"
     working_dir: /app
-    volumes:
-      - ./backend:/app
-      - /app/node_modules   
+    #volumes:
+      #- ./backend:/app
+     # - /app/node_modules   
 
   frontend:
     build:
