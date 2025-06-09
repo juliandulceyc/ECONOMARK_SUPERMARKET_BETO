@@ -18,7 +18,7 @@ import routesDetalleEntradas from './routes/routesDetalleEntradas.js'
 import connectToDataBase from './lib/db.js';
 import errorHandler from './middleware/errorHandler.js';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './docs/swagger.json';
+import swaggerDocument from './docs/swagger.json' assert { type: 'json'};
 
 const app = express()
 
