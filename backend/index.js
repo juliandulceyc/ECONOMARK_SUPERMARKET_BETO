@@ -33,6 +33,15 @@ app.use(cors({
     credentials: true
 }))
 
+// Permite cualquier origin durante pruebas
+app.use(cors({
+  origin: (origin, callback) => {
+    // Permite solicitudes sin origin (como Postman) o desde cualquier frontend
+    callback(null, true);
+  },
+  credentials: true
+}))
+
 app.use('/auth', authRouter)
 app.use('/productos', routes)
 app.use('/credenciales', routesCredenciales)
