@@ -27,8 +27,5 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          projectKey: economark-supermarket-beto
-          organization: economark-supermarket-beto
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
