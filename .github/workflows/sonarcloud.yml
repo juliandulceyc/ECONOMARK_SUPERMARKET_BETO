@@ -1,0 +1,34 @@
+name: SonarCloud
+
+on:
+  push:
+    branches:
+      - 7mo-Trimestre
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - 7mo-Trimestre
+
+jobs:
+  build:
+    name: Build and analyze on SonarCloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectKey: economark-supermarket-beto
+          organization: economark-supermarket-beto
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

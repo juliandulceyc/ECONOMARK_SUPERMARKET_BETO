@@ -27,8 +27,9 @@ app.use(helmet())
 app.use(cors({
     origin: [
         'http://localhost:5173',
-        'http://172.210.65.94',         // IP pública VM
-        'http://172.210.65.94:5173'     //  Vite 
+        'http://172.210.65.94',// IP pública VM
+        'http://172.210.65.94:5173',//  Vite
+        'http://supermarketbeto.duckdns.org:5173'
     ],
     credentials: true
 }))
