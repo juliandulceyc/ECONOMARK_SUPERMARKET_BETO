@@ -3,11 +3,11 @@ name: SonarCloud
 on:
   push:
     branches:
-      - 7mo-Trimestre
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
-      - 7mo-Trimestre
+      - master
 
 jobs:
   build:
