@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './Sidebar.css';
 
 function Sidebar({ onNavigate, currentView, userRole }) {
   const supermarketImage = 'https://img.icons8.com/?size=100&id=otDBSWUrE50n&format=png&color=000000';
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
+  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+
+  const menuItems = [
+    { key: 'dashboard', icon: 'bi-speedometer2', label: 'Inicio', roles: ['admin', 'user'] },
+    { key: 'users', icon: 'bi-people', label: 'Usuarios', roles: ['admin'] },
+    { key: 'inventory', icon: 'bi-box', label: 'Inventario', roles: ['admin'] },
+    { key: 'proveedores', icon: 'bi-truck', label: 'Proveedores', roles: ['admin'] },
+    { key: 'estadisticas', icon: 'bi-bar-chart', label: 'Estadísticas', roles: ['admin'] },
+    { key: 'reports', icon: 'bi-file-earmark-text', label: 'Reportes', roles: ['admin'] },
+    { key: 'entry', icon: 'bi-arrow-left-right', label: 'Entradas/Salidas', roles: ['admin'] },
+    { key: 'sell', icon: 'bi-cart', label: 'Ventas', roles: ['admin', 'user'] },
+    { key: 'settings', icon: 'bi-gear', label: 'Ajustes', roles: ['admin', 'user'] },
+  ];
 
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
@@ -29,106 +40,41 @@ function Sidebar({ onNavigate, currentView, userRole }) {
           </button>
         </div>
         <nav className="sidebar-nav">
-          <div
-            role="button"
-            className={`nav-item ${currentView === 'dashboard' ? 'active' : ''}`}
-            onClick={() => onNavigate('dashboard')}
-          >
-            <div className="nav-content">
-              <i className="bi bi-speedometer2"></i>
-              <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Inicio</span>
-            </div>
-          </div>
-
-          {userRole === 'admin' && (
-            <>
-              <div
-                role="button"
-                className={`nav-item ${currentView === 'users' ? 'active' : ''}`}
-                onClick={() => onNavigate('users')}
+          {menuItems
+            .filter(item => item.roles.includes(userRole))
+            .map(item => (
+              <button
+                key={item.key}
+                type="button"
+                className={`nav-item ${currentView === item.key ? 'active' : ''}`}
+                onClick={() => onNavigate(item.key)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: 0,
+                  margin: 0,
+                  cursor: 'pointer'
+                }}
+                aria-current={currentView === item.key ? "page" : undefined}
               >
                 <div className="nav-content">
-                  <i className="bi bi-people"></i>
-                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Usuarios</span>
+                  <i className={`bi ${item.icon}`}></i>
+                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>{item.label}</span>
                 </div>
-              </div>
-              <div
-                role="button"
-                className={`nav-item ${currentView === 'inventory' ? 'active' : ''}`}
-                onClick={() => onNavigate('inventory')}
-              >
-                <div className="nav-content">
-                  <i className="bi bi-box"></i>
-                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Inventario</span>
-                </div>
-              </div>
-              <div
-                role="button"
-                className={`nav-item ${currentView === 'proveedores' ? 'active' : ''}`}
-                onClick={() => onNavigate('proveedores')}
-              >
-                <div className="nav-content">
-                  <i className="bi bi-truck"></i>
-                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Proveedores</span>
-                </div>
-              </div>
-              <div
-                role="button"
-                className={`nav-item ${currentView === 'estadisticas' ? 'active' : ''}`}
-                onClick={() => onNavigate('estadisticas')}
-              >
-                <div className="nav-content">
-                  <i className="bi bi-bar-chart"></i>
-                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Estadísticas</span>
-                </div>
-              </div>
-              <div
-                role="button"
-                className={`nav-item ${currentView === 'reports' ? 'active' : ''}`}
-                onClick={() => onNavigate('reports')}
-              >
-                <div className="nav-content">
-                  <i className="bi bi-file-earmark-text"></i>
-                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Reportes</span>
-                </div>
-              </div>
-              <div
-                role="button"
-                className={`nav-item ${currentView === 'entry' ? 'active' : ''}`}
-                onClick={() => onNavigate('entry')}
-              >
-                <div className="nav-content">
-                  <i className="bi bi-arrow-left-right"></i>
-                  <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Entradas/Salidas</span>
-                </div>
-              </div>
-            </>
-          )}
-
-          <div
-            role="button"
-            className={`nav-item ${currentView === 'sell' ? 'active' : ''}`}
-            onClick={() => onNavigate('sell')}
-          >
-            <div className="nav-content">
-              <i className="bi bi-cart"></i>
-              <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Ventas</span>
-            </div>
-          </div>
-          <div
-            role="button"
-            className={`nav-item ${currentView === 'settings' ? 'active' : ''}`}
-            onClick={() => onNavigate('settings')}
-          >
-            <div className="nav-content">
-              <i className="bi bi-gear"></i>
-              <span className={`nav-text ${isCollapsed ? 'hidden' : ''}`}>Ajustes</span>
-            </div>
-          </div>
+              </button>
+            ))}
         </nav>
       </div>
     </div>
   );
 }
+
+Sidebar.propTypes = {
+  onNavigate: PropTypes.func.isRequired,
+  currentView: PropTypes.string.isRequired,
+  userRole: PropTypes.string.isRequired,
+};
 
 export default Sidebar;
