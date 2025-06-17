@@ -40,18 +40,17 @@ const ReportsCard = ({ entityKey }) => {
       XLSX.utils.book_append_sheet(workbook, worksheet, entity.label);
       XLSX.writeFile(workbook, `${entityKey}.xlsx`);
 
-      // SweetAlert de éxito
       Swal.fire({
         icon: 'success',
         title: '¡Éxito!',
         text: 'El archivo Excel se descargó correctamente.',
       });
     } catch (error) {
-
+      console.error(error);
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Hubo un problema al generar el archivo Excel.',
+        text: `Hubo un problema al generar el archivo Excel.\n${error.message}`,
       });
     }
   };
@@ -62,7 +61,7 @@ const ReportsCard = ({ entityKey }) => {
         <TablePDF
           data={data}
           columns={entity.columns}
-          title={entity.label} // Pasa el nombre de la tabla como título
+          title={entity.label}
         />
       ).toBlob();
 
@@ -73,18 +72,17 @@ const ReportsCard = ({ entityKey }) => {
       link.click();
       URL.revokeObjectURL(url);
 
-      // SweetAlert de éxito
       Swal.fire({
         icon: 'success',
         title: '¡Éxito!',
         text: 'El archivo PDF se descargó correctamente.',
       });
     } catch (error) {
-      // Alerta en caso de error
+      console.error(error);
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Hubo un problema al generar el archivo PDF.',
+        text: `Hubo un problema al generar el archivo PDF.\n${error.message}`,
       });
     }
   };
@@ -94,10 +92,11 @@ const ReportsCard = ({ entityKey }) => {
   return (
     <Card className="card-custom shadow-lg rounded-4 border-0 mb-4 transition-all">
       <Card.Body className="d-flex flex-column justify-content-between">
-        <div
+        <button
+          type="button"
           className="card-header-custom d-flex align-items-center justify-content-between mb-3"
           onClick={() => setShowOptions((prev) => !prev)}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', background: 'none', border: 'none', width: '100%' }}
         >
           <div className="d-flex align-items-center gap-3">
             <FileDown size={22} />
@@ -109,7 +108,7 @@ const ReportsCard = ({ entityKey }) => {
             </div>
           </div>
           {showOptions ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        </div>
+        </button>
 
         {/* Contenido colapsable */}
         <Collapse in={showOptions}>
@@ -128,9 +127,9 @@ const ReportsCard = ({ entityKey }) => {
                 <tbody>
                   {Array.isArray(data) && data.length > 0 ? (
                     data.slice(0, 3).map((item, i) => (
-                      <tr key={i}>
-                        {entity.columns.map((col, index) => (
-                          <td key={index} className="border-end">
+                      <tr key={item.id ?? item[entity.columns[0].key]}>
+                        {entity.columns.map((col) => (
+                          <td key={col.key} className="border-end">
                             {item[col.key] ?? '-'}
                           </td>
                         ))}
@@ -174,12 +173,12 @@ const ReportsCard = ({ entityKey }) => {
           </div>
         </Collapse>
       </Card.Body>
-    </Card>
+    </Card >
   );
 };
 
 ReportsCard.propTypes = {
-  entityKey: PropTypes.string.isRequired, // o el tipo correcto (string, number, etc.)
+  entityKey: PropTypes.string.isRequired,
 };
 
 export default ReportsCard;
