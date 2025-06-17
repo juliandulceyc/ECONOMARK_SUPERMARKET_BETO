@@ -1,9 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/nav_reportes"
-        android:title="Reportes"/>
-    <item
-        android:id="@+id/nav_facturacion"
-        android:title="Facturación"/>
-    <!-- Agrega más ítems de menú según necesites -->
-</menu>
