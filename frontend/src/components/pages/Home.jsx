@@ -28,7 +28,11 @@ axios.interceptors.response.use(
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
-    return Promise.reject(error);
+    // Asegura que el rechazo sea siempre un Error
+    if (error instanceof Error) {
+      return Promise.reject(error);
+    }
+    return Promise.reject(new Error(typeof error === 'string' ? error : JSON.stringify(error)));
   }
 );
 

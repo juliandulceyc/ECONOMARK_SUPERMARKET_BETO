@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
-import Swal from "sweetalert2"; // Importa SweetAlert2
+import Swal from "sweetalert2";
 import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal, Spinner, Alert } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/show.css'
+import '../styles/show.css';
 import Inventario from "../inventario/inventario";
 
 // Modal reutilizable para crear/editar productos
@@ -56,6 +57,15 @@ const FormModal = ({ showModal, setShowModal, handleSubmit, editData, handleChan
     </Modal>
 );
 
+FormModal.propTypes = {
+    showModal: PropTypes.bool.isRequired,
+    setShowModal: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    editData: PropTypes.object,
+    handleChange: PropTypes.func.isRequired,
+    config: PropTypes.object.isRequired,
+};
+
 const CompShowProducts = () => {
     const [tableView, setTableView] = useState("products");
     const [dataList, setDataList] = useState([]);
@@ -82,6 +92,7 @@ const CompShowProducts = () => {
                 setCategories(uniqueCategories);
             }
         } catch (err) {
+            console.error(err);
             setError('Error al cargar los datos');
         } finally {
             setLoading(false);
@@ -90,6 +101,7 @@ const CompShowProducts = () => {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tableView]);
 
     // Función para eliminar un producto
@@ -115,6 +127,7 @@ const CompShowProducts = () => {
                 );
                 fetchData();
             } catch (err) {
+                console.error(err);
                 Swal.fire(
                     'Error!',
                     'Hubo un problema al eliminar el producto.',
@@ -148,6 +161,7 @@ const CompShowProducts = () => {
             setShowModal(false);
             fetchData();
         } catch (err) {
+            console.error(err);
             Swal.fire(
                 'Error!',
                 'Hubo un problema al guardar los datos.',
@@ -209,7 +223,7 @@ const CompShowProducts = () => {
             </div>
 
             {loading ? (
-                <div className="text-center">
+                <div className="text-center" aria-live="polite">
                     <Spinner animation="border" />
                 </div>
             ) : (

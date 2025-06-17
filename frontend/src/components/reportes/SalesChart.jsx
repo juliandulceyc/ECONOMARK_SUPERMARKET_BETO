@@ -79,8 +79,8 @@ function SalesChart() {
       </Card.Header>
       <Card.Body>
         {loading ? (
-          <div className="text-center">
-            <Spinner animation="border" role="status" />
+          <div aria-live="polite">
+            <Spinner animation="border" />
           </div>
         ) : (
           <Line options={options} data={chartData} />

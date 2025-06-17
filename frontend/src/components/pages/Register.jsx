@@ -56,7 +56,7 @@ const Register = () => {
       if (err.response) {
         if (err.response.status === 409) {
           setError('El nombre de usuario o correo ya está en uso.');
-        } else if (err.response.data && err.response.data.errors) {
+        } else if (err.response?.data?.errors) {
           // Mostrar todos los mensajes de error del backend
           const mensajes = err.response.data.errors.map(e => e.msg).join(' ');
           setError(mensajes);

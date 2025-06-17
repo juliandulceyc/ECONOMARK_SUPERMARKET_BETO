@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 // Estilos
@@ -65,24 +66,24 @@ const TablePDF = ({ data = [], columns = [], title = 'Reporte' }) => (
       <View style={styles.table}>
         {/* Encabezado */}
         <View style={styles.tableRow}>
-          {columns.map((col, i) => (
-            <View key={i} style={getColStyle(columns.length, true)}>
+          {columns.map((col) => (
+            <View key={col.key} style={getColStyle(columns.length, true)}>
               <Text>{col.label.toUpperCase()}</Text>
             </View>
           ))}
         </View>
 
         {/* Filas */}
-        {data.slice(0, 50).map((item, i) => (
+        {data.slice(0, 50).map((item) => (
           <View
-            key={i}
+            key={item.id ?? columns.map(col => item[col.key]).join('-')}
             style={[
               styles.tableRow,
-              i % 2 === 1 ? styles.zebra : null,
+              data.indexOf(item) % 2 === 1 ? styles.zebra : null,
             ]}
           >
-            {columns.map((col, j) => (
-              <View key={j} style={getColStyle(columns.length, false)}>
+            {columns.map((col) => (
+              <View key={col.key} style={getColStyle(columns.length, false)}>
                 <Text>
                   {item[col.key] != null ? String(item[col.key]) : '-'}
                 </Text>
@@ -94,5 +95,11 @@ const TablePDF = ({ data = [], columns = [], title = 'Reporte' }) => (
     </Page>
   </Document>
 );
+
+TablePDF.propTypes = {
+  data: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  title: PropTypes.string,
+};
 
 export default TablePDF;

@@ -123,13 +123,10 @@ function DashboardStats() {
                   </h3>
                 </div>
                 <i
-                  className={`bi ${iconMap[key] || 'bi-collection'} h1`}
+                  className={`bi ${iconMap[key] || 'bi-collection'} h1 icon-anim`}
                   style={{
-                    transition: 'transform 0.3s ease, color 0.3s ease',
                     color: 'rgba(255, 255, 255, 0.8)',
                   }}
-                  onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
-                  onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
                 ></i>
               </div>
             </Card.Body>

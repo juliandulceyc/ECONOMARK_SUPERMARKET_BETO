@@ -7,7 +7,7 @@ import { faSearch, faCashRegister, faTrashAlt } from '@fortawesome/free-solid-sv
 import FacturaModal from './FacturaModal';
 import ClienteModal from './ClienteModal';
 import Swal from 'sweetalert2';
-import { Modal } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 // Hook personalizado para el cronómetro
 function useCronometro() {
@@ -50,7 +50,7 @@ const Ventas = ({ cajero }) => {
   const [horaActual, setHoraActual] = useState(new Date().toLocaleTimeString());
 
   // Cronómetro con hook personalizado
-  const { activo: cronometroActivo, segundos, iniciar, detener } = useCronometro();
+  const { segundos, iniciar, detener } = useCronometro();
 
   // Actualiza la hora cada segundo
   useEffect(() => {
@@ -72,6 +72,7 @@ const Ventas = ({ cajero }) => {
         const response = await API.get('/clientes');
         setClientes(response.data);
       } catch (error) {
+        console.error("Error al obtener los clientes:", error);
         Swal.fire("Error", "Error al obtener los clientes", "error");
       }
     };
@@ -88,8 +89,13 @@ const Ventas = ({ cajero }) => {
       const response = await API.get(`/productos/${codigoProducto}`);
       setProducto(response.data);
     } catch (error) {
+      console.error(error); // Registra el error en la consola
       setProducto(null);
-      Swal.fire("Producto no encontrado", "Verifica el código ingresado", "warning");
+      Swal.fire(
+        "Producto no encontrado",
+        `Verifica el código ingresado\n${error.message}`,
+        "warning"
+      );
     }
   }, [codigoProducto]);
 
@@ -99,6 +105,7 @@ const Ventas = ({ cajero }) => {
       const response = await API.get('/productos');
       setListaProductos(response.data);
     } catch (error) {
+      console.error(error);
       Swal.fire("Error", "No se pudo obtener la lista de productos", "error");
     }
   };
@@ -200,6 +207,7 @@ const Ventas = ({ cajero }) => {
         await API.put(`/productos/${productoVenta.idProducto}`, { stock: nuevoStock, estado: nuevoEstado });
       }
     } catch (error) {
+      console.error("Error al actualizar el stock:", error);
       Swal.fire("Error", "No se pudo actualizar el stock", "error");
     }
   };
@@ -351,8 +359,8 @@ const Ventas = ({ cajero }) => {
             </tr>
           </thead>
           <tbody>
-            {productosEnVenta.map((producto, index) => (
-              <tr key={index}>
+            {productosEnVenta.map((producto) => (
+              <tr key={producto.idProducto}>
                 <td>{producto.idProducto}</td>
                 <td>{producto.nombreProducto}</td>
                 <td>{producto.cantidad}</td>
@@ -393,7 +401,7 @@ const Ventas = ({ cajero }) => {
       </footer>
 
       {mostrarModal && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true">
+        <dialog className="modal-backdrop" open>
           <div className="modal-content">
             <h3>Seleccionar producto</h3>
             <button className="modal-close" onClick={cerrarModal} aria-label="Cerrar modal">✖</button>
@@ -418,7 +426,7 @@ const Ventas = ({ cajero }) => {
               </tbody>
             </table>
           </div>
-        </div>
+        </dialog>
       )}
 
       {mostrarModalFactura && (
@@ -437,6 +445,10 @@ const Ventas = ({ cajero }) => {
       />
     </div>
   );
+};
+
+Ventas.propTypes = {
+  cajero: PropTypes.string,
 };
 
 export default Ventas;

@@ -384,17 +384,30 @@ body {
   cursor: pointer;
 }
 
+/* Unifica todas las reglas de .modal-table */
 .modal-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  margin-top: 1rem; /* Si quieres mantener este margen */
 }
 
+/* Unifica las reglas de las celdas */
 .modal-table th,
 .modal-table td {
   padding: 8px 10px;
   border: 1px solid #ddd;
   text-align: center;
+  cursor: pointer; /* Si quieres mantener el cursor */
+}
+
+/* Otros estilos relacionados */
+.modal-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.modal-table th {
+  background-color: #e9ecef;
+  font-weight: bold;
 }
 
 .boton-seleccionar-cliente {
@@ -418,25 +431,4 @@ body {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
-}
-
-.modal-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.modal-table th, .modal-table td {
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-  cursor: pointer;
-}
-
-.modal-table tr:hover {
-  background-color: #f1f1f1;
-}
-
-.modal-table th {
-  background-color: #e9ecef;
-  font-weight: bold;
 }

@@ -17,7 +17,6 @@ const colorMap = {
 };
 
 function DashboardStats() {
-  const [counts, setCounts] = useState({});
   const [totalVentas, setTotalVentas] = useState(0);
   const [ganancias, setGanancias] = useState(0);
   const [totalProductos, setTotalProductos] = useState(0);
