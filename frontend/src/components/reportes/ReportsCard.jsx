@@ -8,6 +8,7 @@ import { pdf } from '@react-pdf/renderer';
 import TablePDF from "./tablePDF";
 import Swal from 'sweetalert2';
 import './reportCard.css';
+import PropTypes from 'prop-types';
 
 const ReportsCard = ({ entityKey }) => {
   const [data, setData] = useState([]);
@@ -175,6 +176,10 @@ const ReportsCard = ({ entityKey }) => {
       </Card.Body>
     </Card>
   );
+};
+
+ReportsCard.propTypes = {
+  entityKey: PropTypes.string.isRequired, // o el tipo correcto (string, number, etc.)
 };
 
 export default ReportsCard;
