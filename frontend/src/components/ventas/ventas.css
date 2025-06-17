@@ -312,7 +312,6 @@ body {
   margin-top: -50px;
   position: relative;
   overflow: visible;
-  padding: 0;
 }
 
 .ventas-footer::before {
@@ -345,7 +344,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: absolute;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
