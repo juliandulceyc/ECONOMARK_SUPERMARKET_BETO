@@ -1,18 +1,15 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Modal, Form } from 'react-bootstrap';
-
-const URL = 'http://172.210.65.94:3000/credenciales/';
+import API from '../services/axiosConfig';
 
 const CompCreateUser = ({ showModal, handleClose, refreshUsers }) => {
     const [rol, setRol] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    
     const store = async (e) => {
         e.preventDefault();
-        await axios.post(URL, { rol, username, password });
+        await API.post('/credenciales/', { rol, username, password }); // Cambia aquí
         refreshUsers(); 
         handleClose(); 
     };

@@ -1,8 +1,6 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Form, Button, Modal } from 'react-bootstrap';
-
-const URL = 'http://172.210.65.94:3000/credenciales/';
+import API from '../services/axiosConfig'; // Importa la instancia centralizada
 
 const CompEditUser = ({ showModal, handleClose, user, refreshUsers }) => {
     const [rol, setRol] = useState('');
@@ -20,7 +18,7 @@ const CompEditUser = ({ showModal, handleClose, user, refreshUsers }) => {
     // Procedimiento para actualizar
     const update = async (e) => {
         e.preventDefault();
-        await axios.put(URL + user.id, {
+        await API.put(`/credenciales/${user.id}`, { // Cambia aquí
             rol, username, password
         });
         refreshUsers(); // Refresca la lista de productos después de actualizar
@@ -35,7 +33,7 @@ const CompEditUser = ({ showModal, handleClose, user, refreshUsers }) => {
             <Modal.Body>
                 <Form onSubmit={update}>
                     <Form.Group className="mb-3">
-                        <select onChange={(e) => setRol(e.target.value)} type='text' name='rol' className="form-select" aria-label="Default select example">
+                        <select onChange={(e) => setRol(e.target.value)} type='text' name='rol' className="form-select" aria-label="Default select example" value={rol}>
                             <option value=''></option>
                             <option value='admin'>Admin</option>
                             <option value='empleado' >Empleado</option>

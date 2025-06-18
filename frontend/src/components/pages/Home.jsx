@@ -18,23 +18,23 @@ import MainMenu from '../pages/Inicio';
 import MenuChart from '../MenuChart';
 import EntradasSalidasMenu from '../entradasSalidas/EntradasSalidasMenu';
 import axios from 'axios';
+import API from '../services/axiosConfig';
 
-// Interceptor global para manejar expiración de token
-axios.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response && error.response.status === 401) {
-      // Token expirado o inválido: limpiar y redirigir
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    // Asegura que el rechazo sea siempre un Error
-    if (error instanceof Error) {
-      return Promise.reject(error);
-    }
-    return Promise.reject(new Error(typeof error === 'string' ? error : JSON.stringify(error)));
+// Función para obtener el rol del usuario
+const fetchUser = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await API.get('/auth/home', { // Cambia aquí
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const { username, correo, rol } = response.data.user;
+    setProfileData({ name: username, email: correo, role: rol });
+    setUserRole(rol);
+  } catch (err) {
+    navigate('/login', { replace: true });
+    console.error(err);
   }
-);
+};
 
 function Home() {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -54,22 +54,6 @@ function Home() {
       navigate('/login', { replace: true });
     }
   }, [navigate]);
-
-  // Función para obtener el rol del usuario
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://172.210.65.94:3000/auth/home', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const { username, correo, rol } = response.data.user;
-      setProfileData({ name: username, email: correo, role: rol });
-      setUserRole(rol);
-    } catch (err) {
-      navigate('/login', { replace: true });
-      console.error(err);
-    }
-  };
 
   useEffect(() => {
     fetchUser();

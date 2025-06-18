@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../services/axiosConfig'; //
 import '../styles/sign-in.css';
 import Logo from '../img/carrito-de-compras.png';
 
@@ -48,7 +48,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://172.210.65.94:3000/auth/register', values);
+      const response = await API.post('/auth/register', values); // 
       if (response.status === 201) {
         navigate('/login', { replace: true });
       }

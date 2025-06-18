@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../services/axiosConfig'; // 
 import '../styles/sign-in.css'; 
 import Logo from '../img/carrito-de-compras.png'; 
 
@@ -23,7 +23,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post('http://172.210.65.94:3000/auth/reset-password', {
+      const response = await API.post('/auth/reset-password', { 
         token,
         newPassword
       });

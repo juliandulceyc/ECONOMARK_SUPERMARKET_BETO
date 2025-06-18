@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../services/axiosConfig'; 
 import '../styles/sign-in.css';
 import Logo from '../img/carrito-de-compras.png';
 
@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('http://172.210.65.94:3000/auth/forgot-password', { correo: email });
+      const response = await API.post('/auth/forgot-password', { correo: email }); // Cambia aquí
       if (response.status === 200) {
         setMessage('Se ha enviado un correo con instrucciones para restablecer tu contraseña.');
       }

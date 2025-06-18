@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Card, Spinner } from 'react-bootstrap';
+import API from '../services/axiosConfig'; 
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,8 +30,8 @@ function SalesChart() {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await fetch('http://172.210.65.94:3000/ventas/resumen-productos');
-        const data = await response.json();
+        const response = await API.get('/ventas/resumen-productos'); 
+        const data = response.data;
 
         // Extraemos nombres de productos y cantidades vendidas
         const labels = data.map(item => item.nombreProducto);

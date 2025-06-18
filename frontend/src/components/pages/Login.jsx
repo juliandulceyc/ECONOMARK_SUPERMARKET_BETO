@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/sign-in.css';
 import Logo from '../img/carrito-de-compras.png';
+import API from '../services/axiosConfig'; // <--- 
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -66,7 +67,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://172.210.65.94:3000/auth/login', values);
+      const response = await API.post('/auth/login', values); // <--- 
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         navigate('/home', { replace: true });

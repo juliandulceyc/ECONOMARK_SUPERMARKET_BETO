@@ -1,11 +1,9 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
-import { Container, Row, Col, Dropdown, Table, Button} from 'react-bootstrap';
+import { Container, Row, Col, Dropdown, Table, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../App.css';
-
-const URL = 'http://172.210.65.94:3000/categorias/'
+import API from "../services/axiosConfig"; 
 
 const CompShowCategories = () => {
     const [categories, setCategories] = useState([])
@@ -14,15 +12,15 @@ const CompShowCategories = () => {
         getCategories()
     }, [])
 
-    //procedimiento para mostar todas las categorias
+    // Procedimiento para mostrar todas las categorías
     const getCategories = async () => {
-        const response = await axios.get(URL)
+        const response = await API.get('/categorias/')
         setCategories(response.data)
     }
 
-    //procedimiento para eliminar una categoria
+    // Procedimiento para eliminar una categoría
     const deleteCategory = async (id) => {
-        await axios.delete(`${URL}${id}`)
+        await API.delete(`/categorias/${id}`)
         getCategories()
     }
 
@@ -53,7 +51,6 @@ const CompShowCategories = () => {
                                         {category.estado}
                                     </span>
                                 </td>
-
                                 <td className="text-center align-middle border-end">
                                     <Button className='btn btn-info mx-2'><i className="fa-solid fa-pen-to-square"></i></Button>
                                     <button onClick={() => deleteCategory(category.idCategoria)} className="btn btn-danger"><i className="fa-solid fa-eraser"></i></button>
@@ -65,7 +62,6 @@ const CompShowCategories = () => {
             </div>
         </div>
     )
-
 }
 
 export default CompShowCategories
