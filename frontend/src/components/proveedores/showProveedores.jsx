@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../services/axiosConfig";
 import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,7 +8,7 @@ import '../styles/show.css'
 const entityConfig = {
     proveedores: {
         label: "Proveedoress",
-        url: "http://172.210.65.94:3000/proveedores/", // <-- Cambia localhost por la IP pública
+        url: "/proveedores/", // Ahora solo el path, la base está en axiosConfig.js
         columns: [
             { key: "idProveedor", label: "ID" },
             { key: "nombreProveedor", label: "NOMBRE" },
@@ -36,7 +36,7 @@ const CompShowProveedores = () => {
 
     // Función para obtener los datos de las entidades (productos o categorías)
     const fetchData = async () => {
-        const res = await axios.get(config.url);
+        const res = await API.get(config.url);
         setDataList(res.data);
 
         // Si la entidad es productos, podemos obtener las categorías
@@ -51,7 +51,7 @@ const CompShowProveedores = () => {
     }, [tableView]);
 
     const handleDelete = async (id) => {
-        await axios.delete(`${config.url}${id}`);
+        await API.delete(`${config.url}${id}`);
         fetchData();
     };
 
@@ -60,9 +60,9 @@ const CompShowProveedores = () => {
         const idValue = editData[config.idField];
 
         if (idValue) {
-            await axios.put(`${config.url}${idValue}`, editData);
+            await API.put(`${config.url}${idValue}`, editData);
         } else {
-            await axios.post(config.url, editData);
+            await API.post(config.url, editData);
         }
 
         setShowModal(false);

@@ -55,7 +55,7 @@ function Home() {
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://172.210.65.94:3000/auth/home', {
+      const response = await axios.get('http://supermarketbeto.duckdns.org:3000/auth/home', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const { username, correo, rol } = response.data.user;

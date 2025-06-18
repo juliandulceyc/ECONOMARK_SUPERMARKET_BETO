@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import API from "../services/axiosConfig";
 
 const ShowEditProveedor = ({ showModal, handleClose, proveedor, refreshProveedores }) => {
     const [formData, setFormData] = useState({
@@ -24,11 +25,7 @@ const ShowEditProveedor = ({ showModal, handleClose, proveedor, refreshProveedor
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await fetch(`http://172.210.65.94:3000/proveedores/update/${formData.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
+            await API.put(`/proveedores/update/${formData.id}`, formData);
             alert("Proveedor actualizado con éxito.");
             refreshProveedores();
             handleClose();

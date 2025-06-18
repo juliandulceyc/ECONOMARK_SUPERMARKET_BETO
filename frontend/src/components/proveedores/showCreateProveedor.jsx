@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import API from "../services/axiosConfig";
 
 const ShowCreateProveedor = ({ showModal, handleClose, refreshProveedores }) => {
     const [formData, setFormData] = useState({
@@ -18,11 +19,7 @@ const ShowCreateProveedor = ({ showModal, handleClose, refreshProveedores }) => 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await fetch("http://172.210.65.94:3000/proveedores/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
+            await API.post("/proveedores/register", formData);
             alert("Proveedor registrado con éxito.");
             refreshProveedores();
             handleClose();

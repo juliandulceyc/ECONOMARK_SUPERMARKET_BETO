@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
-import Swal from "sweetalert2"; // Importa SweetAlert2
+import API from "../services/axiosConfig"; // Cambia axios por API
+import Swal from "sweetalert2";
 import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal, Spinner, Alert } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -75,7 +75,7 @@ const CompShowProducts = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await axios.get(config.url);
+            const res = await API.get(config.url);
             setDataList(res.data);
             if (tableView === 'products') {
                 const uniqueCategories = [...new Set(res.data.map(product => product.idCategoria))];
@@ -107,7 +107,7 @@ const CompShowProducts = () => {
 
         if (confirmDelete.isConfirmed) {
             try {
-                await axios.delete(`${config.url}${id}`);
+                await API.delete(`${config.url}${id}`);
                 await Swal.fire(
                     'Eliminado!',
                     'El producto ha sido eliminado.',
@@ -131,14 +131,14 @@ const CompShowProducts = () => {
 
         try {
             if (idValue) {
-                await axios.put(`${config.url}${idValue}`, editData);
+                await API.put(`${config.url}${idValue}`, editData);
                 await Swal.fire(
                     '¡Actualizado!',
                     `${config.label.slice(0, -1)} actualizado con éxito.`,
                     'success'
                 );
             } else {
-                await axios.post(config.url, editData);
+                await API.post(config.url, editData);
                 await Swal.fire(
                     '¡Creado!',
                     `${config.label.slice(0, -1)} creado con éxito.`,

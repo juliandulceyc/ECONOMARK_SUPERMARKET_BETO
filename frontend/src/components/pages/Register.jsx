@@ -48,7 +48,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://172.210.65.94:3000/auth/register', values);
+      const response = await axios.post('http://supermarketbeto.duckdns.org:3000/auth/register', values);
       if (response.status === 201) {
         navigate('/login', { replace: true });
       }
