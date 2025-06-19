@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 
 function Sidebar({ onNavigate, currentView, userRole }) {
-  const navigate = useNavigate();
   const supermarketImage = 'https://img.icons8.com/?size=100&id=otDBSWUrE50n&format=png&color=000000';
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -47,7 +45,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
               <div
                 role="button"
                 className={`nav-item ${currentView === 'users' ? 'active' : ''}`}
-                onClick={() => navigate('/users')}
+                onClick={() => onNavigate('users')}
               >
                 <div className="nav-content">
                   <i className="bi bi-people"></i>
