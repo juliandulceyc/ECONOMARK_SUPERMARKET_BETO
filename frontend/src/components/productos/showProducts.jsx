@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import API from "../services/axiosConfig"; // Cambia axios por API
+import API from "../services/axiosConfig"; 
 import Swal from "sweetalert2";
 import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal, Spinner, Alert } from "react-bootstrap";
