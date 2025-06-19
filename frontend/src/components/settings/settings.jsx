@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Form, Button, Card, Row, Col, Badge } from 'react-bootstrap';
-import { Person, Envelope, Bell, Palette } from 'react-bootstrap-icons'; 
+import { Person,  Bell, Palette } from 'react-bootstrap-icons'; 
 
 const Settings = ({ profileData }) => { // Recibimos `profileData` como prop
   const [username, setUsername] = useState('');
@@ -136,5 +137,13 @@ const Settings = ({ profileData }) => { // Recibimos `profileData` como prop
     </div>
   );
 };
+Settings.propTypes = {
+  profileData: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.string,
+  }).isRequired,
+};
 
 export default Settings;
+

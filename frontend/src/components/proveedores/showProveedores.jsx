@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import API from "../services/axiosConfig"; // Cambia aquí
+import API from "../services/axiosConfig"; 
 import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';

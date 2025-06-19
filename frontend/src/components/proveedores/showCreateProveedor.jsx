@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import PropTypes from "prop-types";
 import API from "../services/axiosConfig"; 
 
 const ShowCreateProveedor = ({ showModal, handleClose, refreshProveedores }) => {
@@ -102,6 +103,11 @@ const ShowCreateProveedor = ({ showModal, handleClose, refreshProveedores }) => 
             </Modal.Body>
         </Modal>
     );
+};
+ShowCreateProveedor.propTypes = {
+    showModal: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    refreshProveedores: PropTypes.func.isRequired,
 };
 
 export default ShowCreateProveedor;

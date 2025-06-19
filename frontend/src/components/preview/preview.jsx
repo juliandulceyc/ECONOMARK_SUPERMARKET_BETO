@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Modal, Spinner, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CompShowCategories from '../categorias/showCategories';
-import API from '../services/axiosConfig'; // Import
+import API from '../services/axiosConfig'; 
 
 const CompTablePreview = () => {
     const [products, setProducts] = useState([]);

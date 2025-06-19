@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 import { Form, Button, Modal } from 'react-bootstrap';
 import API from '../services/axiosConfig'; // Importa la instancia centralizada
 
@@ -70,5 +71,17 @@ const CompEditUser = ({ showModal, handleClose, user, refreshUsers }) => {
         </Modal>
     );
 };
+CompEditUser.propTypes = {
+    showModal: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    user: PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        rol: PropTypes.string,
+        username: PropTypes.string,
+        password: PropTypes.string,
+    }),
+    refreshUsers: PropTypes.func.isRequired,
+};
 
 export default CompEditUser;
+

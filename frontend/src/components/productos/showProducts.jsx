@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
+import API from "../services/axiosConfig";
 import Swal from "sweetalert2";
 import SearchBar from "../common/SearchBar";
 import { Table, Button, Form, Modal, Spinner, Alert } from "react-bootstrap";
@@ -80,12 +80,38 @@ const CompShowProducts = () => {
 
     const config = Inventario[tableView];
 
+    // Always call hooks unconditionally
+    const filteredData = useMemo(() => {
+        if (!config) return [];
+        return dataList.filter(item => {
+            const matchesSearch = Object.keys(item).some(key =>
+                item[key]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            const matchesColumnFilter = filterByColumn
+                ? item[filterByColumn]?.toString().toLowerCase().includes(filterByValue.toLowerCase())
+                : true;
+            return matchesSearch && matchesColumnFilter;
+        });
+    }, [dataList, searchQuery, filterByColumn, filterByValue, config]);
+
+    useEffect(() => {
+        // No fetch if config is undefined
+        if (!config) return;
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tableView]);
+
+    // Protección si config no existe
+    if (!config) {
+        return <div className="text-danger">Configuración de inventario no encontrada.</div>;
+    }
+
     // Función para obtener los datos de las tablas
     const fetchData = async () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await axios.get(config.url);
+            const res = await API.get(config.url);
             setDataList(res.data);
             if (tableView === 'products') {
                 const uniqueCategories = [...new Set(res.data.map(product => product.idCategoria))];
@@ -98,11 +124,6 @@ const CompShowProducts = () => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tableView]);
 
     // Función para eliminar un producto
     const handleDelete = async (id) => {
@@ -119,7 +140,7 @@ const CompShowProducts = () => {
 
         if (confirmDelete.isConfirmed) {
             try {
-                await axios.delete(`${config.url}${id}`);
+                await API.delete(`${config.url}${id}`);
                 await Swal.fire(
                     'Eliminado!',
                     'El producto ha sido eliminado.',
@@ -144,14 +165,14 @@ const CompShowProducts = () => {
 
         try {
             if (idValue) {
-                await axios.put(`${config.url}${idValue}`, editData);
+                await API.put(`${config.url}${idValue}`, editData);
                 await Swal.fire(
                     '¡Actualizado!',
                     `${config.label.slice(0, -1)} actualizado con éxito.`,
                     'success'
                 );
             } else {
-                await axios.post(config.url, editData);
+                await API.post(config.url, editData);
                 await Swal.fire(
                     '¡Creado!',
                     `${config.label.slice(0, -1)} creado con éxito.`,
@@ -174,19 +195,6 @@ const CompShowProducts = () => {
         const { name, value } = e.target;
         setEditData(prev => ({ ...prev, [name]: value }));
     };
-
-    // Filtrado de datos
-    const filteredData = useMemo(() => {
-        return dataList.filter(item => {
-            const matchesSearch = Object.keys(item).some(key =>
-                item[key]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            const matchesColumnFilter = filterByColumn
-                ? item[filterByColumn]?.toString().toLowerCase().includes(filterByValue.toLowerCase())
-                : true;
-            return matchesSearch && matchesColumnFilter;
-        });
-    }, [dataList, searchQuery, filterByColumn, filterByValue]);
 
     return (
         <div className="container">
@@ -246,13 +254,19 @@ const CompShowProducts = () => {
                                         </td>
                                     ))}
                                     <td className="text-center border-end">
-                                        <Button className="btn btn-info mx-2 my-2" onClick={() => {
-                                            setEditData(item);
-                                            setShowModal(true);
-                                        }}>
+                                        <Button
+                                            className="btn btn-info mx-2 my-2"
+                                            aria-label="Editar"
+                                            onClick={() => {
+                                                setEditData(item);
+                                                setShowModal(true);
+                                            }}>
                                             <i className="fa-solid fa-pen-to-square"></i>
                                         </Button>
-                                        <Button className="btn btn-danger" onClick={() => handleDelete(item[config.idField])}>
+                                        <Button
+                                            className="btn btn-danger"
+                                            aria-label="Eliminar"
+                                            onClick={() => handleDelete(item[config.idField])}>
                                             <i className="fa-solid fa-eraser"></i>
                                         </Button>
                                     </td>

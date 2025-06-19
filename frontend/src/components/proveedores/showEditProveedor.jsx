@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Modal, Form, Button } from "react-bootstrap";
-import API from "../services/axiosConfig"; // Agrega esta línea
+import API from "../services/axiosConfig"; 
 
 const ShowEditProveedor = ({ showModal, handleClose, proveedor, refreshProveedores }) => {
     const [formData, setFormData] = useState({
@@ -95,5 +96,12 @@ const ShowEditProveedor = ({ showModal, handleClose, proveedor, refreshProveedor
         </Modal>
     );
 };
+ShowEditProveedor.propTypes = {
+    showModal: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    proveedor: PropTypes.object,
+    refreshProveedores: PropTypes.func.isRequired,
+};
 
 export default ShowEditProveedor;
+

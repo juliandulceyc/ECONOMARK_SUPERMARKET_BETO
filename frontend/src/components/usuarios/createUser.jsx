@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { Button, Modal, Form } from 'react-bootstrap';
 import API from '../services/axiosConfig';
 
@@ -65,5 +66,11 @@ const CompCreateUser = ({ showModal, handleClose, refreshUsers }) => {
         </Modal>
     );
 };
+CompCreateUser.propTypes = {
+    showModal: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    refreshUsers: PropTypes.func.isRequired,
+};
 
 export default CompCreateUser;
+
