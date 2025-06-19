@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../services/axiosConfig'; // Usa el cliente centralizado
 import { Card, Button, Table, Collapse } from 'react-bootstrap';
 import { FileDown, ChevronDown, ChevronUp } from 'lucide-react';
 import Inventario from '../inventario/inventario';
@@ -17,7 +17,7 @@ const ReportsCard = ({ entityKey }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(entity.url);
+        const res = await API.get(entity.url); // Cambia axios por API
         setData(res.data);
       } catch (error) {
         console.error(`Error al obtener datos de ${entityKey}`, error);
@@ -39,14 +39,12 @@ const ReportsCard = ({ entityKey }) => {
       XLSX.utils.book_append_sheet(workbook, worksheet, entity.label);
       XLSX.writeFile(workbook, `${entityKey}.xlsx`);
 
-      // SweetAlert de éxito
       Swal.fire({
         icon: 'success',
         title: '¡Éxito!',
         text: 'El archivo Excel se descargó correctamente.',
       });
     } catch (error) {
-
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
@@ -61,7 +59,7 @@ const ReportsCard = ({ entityKey }) => {
         <TablePDF
           data={data}
           columns={entity.columns}
-          title={entity.label} // Pasa el nombre de la tabla como título
+          title={entity.label}
         />
       ).toBlob();
 
@@ -72,14 +70,12 @@ const ReportsCard = ({ entityKey }) => {
       link.click();
       URL.revokeObjectURL(url);
 
-      // SweetAlert de éxito
       Swal.fire({
         icon: 'success',
         title: '¡Éxito!',
         text: 'El archivo PDF se descargó correctamente.',
       });
     } catch (error) {
-      // Alerta en caso de error
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
@@ -110,7 +106,6 @@ const ReportsCard = ({ entityKey }) => {
           {showOptions ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </div>
 
-        {/* Contenido colapsable */}
         <Collapse in={showOptions}>
           <div>
             <div className="table-responsive">
@@ -145,7 +140,6 @@ const ReportsCard = ({ entityKey }) => {
             </div>
 
             <div className="mt-2 d-flex gap-2 justify-content-start">
-              {/* Botones de Descargar PDF y Excel */}
               <Button
                 variant="outline-primary"
                 size="sm"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import API from "../services/axiosConfig"; // Usa el cliente centralizado
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import SearchBar from "../common/SearchBar";
 import Inventario from "../inventario/inventario";
@@ -17,7 +17,7 @@ const CompShowUsers = () => {
     const [filterByValue, setFilterByValue] = useState("");
 
     const getData = async () => {
-        const response = await axios.get(url);
+        const response = await API.get(url);
         setData(response.data);
     };
 
@@ -26,16 +26,16 @@ const CompShowUsers = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        await axios.delete(`${url}${id}`);
+        await API.delete(`${url}${id}`);
         getData();
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
         if (editData[idField]) {
-            await axios.put(`${url}${editData[idField]}`, editData);
+            await API.put(`${url}${editData[idField]}`, editData);
         } else {
-            await axios.post(url, editData);
+            await API.post(url, editData);
         }
         setShowModal(false);
         getData();

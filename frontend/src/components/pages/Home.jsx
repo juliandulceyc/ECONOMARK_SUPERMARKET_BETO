@@ -17,20 +17,7 @@ import Settings from '../settings/settings';
 import MainMenu from '../pages/Inicio';
 import MenuChart from '../MenuChart';
 import EntradasSalidasMenu from '../entradasSalidas/EntradasSalidasMenu';
-import axios from 'axios';
-
-// Interceptor global para manejar expiración de token
-axios.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response && error.response.status === 401) {
-      // Token expirado o inválido: limpiar y redirigir
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+import API from '../services/axiosConfig'; // <--- Cambia esto
 
 function Home() {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -55,7 +42,7 @@ function Home() {
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://supermarketbeto.duckdns.org:3000/auth/home', {
+      const response = await API.get('/auth/home', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const { username, correo, rol } = response.data.user;
