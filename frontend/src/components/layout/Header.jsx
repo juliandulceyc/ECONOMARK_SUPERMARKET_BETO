@@ -1,5 +1,6 @@
 // Header.jsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Dropdown, Badge, Modal, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './head.css';
@@ -8,7 +9,6 @@ function Header({ currentView, profileData }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileImage, setProfileImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_iwynnKUnSZbPBC5SiPy6Ay9-3cIEezn6w&s');
-  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const notifications = [
@@ -170,5 +170,13 @@ function Header({ currentView, profileData }) {
     </nav>
   );
 }
+Header.propTypes = {
+  currentView: PropTypes.string.isRequired,
+  profileData: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.string,
+  }).isRequired,
+};
 
 export default Header;

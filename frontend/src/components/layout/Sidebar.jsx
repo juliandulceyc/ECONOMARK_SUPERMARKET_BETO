@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './Sidebar.css';
 
-function Sidebar({ onNavigate, currentView, userRole }) {
+function Sidebar({ onNavigate, currentView, userRole, isCollapsed, onToggle }) {
   const supermarketImage = 'https://img.icons8.com/?size=100&id=otDBSWUrE50n&format=png&color=000000';
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   const menuItems = [
     { key: 'dashboard', icon: 'bi-speedometer2', label: 'Inicio', roles: ['admin', 'user'] },
@@ -33,7 +30,7 @@ function Sidebar({ onNavigate, currentView, userRole }) {
           </div>
           <button
             className="collapse-button"
-            onClick={toggleSidebar}
+            onClick={onToggle}
             title={isCollapsed ? 'Expandir' : 'Minimizar'}
           >
             <i className={`fas ${isCollapsed ? 'fa-arrow-right' : 'fa-arrow-left'}`}></i>
@@ -75,6 +72,8 @@ Sidebar.propTypes = {
   onNavigate: PropTypes.func.isRequired,
   currentView: PropTypes.string.isRequired,
   userRole: PropTypes.string.isRequired,
+  isCollapsed: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

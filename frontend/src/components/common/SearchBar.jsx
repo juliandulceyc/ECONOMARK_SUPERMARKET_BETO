@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { InputGroup, Form, Row, Col } from 'react-bootstrap';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 import './SearchBar.css';
@@ -63,6 +64,21 @@ const SearchBar = ({
       </Row>
     </div>
   );
+};
+
+SearchBar.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
+  filterByColumn: PropTypes.string.isRequired,
+  onFilterColumnChange: PropTypes.func.isRequired,
+  filterByValue: PropTypes.string.isRequired,
+  onFilterValueChange: PropTypes.func.isRequired,
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired
+    })
+  )
 };
 
 export default SearchBar;
