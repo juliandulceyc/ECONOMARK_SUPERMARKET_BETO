@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Configuración de axios centralizada
 const API = axios.create({
-  baseURL: 'http://supermarketbeto.duckdns.org:3000', 
+  baseURL: 'https://supermarketbeto.duckdns.org/api', 
   withCredentials: true,  // Habilitar credenciales para compartir cookies
 });
 

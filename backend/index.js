@@ -27,9 +27,10 @@ app.use(helmet())
 app.use(cors({
     origin: [
         'http://localhost:5173',
-        'http://172.210.65.94',// IP pública VM
-        'http://172.210.65.94:5173',//  Vite
-        'http://supermarketbeto.duckdns.org:5173'
+        'http://172.210.65.94',
+        'http://172.210.65.94:5173',
+        'http://supermarketbeto.duckdns.org:5173',
+        'https://supermarketbeto.duckdns.org' // <--- AGREGA ESTA LÍNEA
     ],
     credentials: true
 }))
