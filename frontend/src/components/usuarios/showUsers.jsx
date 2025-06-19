@@ -18,7 +18,12 @@ const CompShowUsers = () => {
 
     const getData = async () => {
         const response = await API.get(url);
-        setData(response.data);
+        if (Array.isArray(response.data)) {
+            setData(response.data);
+        } else {
+            setData([]); // O maneja el error como prefieras
+            // Opcional: console.error('La respuesta no es un array:', response.data);
+        }
     };
 
     useEffect(() => {
