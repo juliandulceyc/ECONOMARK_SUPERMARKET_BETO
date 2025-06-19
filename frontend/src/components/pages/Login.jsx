@@ -66,7 +66,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await API.post('/auth/login', values); // Cambia aquí
+      const response = await API.post('/auth/login', values); 
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         navigate('/home', { replace: true });

@@ -17,7 +17,7 @@ import Settings from '../settings/settings';
 import MainMenu from '../pages/Inicio';
 import MenuChart from '../MenuChart';
 import EntradasSalidasMenu from '../entradasSalidas/EntradasSalidasMenu';
-import API from '../services/axiosConfig'; // <--- Cambia esto
+import API from '../services/axiosConfig'; 
 
 function Home() {
   const [currentView, setCurrentView] = useState('dashboard');
