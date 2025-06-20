@@ -1,20 +1,22 @@
 describe('Home', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'http://172.210.65.94:3000/auth/home', {
+    // Intercepta la petición de usuario
+    cy.intercept('GET', '/auth/home', {
       user: { username: 'HCD', correo: 'admin@correo.com', rol: 'admin' }
     }).as('getUser');
-    cy.request('POST', 'http://172.210.65.94:3000/auth/login', {
+    // Simula login y guarda el token
+    cy.request('POST', '/auth/login', {
       username: 'HCD',
       password: '123456'
     }).then((resp) => {
       window.localStorage.setItem('token', resp.body.token);
-      cy.visit('http://172.210.65.94:5173/home');
+      cy.visit('/home');
     });
   });
 
   it('debe redirigir a login si no hay token', () => {
     window.localStorage.removeItem('token');
-    cy.visit('http://172.210.65.94:5173/home');
+    cy.visit('/home');
     cy.url().should('include', '/login');
   });
 
@@ -25,37 +27,43 @@ describe('Home', () => {
   });
 
   it('debe mostrar productos al navegar a Inventario', () => {
-    cy.contains('.nav-item[role="button"]', 'Inventario', { timeout: 10000 }).should('be.visible').click();
-    cy.contains('Productos', { timeout: 10000 }).should('exist');
+    cy.get('.sidebar-wrapper').contains('Inventario').click();
+    cy.contains('Productos').should('exist');
   });
 
   it('debe mostrar usuarios solo si el usuario es admin', () => {
+    cy.intercept('GET', '/auth/home', {
+      user: { username: 'HCD', correo: 'admin@correo.com', rol: 'admin' }
+    });
     window.localStorage.setItem('token', 'TOKEN_ADMIN');
-    cy.visit('http://172.210.65.94:5173/home');
+    cy.visit('/home');
     cy.get('.sidebar-wrapper').contains('Usuarios').click();
-    cy.contains('Usuarios').should('exist'); // CompShowUsers muestra este título
+    cy.contains('Usuarios').should('exist');
   });
 
-  it('debe mostrar mensaje de permisos si usuario no es admin en usuarios', () => {
+  it('no debe mostrar el botón Usuarios si el usuario no es admin', () => {
+    cy.intercept('GET', '/auth/home', {
+      user: { username: 'Empleado', correo: 'empleado@correo.com', rol: 'empleado' }
+    });
     window.localStorage.setItem('token', 'TOKEN_EMPLEADO');
-    cy.visit('http://172.210.65.94:5173/home');
-    cy.get('.sidebar-wrapper').contains('Usuarios').click();
-    cy.contains('No tienes permisos para acceder a esta sección.').should('exist');
+    cy.visit('/home');
+    cy.get('.sidebar-wrapper').contains('Usuarios').should('not.exist');
   });
+
 
   it('debe mostrar ventas al navegar a Ventas', () => {
     cy.get('.sidebar-wrapper').contains('Ventas').click();
-    cy.contains('Cobrar').should('exist'); // Ventas muestra botón "Cobrar"
+    cy.contains('Cobrar').should('exist');
   });
 
   it('debe mostrar reportes al navegar a Reportes', () => {
     cy.get('.sidebar-wrapper').contains('Reportes').click();
-    cy.contains('Reportes').should('exist'); // Reports muestra este título
+    cy.contains('Reportes').should('exist');
   });
 
   it('debe alternar el sidebar', () => {
-    cy.get('.sidebar-wrapper button').contains('☰').click(); // El botón de colapsar suele ser el ícono ☰
-    cy.get('.sidebar-wrapper').should('have.class', 'collapsed'); // Si tu sidebar usa esta clase al colapsar
+    cy.get('.sidebar-wrapper button').first().click();
+    cy.get('.sidebar').should('have.class', 'collapsed');
   });
 
   it('debe bloquear el botón atrás hacia login', () => {

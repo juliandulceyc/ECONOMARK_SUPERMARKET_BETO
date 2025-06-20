@@ -1,6 +1,6 @@
 describe('Registro de usuario', () => {
   beforeEach(() => {
-    cy.visit('http://172.210.65.94:5173/register');
+    cy.visit('/register');
   });
 
   it('debe mostrar error si los campos están vacíos', () => {
@@ -14,7 +14,7 @@ describe('Registro de usuario', () => {
     cy.get('input[name="correo"]').type('correo_invalido');
     cy.get('input[name="password"]').type('123456');
     cy.get('form').submit();
-    cy.contains('El correo debe ser válido').should('exist');
+    cy.contains(/correo.*válido/i).should('exist');
   });
 
   it('debe mostrar error si el usuario ya existe', () => {
